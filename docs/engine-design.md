@@ -1,6 +1,6 @@
 # Open-source BSData roster engine: minimal design sketch
 
-Status: sketch, written 2026-11-12. Companion to `bsdata-extensions-spec.md`
+Status: sketch, written 2026-11-12; language decided (Java 25 with TeaVM) 2026-11-12. Companion to `bsdata-extensions-spec.md`
 (what the data means) and the separate repository
 [`edward3h/nr-extension-tests`](https://github.com/edward3h/nr-extension-tests)
 (how to check it). This
@@ -17,8 +17,8 @@ is still undecided.
 2. Results that match New Recruit (NR) on the behaviour the data actually uses.
    The extensions in the spec are the target, not just the original
    BattleScribe schema.
-3. Runs headless (Node or JVM) so it can be tested, scripted and embedded. A UI
-   is a separate, later project.
+3. Runs headless on the JVM and, compiled with TeaVM, in the browser and Node,
+   from one Java code base. A UI is a separate, later project.
 4. A conformance suite anyone can run: `tests/expected.json` in `edward3h/nr-extension-tests`,
    `RESULTS.md`, plus differential tests against NR on real rosters.
 
@@ -40,16 +40,86 @@ This is large enough that a naive approach (re-evaluating every modifier for
 every node on every change) will be slow, and small enough to hold in memory.
 Design for lazy, memoised evaluation. Load once; build indexes once.
 
-## 3. Language and platform (decision needed)
+## 3. Language and platform
 
-| Option | For | Against |
-|---|---|---|
-| **TypeScript** (recommended) | Runs in browsers, so an eventual web UI shares the core; NR's editor and BlueScribe are both JS, so there is prior art to read; JSON is native | Weaker numeric and typing guarantees; fewer batteries for XML streaming |
-| Java or Kotlin | Strong typing, good XML and testing tools; matches your existing Java/Gradle projects | A web UI would need a separate port or a server, or compilation to the browser |
-| Rust to WASM | Fast, portable | Highest effort; not needed at this size |
+**Decided: Java 25, compiled to JavaScript with TeaVM for the browser.** This
+follows the setup in the author's `kv2` project, which already builds a shared
+Java library (`rosterParser`) for both a server and a TeaVM client.
 
-The rest of this document is language-neutral. Names are TypeScript-flavoured
-for brevity.
+### 3.1 Toolchain (copied from kv2)
+
+- Java: Temurin 25, pinned in `.tool-versions` and managed with `mise`; Gradle
+  toolchain `JavaLanguageVersion.of(25)`.
+- TeaVM 0.16.0. The shared library uses the `org.teavm.library` plugin; the
+  browser module uses the `org.teavm` plugin with the `jso` libraries. The
+  TeaVM Maven repository is `https://teavm.org/maven/repository`.
+- Quality gates from kv2's conventions plugin: Spotless (`palantirJavaFormat`,
+  import order, licence header), the EISOP Checker Framework **nullness**
+  checker with JSpecify annotations (`@NullMarked` in `package-info.java`),
+  JUnit 6 on the JUnit Platform, and a `pre-commit` git hook that runs `build`.
+- The licence header text in kv2 is `(C) Edward Harman and contributors $YEAR`;
+  use the same unless the licence decision says otherwise.
+
+### 3.2 Modules
+
+```
+engine-core     pure Java 25; no platform dependencies; compiled by javac and by TeaVM
+engine-jvm      JVM loaders (files, XML), command-line checker, JUnit conformance runner
+engine-web      TeaVM entry point: JSO bindings, browser loaders (fetch, DOMParser)
+conformance     test data and runner shared by the JVM and JavaScript builds
+```
+
+`engine-core` is the whole engine from section 4: data model, roster, queries,
+conditions, modifiers, validation, rendering to plain data. It never touches
+files, the network, threads or reflection. Everything platform-specific sits
+behind small interfaces (`DataSource`, `DataNode`).
+
+### 3.3 Constraints that TeaVM puts on `engine-core`
+
+TeaVM compiles bytecode to JavaScript and ships its **own subset of the Java
+class library**; its docs say reflection, resources, class loaders and JNI are
+restricted. The following are consequences for the design. Items marked
+*verify* need a short spike (milestone M0) because I have not confirmed them.
+
+- **No reflection, no class-path resources, no reflection-based libraries**
+  (Jackson, Gson, JAXB) in the core. Immutable data comes in through the
+  `DataNode` interface.
+- **JSON parsing**: a small hand-written parser in `engine-core` that builds
+  `DataNode`s, used on every platform, so JVM and browser parse identically and
+  the core has no dependency. Browsers could use `JSON.parse` via JSO for speed,
+  but only as an optimisation. *Verify* the cost of parsing 49 MB in the
+  browser (see the memory note below).
+- **XML parsing**: `javax.xml` is probably not available under TeaVM (*verify*
+  against the class-library report). Plan: a small streaming XML parser in
+  `engine-core` (the BattleScribe schema is simple: elements, attributes, text),
+  again identical everywhere. XML support can follow JSON, since the current
+  repositories are JSON.
+- **Numbers**: the data and NR use JavaScript doubles, and NR displays results
+  such as `11.666666666666666`, `2.5` and `4.6875`. Use `double` and a
+  **JavaScript-compatible number formatter** written in the core (`5` not
+  `5.0`, shortest round-trip digits), so the JVM and TeaVM builds print the
+  same text. Do not use `Double.toString` or `String.format` for output.
+- **Java class library coverage**: TeaVM implements `BigDecimal` almost fully
+  and `java.util.regex` only partly. Prefer plain collections, `String` and
+  `StringBuilder`, avoid regex in hot paths and avoid `java.time`, locale
+  behaviour and `String.format`. Run each new dependency through the
+  compatibility report before using it. *Verify* records, sealed interfaces and
+  pattern-matching `switch` under TeaVM 0.16 with Java 25 bytecode (kv2 builds
+  with both, but the spike should confirm these constructs specifically).
+- **No threads or blocking I/O** in the core. It is single-threaded and
+  synchronous; loading is the caller's job.
+- **Determinism**: iteration order must not depend on hash ordering. Use
+  insertion-ordered collections or sort explicitly, so both builds agree.
+- **Memory**: the 11e data is about 104,000 objects. Do not keep both a raw
+  `DataNode` tree and a typed model. Convert straight into the typed model
+  while parsing and drop the raw tree.
+
+### 3.4 What kv2 already gives
+
+- A tested pattern for a Java library shared by a server and a TeaVM client
+  (`rosterParser`, an interface plus implementation with a plain JUnit test).
+- A working Gradle setup, nullness checking and formatting to copy.
+- The TeaVM `jso` and `interop` libraries for the browser glue.
 
 ## 4. Architecture
 
@@ -90,26 +160,28 @@ Diagnostics, totals, profile tables
 
 Output type, roughly:
 
-```ts
-interface Entry {              // selectionEntry, group, link target...
-  id: string; name: string; type: 'unit'|'model'|'upgrade'|'mount'|'crew'|'group'|...;
-  constraints: Constraint[]; modifiers: Modifier[]; modifierGroups: ModifierGroup[];
-  costs: Cost[]; profiles: Profile[]; rules: Rule[]; infoLinks: Link[];
-  children: (Entry | Link)[]; categoryLinks: CategoryLink[]; associations: Association[];
-}
+```java
+// immutable records; sealed hierarchies for the variants
+record Entry(String id, String name, EntryType type,
+             List<Constraint> constraints, List<Modifier> modifiers,
+             List<ModifierGroup> modifierGroups, List<Cost> costs,
+             List<Profile> profiles, List<Rule> rules, List<InfoLink> infoLinks,
+             List<Child> children, List<CategoryLink> categoryLinks,
+             List<Association> associations) {}
+sealed interface Child permits Entry, EntryLink {}
 ```
 
 ### 4.2 Roster model
 
-```ts
-interface Selection {
-  id: string; entry: Entry; link?: Link;      // which entry, via which link
-  amount: number; children: Selection[]; parent?: Selection;
-  catalogue: Catalogue;                       // whose data it came from
+```java
+final class Selection {            // mutable roster node
+    final String id; final Entry entry; final @Nullable EntryLink link;
+    double amount; final List<Selection> children; @Nullable Selection parent;
+    final Catalogue catalogue;     // whose data it came from
 }
-interface Force { entry: ForceEntry; catalogue: Catalogue; categories: CategoryNode[];
-                  childForces: Force[] }
-interface Roster { forces: Force[]; costLimits: Map<CostTypeId, number>; ... }
+final class Force { ForceEntry entry; Catalogue catalogue; List<CategoryNode> categories;
+                    List<Force> childForces; }
+final class Roster { List<Force> forces; Map<String, Double> costLimits; /* ... */ }
 ```
 
 The tree shape matters for scopes: `roster > force > category node > root entry
@@ -228,7 +300,7 @@ Each ends with something that runs and is checked.
 
 | # | Milestone | Done when |
 |---|---|---|
-| M0 | Loader, ID index, link resolution | Loads `wh40k-11e` and HH3 with zero unresolved references; reports the object, link and modifier counts in section 2 |
+| M0 | Toolchain spike, loader, ID index, link resolution | Gradle skeleton builds with Java 25 and TeaVM 0.16; one test runs identically on the JVM and in Node; loads `wh40k-11e` and HH3 with zero unresolved references and reports the counts in section 2; records, sealed types and the JSON and XML parsers confirmed under TeaVM; browser parse time and memory measured |
 | M1 | Roster tree, instantiation, costs without modifiers | A unit's base cost sums correctly; a hand-made roster totals match NR |
 | M2 | Query engine, scopes, conditions, groups | Condition truth tables match the NR notes; T16 passes |
 | M3 | Modifier pipeline for plain numbers and text | T04, T05, T08, T12, T14, T09 pass |
@@ -243,7 +315,7 @@ the most judgement. M8 is the honest measure of success.
 
 ## 7. Testing strategy
 
-1. **Unit tests per rule**, generated from `tests/expected.json` (each entry has
+1. **Unit tests per rule**, run on both the JVM (JUnit) and as compiled JavaScript (Node), generated from `tests/expected.json` (each entry has
    its base value, modifiers and the value NR showed). The runner builds the
    scratch roster programmatically (UNIT A, select `APPLY`, read the profile)
    so the same files serve as engine tests. Repeat tests need models toggled to
@@ -312,15 +384,24 @@ dependency problem are where the real uncertainty sits. M0 to M4 look
 tractable as a part-time project; M5 to M8 depend on how closely NR's
 instantiation and validation have to be matched.
 
-## 10. What is needed from you
+## 10. Decisions
 
-1. **Language and platform**: TypeScript, Java/Kotlin, or something else.
-2. **Licence** for the engine.
-3. **Scope of version 1**: headless library with a command-line checker (M0 to
-   M7), or include a minimal UI.
-4. **Parity bar**: match NR where it differs from original BattleScribe (as in
+Resolved:
+
+- **Language and platform**: Java 25, with TeaVM for the browser, following
+  `kv2` (sections 3.1 to 3.4).
+
+Still needed:
+
+1. **Licence** for the engine (the licence header in kv2 is "(C) Edward Harman and contributors").
+2. **Scope of version 1**: headless library and command-line checker (M0 to M7),
+   or include a minimal browser UI through `engine-web`.
+3. **Parity bar**: match NR where it differs from original BattleScribe (as in
    this sketch), or offer both modes.
-5. **Whether to start now.** The cheapest next step is M0 plus the test
-   harness skeleton: load the two datasets, report the counts in section 2, and
-   run `tests/expected.json` against an empty evaluator so every test fails
-   for a known reason. That gives a real, measurable starting point.
+4. **Repository layout**: put the Gradle project in this repository next to
+   `docs/`, or in a new one. The sketch assumes this repository.
+5. **Whether to start now.** The cheapest next step is the M0 spike: a Gradle
+   skeleton following kv2, one pure-Java class compiled by both javac and
+   TeaVM, a loader for the JSON data, and the conformance runner executing
+   `tests/expected.json` against an empty evaluator so every test fails for a
+   known reason.
