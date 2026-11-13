@@ -90,9 +90,19 @@ class ViewDifferentialTest {
     // ---- profiles
 
     @Test
-    void everyProfileValueTheEngineHandlesMatchesTheExport() throws IOException {
-        Roster file = TestData.roster("extension-tests.roster.json");
-        RosterModel model = bind("extension-tests.roster.json");
+    void everyProfileValueMatchesTheExport() throws IOException {
+        assertEquals(140, compareProfiles("extension-tests.roster.json"));
+    }
+
+    /** The same roster after attaching leader E to bodyguard F: F's weapon gains E's keyword through {@code group}. */
+    @Test
+    void everyProfileValueMatchesTheExportWithAUnitAttached() throws IOException {
+        assertEquals(141, compareProfiles("extension-tests-attached.roster.json"));
+    }
+
+    private int compareProfiles(String rosterFile) throws IOException {
+        Roster file = TestData.roster(rosterFile);
+        RosterModel model = bind(rosterFile);
         Map<String, Map<String, Map<String, String>>> nr = new LinkedHashMap<>();
         file.forces().forEach(f -> f.selections().forEach(s -> collectProfiles(s, nr)));
         List<String> wrong = new ArrayList<>();
@@ -122,9 +132,8 @@ class ViewDifferentialTest {
             }
         }
         assertEquals("", String.join("\n", wrong));
-        // the only profile left out is the one changed by a modifier with affects (M7)
-        assertEquals(List.of("E weapon"), skipped);
-        assertEquals(139, compared);
+        assertEquals(List.of(), skipped);
+        return compared;
     }
 
     private static void collectProfiles(Roster.Selection s, Map<String, Map<String, Map<String, String>>> out) {

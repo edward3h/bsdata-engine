@@ -33,8 +33,12 @@ import org.jspecify.annotations.Nullable;
  *   <li>a constraint's own modifiers (field = its id) change its limit.
  * </ul>
  *
- * Not yet: {@code associations}, {@code traverseAssociationGroup} (M7), {@code shared: false}, and constraints on
- * forces and categories (M6). Those are reported in {@link #diagnostics()} and skipped.
+ * <p>Associations (M7): a constraint on the {@code associations} field counts nothing (observed), and one with
+ * {@code traverseAssociationGroup} counts across the attached group. A leader's association has its own limits,
+ * checked against the units attached.
+ *
+ * <p>Not yet: {@code shared: false}, and constraints on forces and categories. Those are reported in
+ * {@link #diagnostics()} and skipped.
  */
 public final class Validator {
     private final RosterModel model;
@@ -72,6 +76,7 @@ public final class Validator {
                         0,
                         parent.name() + " " + s.name() + " cannot be selected while hidden"));
             }
+            associations(s);
             available(s, s.entry().body().children(), s);
             var link = s.link();
             if (link != null) {
@@ -80,6 +85,40 @@ public final class Validator {
         }
         costLimits();
         return new ArrayList<>(out);
+    }
+
+    // ---- associations
+
+    /**
+     * A leader's association has limits of its own, checked against the units attached (observed: the interface lets
+     * the maximum be exceeded and reports it). The host is shown with its category, as New Recruit does.
+     */
+    private void associations(Selection s) {
+        for (Association a : Associations.of(s)) {
+            double count = Associations.attached(s, a).size();
+            if (count < a.min()) {
+                out.add(associationViolation(s, a, Violation.Kind.ASSOCIATION_MIN, count, a.min()));
+            }
+            if (a.max() >= 0 && count > a.max()) {
+                out.add(associationViolation(s, a, Violation.Kind.ASSOCIATION_MAX, count, a.max()));
+            }
+        }
+    }
+
+    private static Violation associationViolation(
+            Selection s, Association a, Violation.Kind kind, double count, double limit) {
+        var category = s.category();
+        String host = (category == null ? "" : category.name() + " ") + s.name();
+        double n = Math.abs(limit - count);
+        // the plural is not observed; "unit" was, with a count of 1
+        String word = a.childId().equals("any") ? "selection" : a.childId();
+        String what = word + (n == 1 ? "" : "s") + " selected";
+        String text = kind == Violation.Kind.ASSOCIATION_MIN
+                ? host + " needs " + NumberText.format(n) + " more " + what + " in " + a.name() + " ("
+                        + NumberText.format(count) + "/" + NumberText.format(limit) + ")"
+                : host + " has " + NumberText.format(n) + " " + what.replace(" selected", " too many selected") + " in "
+                        + a.name() + " (" + NumberText.format(count) + "/" + NumberText.format(limit) + ")";
+        return new Violation(s, kind, null, count, limit, text);
     }
 
     // ---- available entries and groups
@@ -184,10 +223,6 @@ public final class Validator {
     }
 
     private void check(Selection here, Constraint c, Selection attach, boolean group) {
-        if (c.traverseAssociationGroup() || c.field().equals("associations")) {
-            diagnostics.add("constraint on associations or across an attached group: not supported until M7");
-            return;
-        }
         if (!c.shared()) {
             diagnostics.add("constraint with shared false: not supported");
             return;
@@ -207,7 +242,8 @@ public final class Validator {
                     q.childId(),
                     q.includeChildSelections(),
                     q.includeChildForces(),
-                    q.percentValue());
+                    q.percentValue(),
+                    q.traverseAssociationGroup());
         }
         Double counted = evaluator.count(here, q);
         double count = counted == null ? 0 : counted;

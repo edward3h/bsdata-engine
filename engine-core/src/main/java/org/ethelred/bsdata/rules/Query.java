@@ -11,4 +11,15 @@ public record Query(
         String childId,
         boolean includeChildSelections,
         boolean includeChildForces,
-        boolean percentValue) {}
+        boolean percentValue,
+        boolean traverseAssociationGroup) {
+    public Query(
+            String field,
+            String scope,
+            String childId,
+            boolean includeChildSelections,
+            boolean includeChildForces,
+            boolean percentValue) {
+        this(field, scope, childId, includeChildSelections, includeChildForces, percentValue, false);
+    }
+}

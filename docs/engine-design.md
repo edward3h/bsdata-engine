@@ -324,7 +324,7 @@ Each ends with something that runs and is checked.
 | M4 | Number tokens inside dice and compound values, `position` | The 27 observations M3 reported as needing tokens pass, and 248 odd-value profiles match NR; the worked-example replica gives `D6+2` (done, section 19) |
 | M5 | Constraints and validation | Validator messages match NR for the synthetic `M5 Constraints` catalogue (min, max, exactly, percent, hidden, scopes, modified limits, cost fields, groups, roster cost limits). The G1 to G3 cost rules were done in M2/M3; leader/bodyguard messages moved to M7 with associations (done, section 20) |
 | M6 | Automatic instantiation (child forces, force and category constraints, and more modifier fields stay open) | The instantiator matches what NR adds for the synthetic `M5 Constraints` and `M6 Instantiate` catalogues; every unit of the generated scale dataset can be added, instantiated and validated without errors (done, section 21) |
-| M7 | Associations, `affects` with `group`, `traverseAssociationGroup` | E, F, G4 results match |
+| M7 | Associations, `affects` (profiles) including `group`, `traverseAssociationGroup` | The synthetic `M7 Associations` observations match, and the E/F/G4 exported rosters match with and without the attachment: all 141 profile values (done, section 22) |
 | M8 | Differential testing against NR | A corpus of rosters exported from NR for the synthetic systems shows the same totals, values and validation as NR. Real data can be checked locally by anyone who holds it, outside the repository and CI |
 | M9 | Roster file format: read and write | A roster exported from NR loads, evaluates to the same totals, and writes back so that NR opens it; the format is documented in the spec |
 
@@ -939,3 +939,35 @@ minimums are untested; so is a group's own scope other than `self`. The exported
 M9 do not need instantiation, since they list their selections.
 
 **Memory.** Unchanged (memory check passes).
+
+## 22. M7: associations, `affects`, `traverseAssociationGroup`
+
+Done on branch `associations-m7`. Scope agreed with the user: the core of associations plus a New Recruit sweep,
+with association limits reported as counts (the observed wording is used, since it came free).
+
+The model: `Attachment` (leader, target, association id) is held on both selections (`Selection.outgoing`,
+`incoming`) and `RosterModel.group(s)` is the connected set of attached selections, the selection first and the rest in
+tree order. `RosterBinder` reads attachments from the exported roster. `Association` parses a definition from an
+entry or link; `Associations` lists the units offered, lists those attached and attaches (without enforcing `max`,
+which New Recruit does not either).
+
+`affects`: `Affects` parses the path and says which selections it reaches; `View` collects, for each selection, the
+modifiers on other selections that reach it, and applies them after the profile's own modifiers, evaluating their
+conditions at the holder. Only the `profiles` target is applied; `entries`, `forces`, `rules` and `associations` targets
+are reported as diagnostics. The word table is odd but was read from New Recruit and the tests pin it (spec 5.8).
+
+`traverseAssociationGroup`: `Query` has a flag; `Evaluator` resolves the scope from each unit in the group, keeps each
+node once and sums the counts. The `associations` field counts nothing, as observed.
+
+`Validator` checks each leader's association minimum and maximum (`ASSOCIATION_MIN`, `ASSOCIATION_MAX`).
+
+**Tests.** `AssociationTest` (the `affects` table, symmetry, three leaders on one bodyguard, `traverse` at several
+scopes, limits and messages, offered units). `ViewDifferentialTest` now also compares every profile of the attached E/F
+roster, where F's weapon gains E's keyword.
+
+**Open.** `ids`, `of` and `labelMember` on associations; association scopes other than `force`; `affects` with an id
+filter together with `group`; plural wording of the limit messages ("units"); a leader attached to several units;
+whether the modifier order within a group follows attach order or tree order (they agreed in the sweep).
+
+**Memory.** Unchanged (memory check passes).
+

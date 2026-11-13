@@ -72,6 +72,58 @@ public final class RosterModel implements TreeNode {
         return forces();
     }
 
+    /** Records a leader attached to a unit. Whether the association allows it is for the caller to check. */
+    public Attachment attach(Selection leader, Selection target, String associationId) {
+        Attachment a = new Attachment(leader, target, associationId);
+        leader.addAttachment(a);
+        modCount++;
+        return a;
+    }
+
+    public void detach(Attachment a) {
+        a.leader().removeAttachment(a);
+        modCount++;
+    }
+
+    /**
+     * The selections joined to {@code s} by attachments, directly or through others: {@code s} first, then the rest
+     * in tree order (observed in New Recruit, which applied a unit's own modifiers first and then the others').
+     */
+    public List<Selection> group(Selection s) {
+        java.util.Set<Selection> seen = java.util.Collections.newSetFromMap(new java.util.IdentityHashMap<>());
+        List<Selection> stack = new ArrayList<>(List.of(s));
+        seen.add(s);
+        while (!stack.isEmpty()) {
+            Selection x = stack.remove(stack.size() - 1);
+            List<Attachment> links = new ArrayList<>(x.outgoing());
+            links.addAll(x.incoming());
+            for (Attachment a : links) {
+                Selection other = a.leader() == x ? a.target() : a.leader();
+                if (seen.add(other)) {
+                    stack.add(other);
+                }
+            }
+        }
+        List<Selection> out = new ArrayList<>();
+        out.add(s);
+        for (Selection x : selections()) {
+            if (x != s && seen.contains(x)) {
+                out.add(x);
+            }
+        }
+        return out;
+    }
+
+    /** The selection with this id, or null. */
+    public @Nullable Selection find(String id) {
+        for (Selection s : selections()) {
+            if (s.id().equals(id)) {
+                return s;
+            }
+        }
+        return null;
+    }
+
     /** The limit set for a cost type id, or -1 for none. */
     public double costLimit(String typeId) {
         return costLimits.getOrDefault(typeId, -1.0);
