@@ -116,7 +116,8 @@ restricted. The following are consequences for the design. Items marked
   insertion-ordered collections or sort explicitly, so both builds agree.
 - **Memory**: the 11e data is about 104,000 objects. Do not keep both a raw
   `DataNode` tree and a typed model. Convert straight into the typed model
-  while parsing and drop the raw tree.
+  while parsing and drop the raw tree. M1 does not do this yet (it measured about
+  930 MB peak for `wh40k-11e` in Node); the memory pass is milestone M1b.
 
 ### 3.4 What kv2 already gives
 
@@ -311,7 +312,8 @@ Each ends with something that runs and is checked.
 | # | Milestone | Done when |
 |---|---|---|
 | M0 | Toolchain spike, loader, ID index, link resolution | Gradle skeleton builds with Java 25 and TeaVM 0.16; one test runs identically on the JVM and in Node; loads `wh40k-11e` and HH3 with zero unresolved references and reports the counts in section 2; records, sealed types and the JSON library confirmed under TeaVM; browser parse time and memory measured |
-| M1 | Roster tree, instantiation, costs without modifiers | A unit's base cost sums correctly; a hand-made roster totals match NR |
+| M1 | Typed game data, roster tree with explicit selections, costs without modifiers | A unit's base cost sums correctly; hand-made and exported rosters total as NR does (done, section 13). Automatic instantiation is left to M5 |
+| M1b | **Memory pass** on the loader and typed model | `wh40k-11e` loads in a browser tab within the agreed budget (proposed: 300 MB peak, against about 930 MB in Node now), measured in a real browser and in Node; HH3 well inside it; reports unchanged (byte-identical JVM and JavaScript output, same counts); a regression check records the peak so later milestones cannot quietly undo it |
 | M2 | Query engine, scopes, conditions, groups | Condition truth tables match the NR notes; T16 passes |
 | M3 | Modifier pipeline for plain numbers and text | T04, T05, T08, T12, T14, T09 pass |
 | M4 | Number tokens, `position`, clamps, repeats, `cumulative-*` | All of F01 to F12 in `expected.json` pass except the fractional F08a (informational); Wulfen replica gives `D6+2` |
@@ -324,6 +326,12 @@ Each ends with something that runs and is checked.
 M0 to M4 are mostly mechanical and fully specified by the tests. M5 to M7 need
 the most judgement. M8 is the honest measure of success. M9 depends on M6, since
 a roster refers to catalogue entries by id, and on documenting the format first.
+
+M1b is a planned step, not optional, and comes before M2: typing conditions and
+modifiers (M2, M3) replaces the raw nodes with more objects, so memory only gets
+worse, and the loader's shape is easiest to change now. It is also a precondition for
+any browser UI. The memory budget is a proposal to settle before starting it. See
+section 13 for the measurements and the changes it should make.
 
 ## 7. Testing strategy
 
@@ -486,9 +494,9 @@ Findings:
   defined elsewhere, and a condition `childId` that is another catalogue's root id
   (6,112 in HH3). So `Linker` applies the scoped lookup to `targetId` only, and for
   every other field any definition anywhere counts as resolved.
-- **Cost on a 5 MB file:** Node loads and parses all 46 `wh40k-11e` files in
-  about 1.4 s and links them in about 0.2 s; HH3 takes 0.7 s and 0.1 s. Peak
-  memory for the whole-repository runs has not been measured yet.
+- **Time:** Node loads and parses all 46 `wh40k-11e` files in about 1.4 s and links
+  them in about 0.2 s; HH3 takes 0.7 s and 0.1 s. Peak memory for the
+  whole-repository runs is in section 13 (about 930 MB for 11e).
 
 Scoped resolution is implemented (`Repository`, `Linker`), with unit tests that mirror
 tests D1a to D1g. On both full repositories it reports 0 out-of-scope `targetId`s,
@@ -525,3 +533,67 @@ Findings that affect the engine:
 Not yet done: the engine side of reading (resolving each selection's `entryId`
 against a `Repository`, which needs the typed model of M1), writing rosters from
 scratch, and checking that NR opens a written file.
+
+## 13. M1: typed model, roster tree, base costs
+
+Done on branch `typed-model`. Decisions: explicit selections only (what NR adds
+automatically when a unit is added waits for M5, because `min` constraints can be
+modified); the typed model is incremental (structure, links, categories, profiles,
+costs and forces are typed; constraints, modifiers, modifier groups and
+associations are kept as raw nodes in `Raw` until M2 and M3 type them); tests use
+synthetic copies of the Extension Tests data, with the real repositories loaded
+from a local path by the command-line checker.
+
+**Code.** `model` (immutable records: `Catalogue`, `Entry`, `Link`, `Body`, `Parts`,
+`GameData` with scoped lookup and `::` path resolution) and `roster` (`RosterModel`,
+`ForceNode`, `Selection`, and `RosterBinder`, which attaches an exported roster file
+to the data).
+
+**Cost rules observed in NR** (M1 Costs test data, `nr-extension-tests/RESULTS.md`):
+
+- An entry link's own cost **replaces** its target's cost of the same cost type
+  (Hero: target 30 pts, link 5 pts, shown 5). Cost types the link does not mention
+  come from the target (Shared unit: link 3 pts, target 20 pts and 2 Enh, shown 3 pts
+  and 2 Enh). This corrects the earlier assumption that "a link and its target both
+  contribute".
+- A selection's cost is its effective cost times its **total number**; a child's
+  amount is per parent, so totals multiply down the tree (Gun 2 under Trooper 3 is 6
+  guns, 12 pts).
+- The roster total is the plain sum of the selections' own costs.
+
+**Results.**
+
+| Check | Result |
+|---|---|
+| Exported M1 Costs roster binds | no problems; every selection's own cost equals the exported cost |
+| Roster total | 50 pts and 2 Enh, as NR |
+| Hand-built roster (explicit adds) | 42 pts at the point NR showed 42 |
+| `entryId` paths in the two larger exports | all resolve (no problems) |
+| Real repositories loaded into the typed model | `wh40k-11e`: 12,035 entries, 4,278 groups, 17,869 links, **0 unresolved**; HH3: 2,912 entries, 1,429 groups, 8,568 links, **0 unresolved** |
+| JVM and compiled-JavaScript reports | byte-identical on both repositories |
+
+**Memory (a concern).** The whole `wh40k-11e` repository peaks at about 930 MB RSS in
+Node and 590 MB on the JVM; HH3 about 430 MB and 330 MB. That is with the parsed
+JSON trees still held (for `Raw` and for the id sets in `Repository`). A browser tab
+will not take 930 MB, so the loader needs a memory pass (milestone M1b, planned
+next, before M2 and before any UI): drop the
+tree after typing, intern repeated strings (type ids, names), keep `Raw` as compact
+nodes, and build `Repository` id sets from the typed model instead of a second tree
+walk.
+
+**The memory pass (M1b) should include**, in order of expected effect:
+
+1. Parse straight into the typed model and release the `DataNode` tree (the
+   largest single cost, since both trees are held now).
+2. Keep `Raw` as compact node trees, or a lazily parsed string, until M2 and M3
+   type them.
+3. Intern repeated strings (cost and profile type ids, entry names, type names).
+4. Build `Repository`'s id sets from the typed model instead of a second walk of
+   the tree, and use primitive-friendly or sorted-array maps where `HashMap` is
+   heavy.
+5. Measure in a browser tab (heap snapshot), not only RSS in Node, and fix the
+   budget before starting.
+
+**Not done:** automatic instantiation (M5); categories as explicit roster nodes
+(needed for `primary-category`, M2); writing a `RosterModel` back to a roster file;
+profile and rule evaluation.

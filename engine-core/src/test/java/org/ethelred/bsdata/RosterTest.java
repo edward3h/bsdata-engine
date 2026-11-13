@@ -59,13 +59,14 @@ class RosterTest {
 
     @Test
     void theRosterCostIsTheSumOfTheSelectionCosts() throws IOException {
-        Roster r = Roster.read(JSON.parse(resource("extension-tests.roster.json")));
+        // each selection's cost is already its total (cost times its total number), so the sum is plain
+        Roster r = Roster.read(JSON.parse(resource("m1-costs.roster.json")));
         Map<String, Double> sums = new LinkedHashMap<>();
         r.forces().forEach(f -> f.selections().forEach(s -> addCosts(s, sums)));
         Map<String, Double> expected = new LinkedHashMap<>();
         r.costs().forEach(c -> expected.put(c.name(), c.value()));
         assertEquals(expected, sums);
-        assertEquals(Map.of("pts", 1200.0, "Enh", 2.0), sums);
+        assertEquals(Map.of("pts", 50.0, "Enh", 2.0), sums);
     }
 
     @Test
@@ -105,7 +106,7 @@ class RosterTest {
     }
 
     private static void addCosts(Roster.Selection s, Map<String, Double> sums) {
-        s.costs().forEach(c -> sums.merge(c.name(), c.value() * s.number(), Double::sum));
+        s.costs().forEach(c -> sums.merge(c.name(), c.value(), Double::sum));
         s.selections().forEach(child -> addCosts(child, sums));
     }
 }
