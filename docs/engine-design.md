@@ -739,7 +739,7 @@ that survives):
   `GameData`; they live in `LoadStrategies`, used by the benchmarks and `LoadersAgreeTest`.
 - `Raw` now holds four JSON strings with accessors that parse on demand. M2 and M3 will type
   these parts; until then nothing reads them.
-- `Pool` shares equal strings of up to 64 characters (not rule text or characteristic values).
+- `Pool` shares equal strings of up to 64 characters: ids, names, type ids and short characteristic values (most are one to three characters, so they repeat constantly). Rule descriptions are not shared.
 - The TeaVM entry point works in a browser (synchronous HTTP reads in place of the file
   system, `console.log` for output), and `load:<directory or URL>:<strategy>` loads and
   reports. The command line has `load <dir> [tree|file|stream]` for the JVM.

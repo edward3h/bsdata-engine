@@ -33,7 +33,7 @@ final class Reader {
         return fields.get(key) instanceof DataNode.Str s ? pool.intern(s.value()) : null;
     }
 
-    /** A string that is not shared: for long text, such as rule descriptions and characteristic values. */
+    /** A string that is not shared: for long text, such as rule descriptions. */
     String text(String key) {
         return fields.get(key) instanceof DataNode.Str s ? s.value() : "";
     }

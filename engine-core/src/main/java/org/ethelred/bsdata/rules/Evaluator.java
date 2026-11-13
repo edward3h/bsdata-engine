@@ -1,0 +1,364 @@
+/* (C) Edward Harman and contributors 2026 */
+package org.ethelred.bsdata.rules;
+
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
+import org.ethelred.bsdata.roster.ForceNode;
+import org.ethelred.bsdata.roster.RosterModel;
+import org.ethelred.bsdata.roster.Selection;
+import org.ethelred.bsdata.roster.TreeNode;
+import org.jspecify.annotations.Nullable;
+
+/**
+ * Evaluates queries and conditions against a roster tree. Behaviour follows the spec (sections 5.9, 5.12 and 6.1);
+ * where the spec records an observation that looks like a bug in New Recruit (the ordinary form of {@code before}, and
+ * an unset {@code min} on a count group acting like 1) that behaviour is reproduced, as the project decided
+ * ("compat mode"). Anything not supported is recorded in {@link #diagnostics()} and treated as disabled.
+ *
+ * <p>Costs come from {@link CostSource}. M2 uses base costs; the modifier pipeline of M3 supplies evaluated ones.
+ */
+public final class Evaluator {
+    /** The outcome of a condition. {@code DISABLED}: its scope resolved to nothing, so it is neither true nor false. */
+    public enum Result {
+        TRUE,
+        FALSE,
+        DISABLED
+    }
+
+    /** The cost of a selection (its own, not its children's) as it should be seen by a query. */
+    public interface CostSource {
+        double cost(Selection selection, String costTypeId);
+    }
+
+    private final RosterModel model;
+    private final CostSource costs;
+    private final Set<String> diagnostics = new LinkedHashSet<>();
+
+    public Evaluator(RosterModel model) {
+        this(model, (s, type) -> s.costs().getOrDefault(type, 0.0));
+    }
+
+    public Evaluator(RosterModel model, CostSource costs) {
+        this.model = model;
+        this.costs = costs;
+    }
+
+    /** What could not be evaluated so far, each once, in the order met. */
+    public List<String> diagnostics() {
+        return new ArrayList<>(diagnostics);
+    }
+
+    // ---- queries
+
+    /**
+     * The value of a query seen from {@code here}, or null if its scope resolves to nothing (the condition is then
+     * disabled) or the query is not supported.
+     */
+    public @Nullable Double count(TreeNode here, Query q) {
+        List<String> unsupported = new ArrayList<>();
+        Scopes.Found found = Scopes.resolve(here, q.scope(), model, unsupported);
+        diagnostics.addAll(unsupported);
+        if (found == null) {
+            return null;
+        }
+        Double raw = countFrom(found, q.field(), q.childId(), q);
+        if (raw == null || !q.percentValue()) {
+            return raw;
+        }
+        Double all = countFrom(found, q.field(), "any", q);
+        return all == null || all == 0 ? Double.valueOf(0) : Double.valueOf(raw / all);
+    }
+
+    private @Nullable Double countFrom(Scopes.Found found, String field, String childId, Query q) {
+        if (field.startsWith("limit::")) {
+            if (found.nodes().get(0) instanceof RosterModel) {
+                return model.costLimit(field.substring("limit::".length()));
+            }
+            diagnostics.add("limit queries are only valid at roster scope");
+            return null;
+        }
+        if (field.equals("associations")) {
+            diagnostics.add("field associations: not supported until M7");
+            return null;
+        }
+        List<TreeNode> candidates = candidates(
+                found, field.equals("selections") || field.equals("forces") ? q.includeChildSelections() : true);
+        if (field.equals("forces")) {
+            double n = 0;
+            for (TreeNode c : candidates) {
+                if (c instanceof ForceNode f && matches(f, childId)) {
+                    n++;
+                }
+            }
+            return n;
+        }
+        double sum = 0;
+        for (TreeNode c : candidates) {
+            if (c instanceof Selection s && matches(s, childId)) {
+                sum += field.equals("selections") ? s.total() : costs.cost(s, field);
+            }
+        }
+        return sum;
+    }
+
+    /** What a scope node counts: what is below it (all depths, or only the next level), plus it if {@code -self}. */
+    private static List<TreeNode> candidates(Scopes.Found found, boolean deep) {
+        List<TreeNode> out = new ArrayList<>();
+        if (found.chain()) {
+            out.addAll(found.nodes());
+            return out;
+        }
+        TreeNode node = found.nodes().get(0);
+        if (found.includeSelf()) {
+            out.add(node);
+        }
+        collect(node, deep, out);
+        return out;
+    }
+
+    private static void collect(TreeNode node, boolean deep, List<TreeNode> out) {
+        for (TreeNode child : node.down()) {
+            // categories are structure, not things to count: look through them to the selections
+            if (child instanceof org.ethelred.bsdata.roster.CategoryNode) {
+                collect(child, deep, out);
+                continue;
+            }
+            out.add(child);
+            if (deep) {
+                collect(child, true, out);
+            }
+        }
+    }
+
+    private static boolean matches(Selection s, String childId) {
+        return switch (childId) {
+            case "any" -> true;
+            case "unit", "model", "upgrade", "mount", "crew" -> s.type().equals(childId);
+            default -> s.is(childId);
+        };
+    }
+
+    private static boolean matches(ForceNode f, String childId) {
+        return childId.equals("any")
+                || f.entry().id().equals(childId)
+                || f.catalogue().id().equals(childId);
+    }
+
+    // ---- conditions
+
+    /** All of the owner's conditions, groups and local groups must hold. Disabled members are skipped. */
+    public Result eval(TreeNode here, Conditions cs) {
+        List<Result> results = new ArrayList<>();
+        cs.conditions().forEach(c -> results.add(eval(here, c)));
+        cs.groups().forEach(g -> results.add(eval(here, g)));
+        cs.localGroups().forEach(g -> results.add(eval(here, g)));
+        return all(results);
+    }
+
+    private static Result all(List<Result> results) {
+        boolean any = false;
+        for (Result r : results) {
+            if (r == Result.FALSE) {
+                return Result.FALSE;
+            }
+            any |= r == Result.TRUE;
+        }
+        return results.isEmpty() || any ? Result.TRUE : Result.DISABLED;
+    }
+
+    public Result eval(TreeNode here, Condition c) {
+        return eval(here, here, c);
+    }
+
+    /**
+     * @param outerHere the node the whole condition sits on; only {@code before} inside a local group uses it
+     */
+    private Result eval(TreeNode here, TreeNode outerHere, Condition c) {
+        switch (c.type()) {
+            case "always":
+                return Result.TRUE;
+            case "never":
+                return Result.FALSE;
+            case "instanceOf":
+            case "notInstanceOf":
+                return instanceOf(here, c);
+            case "before":
+                return before(here, outerHere, c);
+            default:
+                break;
+        }
+        Double count = count(here, Conditions.query(c));
+        if (count == null) {
+            return Result.DISABLED;
+        }
+        Boolean ok = compare(c.type(), count, c.value());
+        if (ok == null) {
+            diagnostics.add("condition type " + c.type() + ": not supported");
+            return Result.DISABLED;
+        }
+        // kept from BattleScribe: atLeast at scope self with a count of 0 is false even for a value of 0
+        if (c.type().equals("atLeast") && c.scope().equals("self") && count == 0) {
+            return Result.FALSE;
+        }
+        return ok ? Result.TRUE : Result.FALSE;
+    }
+
+    private static @Nullable Boolean compare(String type, double count, double value) {
+        return switch (type) {
+            case "atLeast" -> count >= value;
+            case "atMost" -> count <= value;
+            case "lessThan" -> count < value;
+            case "greaterThan" -> count > value;
+            case "equalTo" -> count == value;
+            case "notEqualTo" -> count != value;
+            default -> null;
+        };
+    }
+
+    private Result instanceOf(TreeNode here, Condition c) {
+        List<String> unsupported = new ArrayList<>();
+        Scopes.Found found = Scopes.resolve(here, c.scope(), model, unsupported);
+        diagnostics.addAll(unsupported);
+        if (found == null) {
+            return Result.DISABLED;
+        }
+        boolean is = false;
+        for (TreeNode n : found.nodes()) {
+            is |= n instanceof Selection s && matches(s, c.childId())
+                    || n instanceof ForceNode f && matches(f, c.childId());
+        }
+        return is == c.type().equals("instanceOf") ? Result.TRUE : Result.FALSE;
+    }
+
+    /**
+     * {@code before}. Inside a local group, where the data uses it, the candidate (here) must come earlier in the tree
+     * than the node the condition sits on, and match the {@code childId}. As an ordinary condition New Recruit was
+     * observed to treat it as "exists": true whenever something matching is in scope, including the node itself and
+     * nodes after it. That contradicts its own notes and is probably unintended, but it is what the engine reproduces.
+     */
+    private Result before(TreeNode here, TreeNode outerHere, Condition c) {
+        if (here != outerHere) {
+            if (here instanceof Selection cand && outerHere instanceof Selection outer) {
+                boolean earlier = model.order(cand) < model.order(outer);
+                return earlier && matches(cand, c.childId()) ? Result.TRUE : Result.FALSE;
+            }
+            return Result.FALSE;
+        }
+        Double count = count(here, Conditions.query(c));
+        if (count == null) {
+            return Result.DISABLED;
+        }
+        return count > 0 ? Result.TRUE : Result.FALSE;
+    }
+
+    public Result eval(TreeNode here, ConditionGroup g) {
+        return eval(here, here, g);
+    }
+
+    private Result eval(TreeNode here, TreeNode outerHere, ConditionGroup g) {
+        List<Result> members = new ArrayList<>();
+        g.conditions().forEach(c -> members.add(eval(here, outerHere, c)));
+        g.groups().forEach(sub -> members.add(eval(here, outerHere, sub)));
+        g.localGroups().forEach(l -> members.add(eval(here, l)));
+        int trues = 0;
+        boolean anyEnabled = false;
+        for (Result r : members) {
+            trues += r == Result.TRUE ? 1 : 0;
+            anyEnabled |= r != Result.DISABLED;
+        }
+        if (!members.isEmpty() && !anyEnabled) {
+            return Result.DISABLED;
+        }
+        boolean ok;
+        switch (g.type()) {
+            case "and":
+                ok = trues == enabled(members);
+                break;
+            case "or":
+                ok = members.isEmpty() || trues > 0;
+                break;
+            case "not":
+                ok = trues == 0;
+                break;
+            case "count":
+                // min and max are inclusive; an unset min acts like 1 (observed in New Recruit)
+                Double lo = g.min();
+                Double hi = g.max();
+                double min = lo == null ? 1 : lo;
+                double max = hi == null ? Double.POSITIVE_INFINITY : hi;
+                ok = trues >= min && trues <= max;
+                break;
+            default:
+                diagnostics.add("condition group type " + g.type() + ": not supported");
+                return Result.DISABLED;
+        }
+        return ok ? Result.TRUE : Result.FALSE;
+    }
+
+    private static int enabled(List<Result> members) {
+        int n = 0;
+        for (Result r : members) {
+            n += r == Result.DISABLED ? 0 : 1;
+        }
+        return n;
+    }
+
+    /**
+     * Counts the selections in the scope for which every inner condition holds (each acting as "self"), then compares
+     * that count with the group's value.
+     */
+    public Result eval(TreeNode here, LocalGroup g) {
+        List<String> unsupported = new ArrayList<>();
+        Scopes.Found found = Scopes.resolve(here, g.scope(), model, unsupported);
+        diagnostics.addAll(unsupported);
+        if (found == null) {
+            return Result.DISABLED;
+        }
+        if (!g.field().equals("selections")) {
+            diagnostics.add("local group field " + g.field() + ": not supported");
+            return Result.DISABLED;
+        }
+        double count = 0;
+        for (TreeNode cand : candidates(found, g.includeChildSelections())) {
+            if (!(cand instanceof Selection s)) {
+                continue;
+            }
+            boolean all = true;
+            for (Condition c : g.conditions()) {
+                all &= eval(s, here, c) == Result.TRUE;
+            }
+            for (ConditionGroup sub : g.groups()) {
+                all &= eval(s, here, sub) == Result.TRUE;
+            }
+            if (all) {
+                count += s.total();
+            }
+        }
+        Boolean ok = compare(g.type(), count, g.value());
+        if (ok == null) {
+            diagnostics.add("local group type " + g.type() + ": not supported");
+            return Result.DISABLED;
+        }
+        return ok ? Result.TRUE : Result.FALSE;
+    }
+
+    // ---- repeats
+
+    /**
+     * How many times a repeat says a modifier applies: the count divided by its value, rounded down (up if
+     * {@code roundUp}), times {@code repeats}. Null if the query's scope resolves to nothing.
+     */
+    public @Nullable Double times(TreeNode here, Repeat r) {
+        Double count = count(here, r.query());
+        if (count == null) {
+            return null;
+        }
+        if (r.value() == 0) {
+            return 0.0;
+        }
+        double ratio = count / r.value();
+        return (r.roundUp() ? Math.ceil(ratio) : Math.floor(ratio)) * r.repeats();
+    }
+}

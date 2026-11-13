@@ -15,11 +15,14 @@ import org.ethelred.bsdata.model.Parts.ForceEntry;
 import org.jspecify.annotations.Nullable;
 
 /** The mutable roster tree: forces holding selections. M1 builds it from explicit choices and sums base costs. */
-public final class RosterModel {
+public final class RosterModel implements TreeNode {
     private final GameData data;
     private final String name;
     private final List<ForceNode> forces = new ArrayList<>();
     private int nextId = 1;
+    private int modCount;
+    private @Nullable Map<Selection, Integer> order;
+    private final Map<String, Double> costLimits = new LinkedHashMap<>();
 
     public RosterModel(GameData data, String name) {
         this.data = data;
@@ -42,10 +45,55 @@ public final class RosterModel {
         return addForce("f" + nextId++, entry, catalogue);
     }
 
+    /** Adds a force with a category node for each category link of its force entry. */
     public ForceNode addForce(String id, ForceEntry entry, Catalogue catalogue) {
+        ForceNode f = addBareForce(id, entry, catalogue);
+        for (var link : entry.categoryLinks()) {
+            f.addCategory("c" + nextId++, link.targetId(), link.name(), link.primary());
+        }
+        return f;
+    }
+
+    /** Adds a force with no category nodes; the caller adds them (for example from a roster file). */
+    public ForceNode addBareForce(String id, ForceEntry entry, Catalogue catalogue) {
         ForceNode f = new ForceNode(this, id, entry, catalogue);
         forces.add(f);
+        modCount++;
         return f;
+    }
+
+    @Override
+    public @Nullable TreeNode up() {
+        return null;
+    }
+
+    @Override
+    public List<ForceNode> down() {
+        return forces();
+    }
+
+    /** The limit set for a cost type id, or -1 for none. */
+    public double costLimit(String typeId) {
+        return costLimits.getOrDefault(typeId, -1.0);
+    }
+
+    public void setCostLimit(String typeId, double limit) {
+        costLimits.put(typeId, limit);
+    }
+
+    /** Position of a selection in tree order (parents before children, by force and category); -1 if absent. */
+    public int order(Selection s) {
+        Map<Selection, Integer> o = order;
+        if (o == null || o.size() != selections().size()) {
+            o = new java.util.IdentityHashMap<>();
+            int i = 0;
+            for (Selection x : selections()) {
+                o.put(x, i++);
+            }
+            order = o;
+        }
+        Integer i = o.get(s);
+        return i == null ? -1 : i;
     }
 
     /** All selections, parents before children. */
@@ -105,12 +153,17 @@ public final class RosterModel {
         return attach(new Selection(this, id, r.entry(), r.link(), r.file(), parent, amount), parent, force);
     }
 
-    private static Selection attach(Selection s, @Nullable Selection parent, @Nullable ForceNode force) {
+    private Selection attach(Selection s, @Nullable Selection parent, @Nullable ForceNode force) {
         if (parent != null) {
             parent.attach(s);
         } else if (force != null) {
-            force.attach(s);
+            String categoryId = s.primaryCategoryId();
+            CategoryNode category = categoryId == null ? null : force.category(categoryId);
+            s.placeIn(force, category);
+            force.attach(s, category);
         }
+        order = null;
+        modCount++;
         return s;
     }
 }

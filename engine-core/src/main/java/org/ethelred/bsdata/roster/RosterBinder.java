@@ -31,7 +31,11 @@ public final class RosterBinder {
                 problems.add("force " + f.name() + ": force entry " + f.entryId() + " not found");
                 continue;
             }
-            ForceNode force = model.addForce(f.id(), entry, catalogue);
+            ForceNode force = model.addBareForce(f.id(), entry, catalogue);
+            // the categories are those the file lists, with the node ids it gave them
+            for (Roster.Category c : f.categories()) {
+                force.addCategory(c.id(), c.entryId(), c.name(), c.primary());
+            }
             for (Roster.Selection s : f.selections()) {
                 bindSelection(data, model, catalogue.file(), s, null, force, problems);
             }

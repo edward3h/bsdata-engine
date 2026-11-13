@@ -10,6 +10,7 @@ import org.ethelred.bsdata.model.Child;
 import org.ethelred.bsdata.model.Entry;
 import org.ethelred.bsdata.model.GameData;
 import org.ethelred.bsdata.model.Link;
+import org.ethelred.bsdata.model.Parts.CategoryLink;
 import org.ethelred.bsdata.model.Parts.Cost;
 import org.jspecify.annotations.Nullable;
 
@@ -17,7 +18,7 @@ import org.jspecify.annotations.Nullable;
  * A node of the roster tree: an entry chosen with an amount. The amount is per parent, so the total number of a
  * selection is its amount times the totals of its ancestors (a Gun amount 2 under a Trooper amount 3 is 6 guns).
  */
-public final class Selection {
+public final class Selection implements TreeNode {
     private final RosterModel model;
     private final String id;
     private final Entry entry;
@@ -26,6 +27,9 @@ public final class Selection {
     private final @Nullable Selection parent;
     private double amount;
     private final List<Selection> children = new ArrayList<>();
+    private @Nullable ForceNode force;
+    private @Nullable CategoryNode category;
+    private @Nullable List<String> groupIds;
 
     Selection(
             RosterModel model,
@@ -99,6 +103,135 @@ public final class Selection {
 
     void attach(Selection child) {
         children.add(child);
+    }
+
+    /** Places a top-level selection in a force, and in a category if it has one. */
+    void placeIn(ForceNode force, @Nullable CategoryNode category) {
+        this.force = force;
+        this.category = category;
+    }
+
+    @Override
+    public TreeNode up() {
+        if (parent != null) {
+            return parent;
+        }
+        CategoryNode c = category;
+        if (c != null) {
+            return c;
+        }
+        ForceNode f = force;
+        return f != null ? f : model;
+    }
+
+    @Override
+    public List<Selection> down() {
+        return children();
+    }
+
+    /** The category node this top-level selection sits in, or null (deeper selections, or no matching category). */
+    public @Nullable CategoryNode category() {
+        return category;
+    }
+
+    /** The force this selection is in. */
+    public @Nullable ForceNode force() {
+        Selection s = this;
+        while (s.parent != null) {
+            s = s.parent;
+        }
+        return s.force;
+    }
+
+    /** The top-level selection above this one, or this one: the unit as it was added to the force. */
+    public Selection rootEntry() {
+        Selection s = this;
+        while (s.parent != null) {
+            s = s.parent;
+        }
+        return s;
+    }
+
+    /** The entry's type ({@code unit}, {@code model}, {@code upgrade}), or an empty string for a group. */
+    public String type() {
+        String t = entry.type();
+        return t == null ? "" : t;
+    }
+
+    /** The id of the category this selection belongs to by its own primary category link, or null. */
+    public @Nullable String primaryCategoryId() {
+        if (link != null) {
+            for (CategoryLink c : link.body().categoryLinks()) {
+                if (c.primary()) {
+                    return c.targetId();
+                }
+            }
+        }
+        for (CategoryLink c : entry.body().categoryLinks()) {
+            if (c.primary()) {
+                return c.targetId();
+            }
+        }
+        return null;
+    }
+
+    /** Ids of the groups this selection's entry sits in, inside its parent's entry (nearest first). */
+    public List<String> groupIds() {
+        List<String> cached = groupIds;
+        if (cached != null) {
+            return cached;
+        }
+        List<String> out = new ArrayList<>();
+        if (parent != null) {
+            findGroups(parent.entry.body().children(), out);
+            if (parent.link != null) {
+                findGroups(parent.link.body().children(), out);
+            }
+        }
+        groupIds = out;
+        return out;
+    }
+
+    /** Looks for this selection's entry below {@code children}, adding the ids of groups on the way (innermost first). */
+    private boolean findGroups(List<Child> children, List<String> out) {
+        for (Child c : children) {
+            if (c == entry) {
+                return true;
+            }
+            if (c instanceof Entry e && findGroups(e.body().children(), out)) {
+                if (e.group()) {
+                    out.add(e.id());
+                }
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Whether this selection counts as the entry, link, category or group with this id: its own entry id, the id of the
+     * link it was reached through, any category it is linked to, or a group it sits in.
+     */
+    public boolean is(String id) {
+        if (entry.id().equals(id) || link != null && link.id().equals(id)) {
+            return true;
+        }
+        if (link != null && link.targetId().equals(id)) {
+            return true;
+        }
+        for (CategoryLink c : entry.body().categoryLinks()) {
+            if (c.targetId().equals(id)) {
+                return true;
+            }
+        }
+        if (link != null) {
+            for (CategoryLink c : link.body().categoryLinks()) {
+                if (c.targetId().equals(id)) {
+                    return true;
+                }
+            }
+        }
+        return groupIds().contains(id);
     }
 
     /**

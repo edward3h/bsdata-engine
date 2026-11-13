@@ -184,7 +184,8 @@ final class Parse {
                 r.bool("hidden"),
                 r.objs("characteristics").stream()
                         .map(c -> new Characteristic(c.str("name"), c.str("typeId"), c.str("$text")))
-                        .toList());
+                        .toList(),
+                raw(r));
     }
 
     private static Rule rule(Reader r) {
