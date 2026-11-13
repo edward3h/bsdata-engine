@@ -12,7 +12,7 @@ import org.jspecify.annotations.Nullable;
 /** Loads the synthetic Extension Tests game system and the rosters exported from New Recruit. */
 public final class TestData {
     private static final MinimalJsonSource JSON = new MinimalJsonSource();
-    private static final String[] FILES = {"Extension Tests", "Extension Tests Catalogue", "M1 Costs"};
+    private static final String[] FILES = {"Extension Tests", "Extension Tests Catalogue", "M1 Costs", "M2 Scopes"};
 
     private TestData() {}
 

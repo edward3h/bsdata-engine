@@ -19,7 +19,8 @@ public final class Parts {
             String typeId,
             String typeName,
             boolean hidden,
-            List<Characteristic> characteristics) {}
+            List<Characteristic> characteristics,
+            Raw raw) {}
 
     public record Rule(String id, String name, String description, boolean hidden) {}
 
