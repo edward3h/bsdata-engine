@@ -379,8 +379,12 @@ upgrade`.
 - **`ancestor` counting is not understood.** `instanceOf` at `ancestor` follows the
   chain; counts do not (most are the same from every host, as if it were the
   roster, with extra amounts for some hosts and ids).
-- Not confirmed by experiment: the other rows above, which agree with
-  the editor notes and were not contradicted.
+- **The other rows of the table matched NR** once counts were relative: `parent`,
+  `root-entry`, `primary-category`, `force`, `primary-catalogue`, `roster`, `unit`,
+  `model`, `upgrade`, `model-or-unit`, entry-id scopes, and an unknown id (which
+  resolves to nothing). `link` and the `-self` forms other than `root-entry`,
+  `model`, `model-or-unit` and `upgrade` were not exercised.
+
 - 11e modifier scopes: `root-entry` (708), `model` (530), `parent` (397),
   `model-or-unit` (240), `upgrade` (181), `roster` (18), `force` (12), `unit`
   (6), `root-entry-self` (5), `model-self` (4), `model-or-unit-self` (2), and
