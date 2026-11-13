@@ -36,6 +36,10 @@ public final class Main {
             System.out.print(ScaleReport.of(scale, seed));
             return;
         }
+        if (args[0].equals("load")) {
+            LoadBench.run(args);
+            return;
+        }
         if (args[0].equals("generate")) {
             generate(args);
             return;

@@ -45,8 +45,11 @@ a user.
 
 - `<directory>` checks references across all JSON files in it and loads them into the typed model.
 - `<file>.roster.json` reads a New Recruit roster export, writes it back and summarises it.
+- `load <directory> [tree|file|stream]` loads data into the typed model and reports time and memory (`stream` is the loader to use).
 - `scale [scale [seed]]` generates a synthetic dataset in memory and reports on it.
 - `generate <dir> [scale [seed]]` writes a synthetic dataset as JSON files.
+
+`./scripts/memory-check.sh` is the memory regression check that CI runs (needs Node).
 
 ## Related repositories
 

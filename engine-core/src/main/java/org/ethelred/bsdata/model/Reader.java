@@ -11,13 +11,15 @@ import org.jspecify.annotations.Nullable;
 final class Reader {
     private static final Map<String, DataNode> NONE = Map.of();
     private final Map<String, DataNode> fields;
+    private final Pool pool;
 
-    private Reader(Map<String, DataNode> fields) {
+    private Reader(Map<String, DataNode> fields, Pool pool) {
         this.fields = fields;
+        this.pool = pool;
     }
 
-    static Reader of(DataNode node) {
-        return new Reader(node instanceof DataNode.Obj o ? o.fields() : NONE);
+    static Reader of(DataNode node, Pool pool) {
+        return new Reader(node instanceof DataNode.Obj o ? o.fields() : NONE, pool);
     }
 
     String str(String key) {
@@ -25,9 +27,15 @@ final class Reader {
         return s == null ? "" : s;
     }
 
+    /** A string, shared with equal strings read before (short ones only). */
     @Nullable
     String optStr(String key) {
-        return fields.get(key) instanceof DataNode.Str s ? s.value() : null;
+        return fields.get(key) instanceof DataNode.Str s ? pool.intern(s.value()) : null;
+    }
+
+    /** A string that is not shared: for long text, such as rule descriptions and characteristic values. */
+    String text(String key) {
+        return fields.get(key) instanceof DataNode.Str s ? s.value() : "";
     }
 
     boolean bool(String key) {
@@ -58,7 +66,7 @@ final class Reader {
         List<Reader> out = new ArrayList<>();
         for (DataNode n : arr(key)) {
             if (n instanceof DataNode.Obj) {
-                out.add(of(n));
+                out.add(of(n, pool));
             }
         }
         return out;

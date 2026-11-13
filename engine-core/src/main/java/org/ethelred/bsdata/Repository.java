@@ -21,22 +21,15 @@ public final class Repository {
             String name, boolean gameSystem, @Nullable String rootId, List<String> linkIds, Set<String> ids) {}
 
     private final Map<String, FileInfo> files = new TreeMap<>();
-    private final Map<String, String> fileByRootId = new HashMap<>();
     private final Map<String, Set<String>> filesById = new HashMap<>();
-    private @Nullable String gameSystemFile;
-    private final Map<String, List<String>> scopeCache = new HashMap<>();
+    private final Scope scope = new Scope();
 
     /** @param trees file name to parsed tree; iteration order does not affect the result */
     public Repository(Map<String, DataNode> trees) {
         new TreeMap<>(trees).forEach((name, tree) -> {
             FileInfo info = describe(name, tree);
             files.put(name, info);
-            if (info.rootId() != null) {
-                fileByRootId.putIfAbsent(info.rootId(), name);
-            }
-            if (info.gameSystem() && gameSystemFile == null) {
-                gameSystemFile = name;
-            }
+            scope.add(name, info.gameSystem(), info.rootId(), info.linkIds());
             for (String id : info.ids()) {
                 filesById.computeIfAbsent(id, k -> new HashSet<>()).add(name);
             }
@@ -112,37 +105,7 @@ public final class Repository {
 
     /** The files visible from {@code file}, most preferred first. Empty if the file is unknown. */
     public List<String> scope(String file) {
-        List<String> cached = scopeCache.get(file);
-        if (cached != null) {
-            return cached;
-        }
-        List<String> order = new ArrayList<>();
-        FileInfo self = files.get(file);
-        if (self != null) {
-            order.add(file);
-            String gs = gameSystemFile;
-            if (gs != null && !gs.equals(file) && !self.gameSystem()) {
-                order.add(gs);
-            }
-            if (!self.gameSystem()) {
-                follow(self, order);
-            }
-        }
-        scopeCache.put(file, order);
-        return order;
-    }
-
-    private void follow(FileInfo from, List<String> order) {
-        for (String targetId : from.linkIds()) {
-            String target = fileByRootId.get(targetId);
-            if (target != null && !order.contains(target)) {
-                order.add(target);
-                FileInfo next = files.get(target);
-                if (next != null) {
-                    follow(next, order);
-                }
-            }
-        }
+        return scope.scope(file);
     }
 
     /** The file whose object an id means when used in {@code file}, or null if it is not visible there. */
