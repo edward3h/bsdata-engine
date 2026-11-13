@@ -7,6 +7,7 @@ import org.ethelred.bsdata.DataNode;
 import org.ethelred.bsdata.Linker;
 import org.ethelred.bsdata.MinimalJsonSource;
 import org.ethelred.bsdata.RosterReport;
+import org.ethelred.bsdata.gen.ScaleReport;
 import org.ethelred.bsdata.model.ModelReport;
 import org.teavm.jso.JSBody;
 
@@ -16,6 +17,11 @@ public final class Main {
     /** Node entry point: reports id references across all JSON files in a directory (the last argument). */
     public static void main(String[] args) {
         String dir = lastArgument();
+        if (dir.startsWith("scale:")) {
+            String[] parts = dir.split(":");
+            log(ScaleReport.of(Double.parseDouble(parts[1]), parts.length > 2 ? Integer.parseInt(parts[2]) : 1));
+            return;
+        }
         if (dir.endsWith(".roster.json")) {
             log(RosterReport.of(readFile(dir)));
             return;

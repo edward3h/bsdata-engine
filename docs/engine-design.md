@@ -624,3 +624,50 @@ What changes is how it is tested and what the repository may contain.
   what the engine had to handle. They cannot be re-run from this repository.
 - **Open question for users:** which game systems the engine should be checked
   against next is theirs to decide; the data format is the same.
+
+## 15. M1a: synthetic scale generator
+
+Done on branch `scale-generator`. `ScaleGenerator` (in `engine-core`, package `gen`) writes
+a game system and 45 catalogues (9 of them libraries) in the JSON form of the real data,
+sized by a `Shape`. `Shape.elevenSized()` holds counts measured on a real 46-file system
+(counts of kinds of object only, no names or text); `scaled(f)` shrinks or grows it. The
+generator uses a 32-bit integer random source and an id mixer, so output depends only on
+the shape and the seed, on the JVM and in JavaScript. It contains no real names or text.
+
+Command line (`engine-jvm`, and in Node via the TeaVM build):
+
+- `scale [scale [seed]]` generates in memory and prints a fingerprint of the content, the
+  count of each kind of object, the reference report (`Linker`) and the model report.
+- `generate <dir> [scale [seed]]` writes pretty-printed files, to try other tools on.
+- In Node, `scale:<scale>:<seed>` as the last argument does the same as `scale`.
+
+**Results at scale 1 (seed 1)** against the real 11e-sized system:
+
+| Kind | Real | Generated |
+|---|---|---|
+| Objects with ids | 103,765 | 102,014 |
+| Entry links, modifiers, modifier groups, conditions, condition groups, repeats, constraints, infoLinks, costs, associations | (measured) | exactly equal |
+| Entries / groups (selection entries and groups, shared and nested) | 12,039 / 4,521 | 12,111 / 4,449 |
+| Characteristics | 58,939 | 61,275 |
+| Catalogue links | 109 | 103 |
+| Entries with a cost | 5,326 | 5,221 |
+| Unresolved link targets | 0 | 0 |
+| Entries nested at each depth (1 to 7) | 4,275 / 4,844 / 3,052 / 1,124 / 190 / 40 / 4 | exact |
+
+- **Deterministic across platforms:** the content fingerprint is identical on the JVM and
+  compiled to JavaScript (`1373e970` for seed 1), and a different seed gives a different
+  dataset.
+- **Valid:** every link target resolves under the scoped lookup (0 out of scope, 0
+  unresolved), links only point at earlier entries so there are no cycles, and a few
+  constraint ids repeat within and across files, as in real data.
+- **Loading it costs about what the real data did:** the Node run peaked at about 900 MB
+  (real: about 930 MB) and parsing took about 1.4 s (real: 1.3 s), so it is a fair stand-in
+  for the memory pass (M1b).
+- **Written to disk** the files total 65 MB, against 46 MB for the real data, because
+  pretty-printing puts every array element on its own line. The largest file is 11.8 MB
+  against 5.1 MB, since the game system and libraries are weighted heavily. Counts and
+  nesting match; byte size does not.
+
+Not modelled: the exact split of costs, constraints and modifiers between kinds of host,
+the real distribution of file sizes, and string content (names are `Entry 123`; text is
+random words with the measured length distribution).

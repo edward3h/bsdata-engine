@@ -5,6 +5,7 @@ import com.eclipsesource.json.Json;
 import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
+import com.eclipsesource.json.WriterConfig;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -20,6 +21,11 @@ public final class MinimalJsonSource implements JsonSource, JsonSink {
     @Override
     public String write(DataNode node) {
         return toJson(node).toString();
+    }
+
+    /** The same as {@link #write} but indented, as the real data files are. */
+    public String writePretty(DataNode node) {
+        return toJson(node).toString(WriterConfig.PRETTY_PRINT);
     }
 
     private static JsonValue toJson(DataNode node) {
