@@ -1,0 +1,2094 @@
+{
+  "catalogue": {
+    "name": "M8 Child Forces",
+    "id": "7259-82dc-12d3-ad9d",
+    "authorName": "extension-tests",
+    "battleScribeVersion": 2.03,
+    "gameSystemId": "11a0-a9a3-bb5c-de4b",
+    "gameSystemRevision": 1,
+    "library": false,
+    "revision": 1,
+    "type": "catalogue",
+    "xmlns": "http://www.battlescribe.net/schema/catalogueSchema",
+    "forceEntries": [
+      {
+        "name": "Parent Force",
+        "id": "56a3-3faf-fba6-9ac0",
+        "hidden": false,
+        "categoryLinks": [
+          {
+            "name": "Units",
+            "id": "ab85-9756-46ed-1fae",
+            "hidden": false,
+            "targetId": "8e51-8031-ab34-a492",
+            "primary": false
+          }
+        ],
+        "forceEntries": [
+          {
+            "name": "Child Force A",
+            "id": "ba88-16b8-a9be-b5fd",
+            "hidden": false,
+            "categoryLinks": [
+              {
+                "name": "Units",
+                "id": "e04a-25b4-5bc1-df03",
+                "hidden": false,
+                "targetId": "8e51-8031-ab34-a492",
+                "primary": false
+              }
+            ],
+            "forceEntries": [
+              {
+                "name": "Grandchild Force",
+                "id": "bdd2-480a-2a7e-6824",
+                "hidden": false,
+                "categoryLinks": [
+                  {
+                    "name": "Units",
+                    "id": "eefc-16e9-b984-63ba",
+                    "hidden": false,
+                    "targetId": "8e51-8031-ab34-a492",
+                    "primary": false
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "name": "Child Force B",
+            "id": "ad82-65ac-18ca-3702",
+            "hidden": false,
+            "categoryLinks": [
+              {
+                "name": "Units",
+                "id": "2be7-f26d-cdaf-324d",
+                "hidden": false,
+                "targetId": "8e51-8031-ab34-a492",
+                "primary": false
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "entryLinks": [
+      {
+        "name": "F Filler",
+        "id": "26cd-714c-e144-7479",
+        "hidden": false,
+        "import": true,
+        "targetId": "35de-1ff6-5f18-ca4f",
+        "type": "selectionEntry",
+        "categoryLinks": [
+          {
+            "name": "Units",
+            "id": "a356-4c46-a3e0-a697",
+            "primary": true,
+            "targetId": "8e51-8031-ab34-a492"
+          }
+        ]
+      },
+      {
+        "name": "CA max1 force selections",
+        "id": "6fbd-9ad8-8ddd-e861",
+        "hidden": false,
+        "import": true,
+        "targetId": "21de-58c5-75d3-7b7c",
+        "type": "selectionEntry",
+        "categoryLinks": [
+          {
+            "name": "Units",
+            "id": "2807-3f57-8f56-b028",
+            "primary": true,
+            "targetId": "8e51-8031-ab34-a492"
+          }
+        ]
+      },
+      {
+        "name": "CB max1 force selections childforces",
+        "id": "0eba-b48a-da32-5137",
+        "hidden": false,
+        "import": true,
+        "targetId": "df6a-2ea2-158d-f966",
+        "type": "selectionEntry",
+        "categoryLinks": [
+          {
+            "name": "Units",
+            "id": "0d49-ae99-aaca-0611",
+            "primary": true,
+            "targetId": "8e51-8031-ab34-a492"
+          }
+        ]
+      },
+      {
+        "name": "CC max1 roster selections",
+        "id": "1d9c-fbc8-2f1f-1072",
+        "hidden": false,
+        "import": true,
+        "targetId": "29f8-95c4-a885-8794",
+        "type": "selectionEntry",
+        "categoryLinks": [
+          {
+            "name": "Units",
+            "id": "ad98-e057-308b-2871",
+            "primary": true,
+            "targetId": "8e51-8031-ab34-a492"
+          }
+        ]
+      },
+      {
+        "name": "CD max0 force forces",
+        "id": "c2ce-9b01-30b9-3f96",
+        "hidden": false,
+        "import": true,
+        "targetId": "741c-16e8-ca7b-0aca",
+        "type": "selectionEntry",
+        "categoryLinks": [
+          {
+            "name": "Units",
+            "id": "a26d-04ef-0189-82b7",
+            "primary": true,
+            "targetId": "8e51-8031-ab34-a492"
+          }
+        ]
+      },
+      {
+        "name": "CE max0 force forces childforces",
+        "id": "50e0-8aac-91df-b148",
+        "hidden": false,
+        "import": true,
+        "targetId": "8f8b-356c-0de8-3838",
+        "type": "selectionEntry",
+        "categoryLinks": [
+          {
+            "name": "Units",
+            "id": "e886-4861-887e-8030",
+            "primary": true,
+            "targetId": "8e51-8031-ab34-a492"
+          }
+        ]
+      },
+      {
+        "name": "CF max1 force selections",
+        "id": "d797-e0a9-5b3e-7147",
+        "hidden": false,
+        "import": true,
+        "targetId": "ab2c-178a-8348-2a97",
+        "type": "selectionEntry",
+        "categoryLinks": [
+          {
+            "name": "Units",
+            "id": "352d-e869-4154-74b9",
+            "primary": true,
+            "targetId": "8e51-8031-ab34-a492"
+          }
+        ]
+      },
+      {
+        "name": "G1n max1 forces",
+        "id": "2e91-35e5-c311-d730",
+        "hidden": false,
+        "import": true,
+        "targetId": "4885-610b-6bb8-9e19",
+        "type": "selectionEntry",
+        "categoryLinks": [
+          {
+            "name": "Units",
+            "id": "63cc-d3c2-8433-4bed",
+            "primary": true,
+            "targetId": "8e51-8031-ab34-a492"
+          }
+        ]
+      },
+      {
+        "name": "G1y max1 forces childforces",
+        "id": "ee7b-a68e-0c29-0d45",
+        "hidden": false,
+        "import": true,
+        "targetId": "b6a5-dc9c-1a7f-c025",
+        "type": "selectionEntry",
+        "categoryLinks": [
+          {
+            "name": "Units",
+            "id": "043a-92b5-f32e-5bb3",
+            "primary": true,
+            "targetId": "8e51-8031-ab34-a492"
+          }
+        ]
+      },
+      {
+        "name": "G2n max2 forces",
+        "id": "81e4-7940-581a-0a9c",
+        "hidden": false,
+        "import": true,
+        "targetId": "b647-ee98-31f5-c36f",
+        "type": "selectionEntry",
+        "categoryLinks": [
+          {
+            "name": "Units",
+            "id": "8f06-cd1d-563e-055f",
+            "primary": true,
+            "targetId": "8e51-8031-ab34-a492"
+          }
+        ]
+      },
+      {
+        "name": "G2y max2 forces childforces",
+        "id": "5a5a-18e1-8b15-4dff",
+        "hidden": false,
+        "import": true,
+        "targetId": "2c20-4301-6fe6-325c",
+        "type": "selectionEntry",
+        "categoryLinks": [
+          {
+            "name": "Units",
+            "id": "f115-d01d-e77c-bfc9",
+            "primary": true,
+            "targetId": "8e51-8031-ab34-a492"
+          }
+        ]
+      },
+      {
+        "name": "G3n max3 forces",
+        "id": "57db-03f1-de81-1de2",
+        "hidden": false,
+        "import": true,
+        "targetId": "1472-a15e-ec9b-4ff4",
+        "type": "selectionEntry",
+        "categoryLinks": [
+          {
+            "name": "Units",
+            "id": "d027-6354-3c0b-e1e7",
+            "primary": true,
+            "targetId": "8e51-8031-ab34-a492"
+          }
+        ]
+      },
+      {
+        "name": "G3y max3 forces childforces",
+        "id": "39d9-feea-affe-85c2",
+        "hidden": false,
+        "import": true,
+        "targetId": "25b3-978e-226e-4e4b",
+        "type": "selectionEntry",
+        "categoryLinks": [
+          {
+            "name": "Units",
+            "id": "ae85-e61a-64d9-dbde",
+            "primary": true,
+            "targetId": "8e51-8031-ab34-a492"
+          }
+        ]
+      },
+      {
+        "name": "G4n max4 forces",
+        "id": "fca2-ad16-3859-cfc8",
+        "hidden": false,
+        "import": true,
+        "targetId": "6c9f-5a09-cc6e-8500",
+        "type": "selectionEntry",
+        "categoryLinks": [
+          {
+            "name": "Units",
+            "id": "8cc0-c660-02c1-ca1d",
+            "primary": true,
+            "targetId": "8e51-8031-ab34-a492"
+          }
+        ]
+      },
+      {
+        "name": "G4y max4 forces childforces",
+        "id": "c2f1-06db-81fc-6396",
+        "hidden": false,
+        "import": true,
+        "targetId": "54a2-61cf-cdfd-03ac",
+        "type": "selectionEntry",
+        "categoryLinks": [
+          {
+            "name": "Units",
+            "id": "4f79-372e-a24e-cf46",
+            "primary": true,
+            "targetId": "8e51-8031-ab34-a492"
+          }
+        ]
+      },
+      {
+        "name": "HA max0 forces of CFA",
+        "id": "6fd7-0f95-1edd-7202",
+        "hidden": false,
+        "import": true,
+        "targetId": "974b-b1b4-f1bd-c50b",
+        "type": "selectionEntry",
+        "categoryLinks": [
+          {
+            "name": "Units",
+            "id": "6127-e01c-e514-1ff4",
+            "primary": true,
+            "targetId": "8e51-8031-ab34-a492"
+          }
+        ]
+      },
+      {
+        "name": "HB max0 forces of CFA childforces",
+        "id": "59d4-c73b-af05-8eed",
+        "hidden": false,
+        "import": true,
+        "targetId": "ec10-be20-cc18-97a7",
+        "type": "selectionEntry",
+        "categoryLinks": [
+          {
+            "name": "Units",
+            "id": "2299-73b6-0add-a492",
+            "primary": true,
+            "targetId": "8e51-8031-ab34-a492"
+          }
+        ]
+      },
+      {
+        "name": "HC max0 forces of GF childforces",
+        "id": "aa04-955c-3d8d-c8d1",
+        "hidden": false,
+        "import": true,
+        "targetId": "d652-6d8d-52ea-7366",
+        "type": "selectionEntry",
+        "categoryLinks": [
+          {
+            "name": "Units",
+            "id": "691c-bd18-6af4-ee70",
+            "primary": true,
+            "targetId": "8e51-8031-ab34-a492"
+          }
+        ]
+      },
+      {
+        "name": "MA atLeast 1 forces CFA",
+        "id": "52d9-8dd3-cad8-7eab",
+        "hidden": false,
+        "import": true,
+        "targetId": "7977-ce47-764c-607f",
+        "type": "selectionEntry",
+        "categoryLinks": [
+          {
+            "name": "Units",
+            "id": "dc78-c3c5-a8a8-e5b9",
+            "primary": true,
+            "targetId": "8e51-8031-ab34-a492"
+          }
+        ]
+      },
+      {
+        "name": "MB instanceOf CFA scope force",
+        "id": "75f1-80e9-03e2-b5ab",
+        "hidden": false,
+        "import": true,
+        "targetId": "5575-abf6-ac22-fdfe",
+        "type": "selectionEntry",
+        "categoryLinks": [
+          {
+            "name": "Units",
+            "id": "7f14-5832-a516-1c75",
+            "primary": true,
+            "targetId": "8e51-8031-ab34-a492"
+          }
+        ]
+      },
+      {
+        "name": "MC instanceOf PF scope force",
+        "id": "38ae-5478-e42a-15a1",
+        "hidden": false,
+        "import": true,
+        "targetId": "0c37-61b5-eb0d-c34f",
+        "type": "selectionEntry",
+        "categoryLinks": [
+          {
+            "name": "Units",
+            "id": "328d-7239-828a-df01",
+            "primary": true,
+            "targetId": "8e51-8031-ab34-a492"
+          }
+        ]
+      },
+      {
+        "name": "MD instanceOf CFA scope ancestor",
+        "id": "d85c-2910-79e4-003f",
+        "hidden": false,
+        "import": true,
+        "targetId": "92ca-ab1e-fc98-87ba",
+        "type": "selectionEntry",
+        "categoryLinks": [
+          {
+            "name": "Units",
+            "id": "a0b1-e20d-f449-a0d7",
+            "primary": true,
+            "targetId": "8e51-8031-ab34-a492"
+          }
+        ]
+      },
+      {
+        "name": "ME atLeast 1 F in parent force",
+        "id": "7087-84ff-1e68-8700",
+        "hidden": false,
+        "import": true,
+        "targetId": "6cc7-a641-ca1f-d14a",
+        "type": "selectionEntry",
+        "categoryLinks": [
+          {
+            "name": "Units",
+            "id": "f0a4-9c30-6c05-d02b",
+            "primary": true,
+            "targetId": "8e51-8031-ab34-a492"
+          }
+        ]
+      },
+      {
+        "name": "MF atLeast 1 F roster",
+        "id": "5e59-7d01-9c4a-b537",
+        "hidden": false,
+        "import": true,
+        "targetId": "b8cf-1f14-499f-80c6",
+        "type": "selectionEntry",
+        "categoryLinks": [
+          {
+            "name": "Units",
+            "id": "b7e5-6d97-659c-23ba",
+            "primary": true,
+            "targetId": "8e51-8031-ab34-a492"
+          }
+        ]
+      },
+      {
+        "name": "MG atLeast 1 F force incl child forces",
+        "id": "d579-fdfe-686e-9b7b",
+        "hidden": false,
+        "import": true,
+        "targetId": "cb54-a0ba-65bd-7766",
+        "type": "selectionEntry",
+        "categoryLinks": [
+          {
+            "name": "Units",
+            "id": "f29d-1278-5cc1-1d86",
+            "primary": true,
+            "targetId": "8e51-8031-ab34-a492"
+          }
+        ]
+      }
+    ],
+    "sharedSelectionEntries": [
+      {
+        "name": "F Filler",
+        "id": "35de-1ff6-5f18-ca4f",
+        "hidden": false,
+        "type": "unit",
+        "costs": [
+          {
+            "name": "pts",
+            "typeId": "a2d8-5d18-80b9-4be2",
+            "value": 10
+          }
+        ],
+        "profiles": [
+          {
+            "name": "f-ownw",
+            "id": "5ca3-2b27-6974-c849",
+            "hidden": false,
+            "typeId": "8d4c-372e-8ac3-def2",
+            "typeName": "Melee Weapons",
+            "characteristics": [
+              {
+                "name": "A",
+                "typeId": "4c71-02b5-b294-444d"
+              },
+              {
+                "name": "S",
+                "typeId": "b7c2-bb77-0d0c-4052"
+              },
+              {
+                "name": "WS",
+                "typeId": "b755-0ea0-6554-6646"
+              },
+              {
+                "name": "Keywords",
+                "typeId": "a2d2-6932-5906-9eaf",
+                "$text": "f-own"
+              },
+              {
+                "name": "Num",
+                "typeId": "e4ba-e365-6ee4-10a4"
+              },
+              {
+                "name": "Txt",
+                "typeId": "7e9c-6ea9-9082-981e"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "CA max1 force selections",
+        "id": "21de-58c5-75d3-7b7c",
+        "hidden": false,
+        "type": "unit",
+        "costs": [
+          {
+            "name": "pts",
+            "typeId": "a2d8-5d18-80b9-4be2",
+            "value": 10
+          }
+        ],
+        "profiles": [
+          {
+            "name": "ca-ownw",
+            "id": "6f8b-1884-f385-0dbf",
+            "hidden": false,
+            "typeId": "8d4c-372e-8ac3-def2",
+            "typeName": "Melee Weapons",
+            "characteristics": [
+              {
+                "name": "A",
+                "typeId": "4c71-02b5-b294-444d"
+              },
+              {
+                "name": "S",
+                "typeId": "b7c2-bb77-0d0c-4052"
+              },
+              {
+                "name": "WS",
+                "typeId": "b755-0ea0-6554-6646"
+              },
+              {
+                "name": "Keywords",
+                "typeId": "a2d2-6932-5906-9eaf",
+                "$text": "ca-own"
+              },
+              {
+                "name": "Num",
+                "typeId": "e4ba-e365-6ee4-10a4"
+              },
+              {
+                "name": "Txt",
+                "typeId": "7e9c-6ea9-9082-981e"
+              }
+            ]
+          }
+        ],
+        "constraints": [
+          {
+            "type": "max",
+            "value": 1,
+            "field": "selections",
+            "scope": "force",
+            "childId": "unit",
+            "shared": true,
+            "includeChildSelections": true,
+            "id": "5bf9-a2d7-0b1e-526c",
+            "name": "ca",
+            "message": "ca",
+            "includeChildForces": false
+          }
+        ]
+      },
+      {
+        "name": "CB max1 force selections childforces",
+        "id": "df6a-2ea2-158d-f966",
+        "hidden": false,
+        "type": "unit",
+        "costs": [
+          {
+            "name": "pts",
+            "typeId": "a2d8-5d18-80b9-4be2",
+            "value": 10
+          }
+        ],
+        "profiles": [
+          {
+            "name": "cb-ownw",
+            "id": "552e-40a5-dd31-e508",
+            "hidden": false,
+            "typeId": "8d4c-372e-8ac3-def2",
+            "typeName": "Melee Weapons",
+            "characteristics": [
+              {
+                "name": "A",
+                "typeId": "4c71-02b5-b294-444d"
+              },
+              {
+                "name": "S",
+                "typeId": "b7c2-bb77-0d0c-4052"
+              },
+              {
+                "name": "WS",
+                "typeId": "b755-0ea0-6554-6646"
+              },
+              {
+                "name": "Keywords",
+                "typeId": "a2d2-6932-5906-9eaf",
+                "$text": "cb-own"
+              },
+              {
+                "name": "Num",
+                "typeId": "e4ba-e365-6ee4-10a4"
+              },
+              {
+                "name": "Txt",
+                "typeId": "7e9c-6ea9-9082-981e"
+              }
+            ]
+          }
+        ],
+        "constraints": [
+          {
+            "type": "max",
+            "value": 1,
+            "field": "selections",
+            "scope": "force",
+            "childId": "unit",
+            "shared": true,
+            "includeChildSelections": true,
+            "id": "cfcc-0c4e-4e10-9c67",
+            "name": "cb",
+            "message": "cb",
+            "includeChildForces": true
+          }
+        ]
+      },
+      {
+        "name": "CC max1 roster selections",
+        "id": "29f8-95c4-a885-8794",
+        "hidden": false,
+        "type": "unit",
+        "costs": [
+          {
+            "name": "pts",
+            "typeId": "a2d8-5d18-80b9-4be2",
+            "value": 10
+          }
+        ],
+        "profiles": [
+          {
+            "name": "cc-ownw",
+            "id": "e37b-4c2e-12d2-829f",
+            "hidden": false,
+            "typeId": "8d4c-372e-8ac3-def2",
+            "typeName": "Melee Weapons",
+            "characteristics": [
+              {
+                "name": "A",
+                "typeId": "4c71-02b5-b294-444d"
+              },
+              {
+                "name": "S",
+                "typeId": "b7c2-bb77-0d0c-4052"
+              },
+              {
+                "name": "WS",
+                "typeId": "b755-0ea0-6554-6646"
+              },
+              {
+                "name": "Keywords",
+                "typeId": "a2d2-6932-5906-9eaf",
+                "$text": "cc-own"
+              },
+              {
+                "name": "Num",
+                "typeId": "e4ba-e365-6ee4-10a4"
+              },
+              {
+                "name": "Txt",
+                "typeId": "7e9c-6ea9-9082-981e"
+              }
+            ]
+          }
+        ],
+        "constraints": [
+          {
+            "type": "max",
+            "value": 1,
+            "field": "selections",
+            "scope": "roster",
+            "childId": "unit",
+            "shared": true,
+            "includeChildSelections": true,
+            "id": "6955-080e-1f10-4182",
+            "name": "cc",
+            "message": "cc",
+            "includeChildForces": false
+          }
+        ]
+      },
+      {
+        "name": "CD max0 force forces",
+        "id": "741c-16e8-ca7b-0aca",
+        "hidden": false,
+        "type": "unit",
+        "costs": [
+          {
+            "name": "pts",
+            "typeId": "a2d8-5d18-80b9-4be2",
+            "value": 10
+          }
+        ],
+        "profiles": [
+          {
+            "name": "cd-ownw",
+            "id": "66a8-ec55-d8de-63de",
+            "hidden": false,
+            "typeId": "8d4c-372e-8ac3-def2",
+            "typeName": "Melee Weapons",
+            "characteristics": [
+              {
+                "name": "A",
+                "typeId": "4c71-02b5-b294-444d"
+              },
+              {
+                "name": "S",
+                "typeId": "b7c2-bb77-0d0c-4052"
+              },
+              {
+                "name": "WS",
+                "typeId": "b755-0ea0-6554-6646"
+              },
+              {
+                "name": "Keywords",
+                "typeId": "a2d2-6932-5906-9eaf",
+                "$text": "cd-own"
+              },
+              {
+                "name": "Num",
+                "typeId": "e4ba-e365-6ee4-10a4"
+              },
+              {
+                "name": "Txt",
+                "typeId": "7e9c-6ea9-9082-981e"
+              }
+            ]
+          }
+        ],
+        "constraints": [
+          {
+            "type": "max",
+            "value": 0,
+            "field": "forces",
+            "scope": "force",
+            "childId": "any",
+            "shared": true,
+            "includeChildSelections": true,
+            "id": "92bb-b4d1-3fd4-cc21",
+            "name": "cd",
+            "message": "cd",
+            "includeChildForces": false
+          }
+        ]
+      },
+      {
+        "name": "CE max0 force forces childforces",
+        "id": "8f8b-356c-0de8-3838",
+        "hidden": false,
+        "type": "unit",
+        "costs": [
+          {
+            "name": "pts",
+            "typeId": "a2d8-5d18-80b9-4be2",
+            "value": 10
+          }
+        ],
+        "profiles": [
+          {
+            "name": "ce-ownw",
+            "id": "050a-bedc-052e-7af1",
+            "hidden": false,
+            "typeId": "8d4c-372e-8ac3-def2",
+            "typeName": "Melee Weapons",
+            "characteristics": [
+              {
+                "name": "A",
+                "typeId": "4c71-02b5-b294-444d"
+              },
+              {
+                "name": "S",
+                "typeId": "b7c2-bb77-0d0c-4052"
+              },
+              {
+                "name": "WS",
+                "typeId": "b755-0ea0-6554-6646"
+              },
+              {
+                "name": "Keywords",
+                "typeId": "a2d2-6932-5906-9eaf",
+                "$text": "ce-own"
+              },
+              {
+                "name": "Num",
+                "typeId": "e4ba-e365-6ee4-10a4"
+              },
+              {
+                "name": "Txt",
+                "typeId": "7e9c-6ea9-9082-981e"
+              }
+            ]
+          }
+        ],
+        "constraints": [
+          {
+            "type": "max",
+            "value": 0,
+            "field": "forces",
+            "scope": "force",
+            "childId": "any",
+            "shared": true,
+            "includeChildSelections": true,
+            "id": "72ca-0bce-9392-8501",
+            "name": "ce",
+            "message": "ce",
+            "includeChildForces": true
+          }
+        ]
+      },
+      {
+        "name": "CF max1 force selections",
+        "id": "ab2c-178a-8348-2a97",
+        "hidden": false,
+        "type": "unit",
+        "costs": [
+          {
+            "name": "pts",
+            "typeId": "a2d8-5d18-80b9-4be2",
+            "value": 10
+          }
+        ],
+        "profiles": [
+          {
+            "name": "cf-ownw",
+            "id": "bfc6-b220-b6d2-b016",
+            "hidden": false,
+            "typeId": "8d4c-372e-8ac3-def2",
+            "typeName": "Melee Weapons",
+            "characteristics": [
+              {
+                "name": "A",
+                "typeId": "4c71-02b5-b294-444d"
+              },
+              {
+                "name": "S",
+                "typeId": "b7c2-bb77-0d0c-4052"
+              },
+              {
+                "name": "WS",
+                "typeId": "b755-0ea0-6554-6646"
+              },
+              {
+                "name": "Keywords",
+                "typeId": "a2d2-6932-5906-9eaf",
+                "$text": "cf-own"
+              },
+              {
+                "name": "Num",
+                "typeId": "e4ba-e365-6ee4-10a4"
+              },
+              {
+                "name": "Txt",
+                "typeId": "7e9c-6ea9-9082-981e"
+              }
+            ]
+          }
+        ],
+        "constraints": [
+          {
+            "type": "max",
+            "value": 1,
+            "field": "selections",
+            "scope": "force",
+            "childId": "unit",
+            "shared": true,
+            "includeChildSelections": true,
+            "id": "5077-7a21-f9b9-d2f8",
+            "name": "cf",
+            "message": "cf"
+          }
+        ]
+      },
+      {
+        "name": "G1n max1 forces",
+        "id": "4885-610b-6bb8-9e19",
+        "hidden": false,
+        "type": "unit",
+        "costs": [
+          {
+            "name": "pts",
+            "typeId": "a2d8-5d18-80b9-4be2",
+            "value": 10
+          }
+        ],
+        "profiles": [
+          {
+            "name": "g1n-ownw",
+            "id": "1aac-d436-053f-153e",
+            "hidden": false,
+            "typeId": "8d4c-372e-8ac3-def2",
+            "typeName": "Melee Weapons",
+            "characteristics": [
+              {
+                "name": "A",
+                "typeId": "4c71-02b5-b294-444d"
+              },
+              {
+                "name": "S",
+                "typeId": "b7c2-bb77-0d0c-4052"
+              },
+              {
+                "name": "WS",
+                "typeId": "b755-0ea0-6554-6646"
+              },
+              {
+                "name": "Keywords",
+                "typeId": "a2d2-6932-5906-9eaf",
+                "$text": "g1n-own"
+              },
+              {
+                "name": "Num",
+                "typeId": "e4ba-e365-6ee4-10a4"
+              },
+              {
+                "name": "Txt",
+                "typeId": "7e9c-6ea9-9082-981e"
+              }
+            ]
+          }
+        ],
+        "constraints": [
+          {
+            "type": "max",
+            "value": 1,
+            "field": "forces",
+            "scope": "force",
+            "childId": "any",
+            "shared": true,
+            "includeChildSelections": true,
+            "id": "d82b-9fea-d4da-a15c",
+            "name": "g1n",
+            "message": "g1n",
+            "includeChildForces": false
+          }
+        ]
+      },
+      {
+        "name": "G1y max1 forces childforces",
+        "id": "b6a5-dc9c-1a7f-c025",
+        "hidden": false,
+        "type": "unit",
+        "costs": [
+          {
+            "name": "pts",
+            "typeId": "a2d8-5d18-80b9-4be2",
+            "value": 10
+          }
+        ],
+        "profiles": [
+          {
+            "name": "g1y-ownw",
+            "id": "400e-0e11-ce7a-200f",
+            "hidden": false,
+            "typeId": "8d4c-372e-8ac3-def2",
+            "typeName": "Melee Weapons",
+            "characteristics": [
+              {
+                "name": "A",
+                "typeId": "4c71-02b5-b294-444d"
+              },
+              {
+                "name": "S",
+                "typeId": "b7c2-bb77-0d0c-4052"
+              },
+              {
+                "name": "WS",
+                "typeId": "b755-0ea0-6554-6646"
+              },
+              {
+                "name": "Keywords",
+                "typeId": "a2d2-6932-5906-9eaf",
+                "$text": "g1y-own"
+              },
+              {
+                "name": "Num",
+                "typeId": "e4ba-e365-6ee4-10a4"
+              },
+              {
+                "name": "Txt",
+                "typeId": "7e9c-6ea9-9082-981e"
+              }
+            ]
+          }
+        ],
+        "constraints": [
+          {
+            "type": "max",
+            "value": 1,
+            "field": "forces",
+            "scope": "force",
+            "childId": "any",
+            "shared": true,
+            "includeChildSelections": true,
+            "id": "92a9-8eed-ea96-8b5f",
+            "name": "g1y",
+            "message": "g1y",
+            "includeChildForces": true
+          }
+        ]
+      },
+      {
+        "name": "G2n max2 forces",
+        "id": "b647-ee98-31f5-c36f",
+        "hidden": false,
+        "type": "unit",
+        "costs": [
+          {
+            "name": "pts",
+            "typeId": "a2d8-5d18-80b9-4be2",
+            "value": 10
+          }
+        ],
+        "profiles": [
+          {
+            "name": "g2n-ownw",
+            "id": "80f9-ea99-5dc5-b4d7",
+            "hidden": false,
+            "typeId": "8d4c-372e-8ac3-def2",
+            "typeName": "Melee Weapons",
+            "characteristics": [
+              {
+                "name": "A",
+                "typeId": "4c71-02b5-b294-444d"
+              },
+              {
+                "name": "S",
+                "typeId": "b7c2-bb77-0d0c-4052"
+              },
+              {
+                "name": "WS",
+                "typeId": "b755-0ea0-6554-6646"
+              },
+              {
+                "name": "Keywords",
+                "typeId": "a2d2-6932-5906-9eaf",
+                "$text": "g2n-own"
+              },
+              {
+                "name": "Num",
+                "typeId": "e4ba-e365-6ee4-10a4"
+              },
+              {
+                "name": "Txt",
+                "typeId": "7e9c-6ea9-9082-981e"
+              }
+            ]
+          }
+        ],
+        "constraints": [
+          {
+            "type": "max",
+            "value": 2,
+            "field": "forces",
+            "scope": "force",
+            "childId": "any",
+            "shared": true,
+            "includeChildSelections": true,
+            "id": "3f4c-ae9e-4932-00a0",
+            "name": "g2n",
+            "message": "g2n",
+            "includeChildForces": false
+          }
+        ]
+      },
+      {
+        "name": "G2y max2 forces childforces",
+        "id": "2c20-4301-6fe6-325c",
+        "hidden": false,
+        "type": "unit",
+        "costs": [
+          {
+            "name": "pts",
+            "typeId": "a2d8-5d18-80b9-4be2",
+            "value": 10
+          }
+        ],
+        "profiles": [
+          {
+            "name": "g2y-ownw",
+            "id": "4540-c2ac-653c-ccee",
+            "hidden": false,
+            "typeId": "8d4c-372e-8ac3-def2",
+            "typeName": "Melee Weapons",
+            "characteristics": [
+              {
+                "name": "A",
+                "typeId": "4c71-02b5-b294-444d"
+              },
+              {
+                "name": "S",
+                "typeId": "b7c2-bb77-0d0c-4052"
+              },
+              {
+                "name": "WS",
+                "typeId": "b755-0ea0-6554-6646"
+              },
+              {
+                "name": "Keywords",
+                "typeId": "a2d2-6932-5906-9eaf",
+                "$text": "g2y-own"
+              },
+              {
+                "name": "Num",
+                "typeId": "e4ba-e365-6ee4-10a4"
+              },
+              {
+                "name": "Txt",
+                "typeId": "7e9c-6ea9-9082-981e"
+              }
+            ]
+          }
+        ],
+        "constraints": [
+          {
+            "type": "max",
+            "value": 2,
+            "field": "forces",
+            "scope": "force",
+            "childId": "any",
+            "shared": true,
+            "includeChildSelections": true,
+            "id": "d1a0-6fa0-5202-bcb4",
+            "name": "g2y",
+            "message": "g2y",
+            "includeChildForces": true
+          }
+        ]
+      },
+      {
+        "name": "G3n max3 forces",
+        "id": "1472-a15e-ec9b-4ff4",
+        "hidden": false,
+        "type": "unit",
+        "costs": [
+          {
+            "name": "pts",
+            "typeId": "a2d8-5d18-80b9-4be2",
+            "value": 10
+          }
+        ],
+        "profiles": [
+          {
+            "name": "g3n-ownw",
+            "id": "462f-8163-46df-2bb6",
+            "hidden": false,
+            "typeId": "8d4c-372e-8ac3-def2",
+            "typeName": "Melee Weapons",
+            "characteristics": [
+              {
+                "name": "A",
+                "typeId": "4c71-02b5-b294-444d"
+              },
+              {
+                "name": "S",
+                "typeId": "b7c2-bb77-0d0c-4052"
+              },
+              {
+                "name": "WS",
+                "typeId": "b755-0ea0-6554-6646"
+              },
+              {
+                "name": "Keywords",
+                "typeId": "a2d2-6932-5906-9eaf",
+                "$text": "g3n-own"
+              },
+              {
+                "name": "Num",
+                "typeId": "e4ba-e365-6ee4-10a4"
+              },
+              {
+                "name": "Txt",
+                "typeId": "7e9c-6ea9-9082-981e"
+              }
+            ]
+          }
+        ],
+        "constraints": [
+          {
+            "type": "max",
+            "value": 3,
+            "field": "forces",
+            "scope": "force",
+            "childId": "any",
+            "shared": true,
+            "includeChildSelections": true,
+            "id": "c22b-6ffa-7c82-a1e2",
+            "name": "g3n",
+            "message": "g3n",
+            "includeChildForces": false
+          }
+        ]
+      },
+      {
+        "name": "G3y max3 forces childforces",
+        "id": "25b3-978e-226e-4e4b",
+        "hidden": false,
+        "type": "unit",
+        "costs": [
+          {
+            "name": "pts",
+            "typeId": "a2d8-5d18-80b9-4be2",
+            "value": 10
+          }
+        ],
+        "profiles": [
+          {
+            "name": "g3y-ownw",
+            "id": "ae2e-e8f2-34d6-c369",
+            "hidden": false,
+            "typeId": "8d4c-372e-8ac3-def2",
+            "typeName": "Melee Weapons",
+            "characteristics": [
+              {
+                "name": "A",
+                "typeId": "4c71-02b5-b294-444d"
+              },
+              {
+                "name": "S",
+                "typeId": "b7c2-bb77-0d0c-4052"
+              },
+              {
+                "name": "WS",
+                "typeId": "b755-0ea0-6554-6646"
+              },
+              {
+                "name": "Keywords",
+                "typeId": "a2d2-6932-5906-9eaf",
+                "$text": "g3y-own"
+              },
+              {
+                "name": "Num",
+                "typeId": "e4ba-e365-6ee4-10a4"
+              },
+              {
+                "name": "Txt",
+                "typeId": "7e9c-6ea9-9082-981e"
+              }
+            ]
+          }
+        ],
+        "constraints": [
+          {
+            "type": "max",
+            "value": 3,
+            "field": "forces",
+            "scope": "force",
+            "childId": "any",
+            "shared": true,
+            "includeChildSelections": true,
+            "id": "9ee4-6112-9761-3388",
+            "name": "g3y",
+            "message": "g3y",
+            "includeChildForces": true
+          }
+        ]
+      },
+      {
+        "name": "G4n max4 forces",
+        "id": "6c9f-5a09-cc6e-8500",
+        "hidden": false,
+        "type": "unit",
+        "costs": [
+          {
+            "name": "pts",
+            "typeId": "a2d8-5d18-80b9-4be2",
+            "value": 10
+          }
+        ],
+        "profiles": [
+          {
+            "name": "g4n-ownw",
+            "id": "85f6-139b-151f-7b96",
+            "hidden": false,
+            "typeId": "8d4c-372e-8ac3-def2",
+            "typeName": "Melee Weapons",
+            "characteristics": [
+              {
+                "name": "A",
+                "typeId": "4c71-02b5-b294-444d"
+              },
+              {
+                "name": "S",
+                "typeId": "b7c2-bb77-0d0c-4052"
+              },
+              {
+                "name": "WS",
+                "typeId": "b755-0ea0-6554-6646"
+              },
+              {
+                "name": "Keywords",
+                "typeId": "a2d2-6932-5906-9eaf",
+                "$text": "g4n-own"
+              },
+              {
+                "name": "Num",
+                "typeId": "e4ba-e365-6ee4-10a4"
+              },
+              {
+                "name": "Txt",
+                "typeId": "7e9c-6ea9-9082-981e"
+              }
+            ]
+          }
+        ],
+        "constraints": [
+          {
+            "type": "max",
+            "value": 4,
+            "field": "forces",
+            "scope": "force",
+            "childId": "any",
+            "shared": true,
+            "includeChildSelections": true,
+            "id": "34f6-41a6-d4e4-9f2d",
+            "name": "g4n",
+            "message": "g4n",
+            "includeChildForces": false
+          }
+        ]
+      },
+      {
+        "name": "G4y max4 forces childforces",
+        "id": "54a2-61cf-cdfd-03ac",
+        "hidden": false,
+        "type": "unit",
+        "costs": [
+          {
+            "name": "pts",
+            "typeId": "a2d8-5d18-80b9-4be2",
+            "value": 10
+          }
+        ],
+        "profiles": [
+          {
+            "name": "g4y-ownw",
+            "id": "ffe5-e6ea-7b9c-a0f2",
+            "hidden": false,
+            "typeId": "8d4c-372e-8ac3-def2",
+            "typeName": "Melee Weapons",
+            "characteristics": [
+              {
+                "name": "A",
+                "typeId": "4c71-02b5-b294-444d"
+              },
+              {
+                "name": "S",
+                "typeId": "b7c2-bb77-0d0c-4052"
+              },
+              {
+                "name": "WS",
+                "typeId": "b755-0ea0-6554-6646"
+              },
+              {
+                "name": "Keywords",
+                "typeId": "a2d2-6932-5906-9eaf",
+                "$text": "g4y-own"
+              },
+              {
+                "name": "Num",
+                "typeId": "e4ba-e365-6ee4-10a4"
+              },
+              {
+                "name": "Txt",
+                "typeId": "7e9c-6ea9-9082-981e"
+              }
+            ]
+          }
+        ],
+        "constraints": [
+          {
+            "type": "max",
+            "value": 4,
+            "field": "forces",
+            "scope": "force",
+            "childId": "any",
+            "shared": true,
+            "includeChildSelections": true,
+            "id": "2be2-70ce-0b70-706b",
+            "name": "g4y",
+            "message": "g4y",
+            "includeChildForces": true
+          }
+        ]
+      },
+      {
+        "name": "HA max0 forces of CFA",
+        "id": "974b-b1b4-f1bd-c50b",
+        "hidden": false,
+        "type": "unit",
+        "costs": [
+          {
+            "name": "pts",
+            "typeId": "a2d8-5d18-80b9-4be2",
+            "value": 10
+          }
+        ],
+        "profiles": [
+          {
+            "name": "ha-ownw",
+            "id": "b556-b564-4b73-35de",
+            "hidden": false,
+            "typeId": "8d4c-372e-8ac3-def2",
+            "typeName": "Melee Weapons",
+            "characteristics": [
+              {
+                "name": "A",
+                "typeId": "4c71-02b5-b294-444d"
+              },
+              {
+                "name": "S",
+                "typeId": "b7c2-bb77-0d0c-4052"
+              },
+              {
+                "name": "WS",
+                "typeId": "b755-0ea0-6554-6646"
+              },
+              {
+                "name": "Keywords",
+                "typeId": "a2d2-6932-5906-9eaf",
+                "$text": "ha-own"
+              },
+              {
+                "name": "Num",
+                "typeId": "e4ba-e365-6ee4-10a4"
+              },
+              {
+                "name": "Txt",
+                "typeId": "7e9c-6ea9-9082-981e"
+              }
+            ]
+          }
+        ],
+        "constraints": [
+          {
+            "type": "max",
+            "value": 0,
+            "field": "forces",
+            "scope": "force",
+            "childId": "ba88-16b8-a9be-b5fd",
+            "shared": true,
+            "includeChildSelections": true,
+            "id": "b2e9-f329-a897-ca9d",
+            "name": "ha",
+            "message": "ha",
+            "includeChildForces": false
+          }
+        ]
+      },
+      {
+        "name": "HB max0 forces of CFA childforces",
+        "id": "ec10-be20-cc18-97a7",
+        "hidden": false,
+        "type": "unit",
+        "costs": [
+          {
+            "name": "pts",
+            "typeId": "a2d8-5d18-80b9-4be2",
+            "value": 10
+          }
+        ],
+        "profiles": [
+          {
+            "name": "hb-ownw",
+            "id": "60be-2528-7d9a-4c2c",
+            "hidden": false,
+            "typeId": "8d4c-372e-8ac3-def2",
+            "typeName": "Melee Weapons",
+            "characteristics": [
+              {
+                "name": "A",
+                "typeId": "4c71-02b5-b294-444d"
+              },
+              {
+                "name": "S",
+                "typeId": "b7c2-bb77-0d0c-4052"
+              },
+              {
+                "name": "WS",
+                "typeId": "b755-0ea0-6554-6646"
+              },
+              {
+                "name": "Keywords",
+                "typeId": "a2d2-6932-5906-9eaf",
+                "$text": "hb-own"
+              },
+              {
+                "name": "Num",
+                "typeId": "e4ba-e365-6ee4-10a4"
+              },
+              {
+                "name": "Txt",
+                "typeId": "7e9c-6ea9-9082-981e"
+              }
+            ]
+          }
+        ],
+        "constraints": [
+          {
+            "type": "max",
+            "value": 0,
+            "field": "forces",
+            "scope": "force",
+            "childId": "ba88-16b8-a9be-b5fd",
+            "shared": true,
+            "includeChildSelections": true,
+            "id": "1321-6bc2-f252-4130",
+            "name": "hb",
+            "message": "hb",
+            "includeChildForces": true
+          }
+        ]
+      },
+      {
+        "name": "HC max0 forces of GF childforces",
+        "id": "d652-6d8d-52ea-7366",
+        "hidden": false,
+        "type": "unit",
+        "costs": [
+          {
+            "name": "pts",
+            "typeId": "a2d8-5d18-80b9-4be2",
+            "value": 10
+          }
+        ],
+        "profiles": [
+          {
+            "name": "hc-ownw",
+            "id": "962e-fc97-0382-d2e9",
+            "hidden": false,
+            "typeId": "8d4c-372e-8ac3-def2",
+            "typeName": "Melee Weapons",
+            "characteristics": [
+              {
+                "name": "A",
+                "typeId": "4c71-02b5-b294-444d"
+              },
+              {
+                "name": "S",
+                "typeId": "b7c2-bb77-0d0c-4052"
+              },
+              {
+                "name": "WS",
+                "typeId": "b755-0ea0-6554-6646"
+              },
+              {
+                "name": "Keywords",
+                "typeId": "a2d2-6932-5906-9eaf",
+                "$text": "hc-own"
+              },
+              {
+                "name": "Num",
+                "typeId": "e4ba-e365-6ee4-10a4"
+              },
+              {
+                "name": "Txt",
+                "typeId": "7e9c-6ea9-9082-981e"
+              }
+            ]
+          }
+        ],
+        "constraints": [
+          {
+            "type": "max",
+            "value": 0,
+            "field": "forces",
+            "scope": "force",
+            "childId": "bdd2-480a-2a7e-6824",
+            "shared": true,
+            "includeChildSelections": true,
+            "id": "532b-b086-47c1-77f1",
+            "name": "hc",
+            "message": "hc",
+            "includeChildForces": true
+          }
+        ]
+      },
+      {
+        "name": "MA atLeast 1 forces CFA",
+        "id": "7977-ce47-764c-607f",
+        "hidden": false,
+        "type": "unit",
+        "costs": [
+          {
+            "name": "pts",
+            "typeId": "a2d8-5d18-80b9-4be2",
+            "value": 10
+          }
+        ],
+        "profiles": [
+          {
+            "name": "ma-ownw",
+            "id": "6f61-361c-cd7f-5183",
+            "hidden": false,
+            "typeId": "8d4c-372e-8ac3-def2",
+            "typeName": "Melee Weapons",
+            "characteristics": [
+              {
+                "name": "A",
+                "typeId": "4c71-02b5-b294-444d"
+              },
+              {
+                "name": "S",
+                "typeId": "b7c2-bb77-0d0c-4052"
+              },
+              {
+                "name": "WS",
+                "typeId": "b755-0ea0-6554-6646"
+              },
+              {
+                "name": "Keywords",
+                "typeId": "a2d2-6932-5906-9eaf",
+                "$text": "ma-own"
+              },
+              {
+                "name": "Num",
+                "typeId": "e4ba-e365-6ee4-10a4"
+              },
+              {
+                "name": "Txt",
+                "typeId": "7e9c-6ea9-9082-981e"
+              }
+            ],
+            "modifiers": [
+              {
+                "field": "a2d2-6932-5906-9eaf",
+                "type": "append",
+                "value": "IF-ma",
+                "join": ", ",
+                "conditions": [
+                  {
+                    "type": "atLeast",
+                    "field": "forces",
+                    "scope": "force",
+                    "childId": "ba88-16b8-a9be-b5fd",
+                    "value": 1,
+                    "shared": true,
+                    "includeChildSelections": true,
+                    "includeChildForces": true
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "MB instanceOf CFA scope force",
+        "id": "5575-abf6-ac22-fdfe",
+        "hidden": false,
+        "type": "unit",
+        "costs": [
+          {
+            "name": "pts",
+            "typeId": "a2d8-5d18-80b9-4be2",
+            "value": 10
+          }
+        ],
+        "profiles": [
+          {
+            "name": "mb-ownw",
+            "id": "d19a-9427-a69c-f23c",
+            "hidden": false,
+            "typeId": "8d4c-372e-8ac3-def2",
+            "typeName": "Melee Weapons",
+            "characteristics": [
+              {
+                "name": "A",
+                "typeId": "4c71-02b5-b294-444d"
+              },
+              {
+                "name": "S",
+                "typeId": "b7c2-bb77-0d0c-4052"
+              },
+              {
+                "name": "WS",
+                "typeId": "b755-0ea0-6554-6646"
+              },
+              {
+                "name": "Keywords",
+                "typeId": "a2d2-6932-5906-9eaf",
+                "$text": "mb-own"
+              },
+              {
+                "name": "Num",
+                "typeId": "e4ba-e365-6ee4-10a4"
+              },
+              {
+                "name": "Txt",
+                "typeId": "7e9c-6ea9-9082-981e"
+              }
+            ],
+            "modifiers": [
+              {
+                "field": "a2d2-6932-5906-9eaf",
+                "type": "append",
+                "value": "IF-mb",
+                "join": ", ",
+                "conditions": [
+                  {
+                    "type": "instanceOf",
+                    "field": "selections",
+                    "scope": "force",
+                    "childId": "ba88-16b8-a9be-b5fd",
+                    "value": 1,
+                    "shared": true,
+                    "includeChildSelections": true
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "MC instanceOf PF scope force",
+        "id": "0c37-61b5-eb0d-c34f",
+        "hidden": false,
+        "type": "unit",
+        "costs": [
+          {
+            "name": "pts",
+            "typeId": "a2d8-5d18-80b9-4be2",
+            "value": 10
+          }
+        ],
+        "profiles": [
+          {
+            "name": "mc-ownw",
+            "id": "d793-23e0-6484-7f8e",
+            "hidden": false,
+            "typeId": "8d4c-372e-8ac3-def2",
+            "typeName": "Melee Weapons",
+            "characteristics": [
+              {
+                "name": "A",
+                "typeId": "4c71-02b5-b294-444d"
+              },
+              {
+                "name": "S",
+                "typeId": "b7c2-bb77-0d0c-4052"
+              },
+              {
+                "name": "WS",
+                "typeId": "b755-0ea0-6554-6646"
+              },
+              {
+                "name": "Keywords",
+                "typeId": "a2d2-6932-5906-9eaf",
+                "$text": "mc-own"
+              },
+              {
+                "name": "Num",
+                "typeId": "e4ba-e365-6ee4-10a4"
+              },
+              {
+                "name": "Txt",
+                "typeId": "7e9c-6ea9-9082-981e"
+              }
+            ],
+            "modifiers": [
+              {
+                "field": "a2d2-6932-5906-9eaf",
+                "type": "append",
+                "value": "IF-mc",
+                "join": ", ",
+                "conditions": [
+                  {
+                    "type": "instanceOf",
+                    "field": "selections",
+                    "scope": "force",
+                    "childId": "56a3-3faf-fba6-9ac0",
+                    "value": 1,
+                    "shared": true,
+                    "includeChildSelections": true
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "MD instanceOf CFA scope ancestor",
+        "id": "92ca-ab1e-fc98-87ba",
+        "hidden": false,
+        "type": "unit",
+        "costs": [
+          {
+            "name": "pts",
+            "typeId": "a2d8-5d18-80b9-4be2",
+            "value": 10
+          }
+        ],
+        "profiles": [
+          {
+            "name": "md-ownw",
+            "id": "4ab6-e465-2381-2f59",
+            "hidden": false,
+            "typeId": "8d4c-372e-8ac3-def2",
+            "typeName": "Melee Weapons",
+            "characteristics": [
+              {
+                "name": "A",
+                "typeId": "4c71-02b5-b294-444d"
+              },
+              {
+                "name": "S",
+                "typeId": "b7c2-bb77-0d0c-4052"
+              },
+              {
+                "name": "WS",
+                "typeId": "b755-0ea0-6554-6646"
+              },
+              {
+                "name": "Keywords",
+                "typeId": "a2d2-6932-5906-9eaf",
+                "$text": "md-own"
+              },
+              {
+                "name": "Num",
+                "typeId": "e4ba-e365-6ee4-10a4"
+              },
+              {
+                "name": "Txt",
+                "typeId": "7e9c-6ea9-9082-981e"
+              }
+            ],
+            "modifiers": [
+              {
+                "field": "a2d2-6932-5906-9eaf",
+                "type": "append",
+                "value": "IF-md",
+                "join": ", ",
+                "conditions": [
+                  {
+                    "type": "instanceOf",
+                    "field": "selections",
+                    "scope": "ancestor",
+                    "childId": "ba88-16b8-a9be-b5fd",
+                    "value": 1,
+                    "shared": true,
+                    "includeChildSelections": true
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "ME atLeast 1 F in parent force",
+        "id": "6cc7-a641-ca1f-d14a",
+        "hidden": false,
+        "type": "unit",
+        "costs": [
+          {
+            "name": "pts",
+            "typeId": "a2d8-5d18-80b9-4be2",
+            "value": 10
+          }
+        ],
+        "profiles": [
+          {
+            "name": "me-ownw",
+            "id": "5859-727c-6648-c2d9",
+            "hidden": false,
+            "typeId": "8d4c-372e-8ac3-def2",
+            "typeName": "Melee Weapons",
+            "characteristics": [
+              {
+                "name": "A",
+                "typeId": "4c71-02b5-b294-444d"
+              },
+              {
+                "name": "S",
+                "typeId": "b7c2-bb77-0d0c-4052"
+              },
+              {
+                "name": "WS",
+                "typeId": "b755-0ea0-6554-6646"
+              },
+              {
+                "name": "Keywords",
+                "typeId": "a2d2-6932-5906-9eaf",
+                "$text": "me-own"
+              },
+              {
+                "name": "Num",
+                "typeId": "e4ba-e365-6ee4-10a4"
+              },
+              {
+                "name": "Txt",
+                "typeId": "7e9c-6ea9-9082-981e"
+              }
+            ],
+            "modifiers": [
+              {
+                "field": "a2d2-6932-5906-9eaf",
+                "type": "append",
+                "value": "IF-me",
+                "join": ", ",
+                "conditions": [
+                  {
+                    "type": "atLeast",
+                    "field": "selections",
+                    "scope": "force",
+                    "childId": "35de-1ff6-5f18-ca4f",
+                    "value": 1,
+                    "shared": true,
+                    "includeChildSelections": true
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "MF atLeast 1 F roster",
+        "id": "b8cf-1f14-499f-80c6",
+        "hidden": false,
+        "type": "unit",
+        "costs": [
+          {
+            "name": "pts",
+            "typeId": "a2d8-5d18-80b9-4be2",
+            "value": 10
+          }
+        ],
+        "profiles": [
+          {
+            "name": "mf-ownw",
+            "id": "8295-4b29-1278-3e92",
+            "hidden": false,
+            "typeId": "8d4c-372e-8ac3-def2",
+            "typeName": "Melee Weapons",
+            "characteristics": [
+              {
+                "name": "A",
+                "typeId": "4c71-02b5-b294-444d"
+              },
+              {
+                "name": "S",
+                "typeId": "b7c2-bb77-0d0c-4052"
+              },
+              {
+                "name": "WS",
+                "typeId": "b755-0ea0-6554-6646"
+              },
+              {
+                "name": "Keywords",
+                "typeId": "a2d2-6932-5906-9eaf",
+                "$text": "mf-own"
+              },
+              {
+                "name": "Num",
+                "typeId": "e4ba-e365-6ee4-10a4"
+              },
+              {
+                "name": "Txt",
+                "typeId": "7e9c-6ea9-9082-981e"
+              }
+            ],
+            "modifiers": [
+              {
+                "field": "a2d2-6932-5906-9eaf",
+                "type": "append",
+                "value": "IF-mf",
+                "join": ", ",
+                "conditions": [
+                  {
+                    "type": "atLeast",
+                    "field": "selections",
+                    "scope": "roster",
+                    "childId": "35de-1ff6-5f18-ca4f",
+                    "value": 1,
+                    "shared": true,
+                    "includeChildSelections": true
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "MG atLeast 1 F force incl child forces",
+        "id": "cb54-a0ba-65bd-7766",
+        "hidden": false,
+        "type": "unit",
+        "costs": [
+          {
+            "name": "pts",
+            "typeId": "a2d8-5d18-80b9-4be2",
+            "value": 10
+          }
+        ],
+        "profiles": [
+          {
+            "name": "mg-ownw",
+            "id": "186a-b86f-d8dc-2b3a",
+            "hidden": false,
+            "typeId": "8d4c-372e-8ac3-def2",
+            "typeName": "Melee Weapons",
+            "characteristics": [
+              {
+                "name": "A",
+                "typeId": "4c71-02b5-b294-444d"
+              },
+              {
+                "name": "S",
+                "typeId": "b7c2-bb77-0d0c-4052"
+              },
+              {
+                "name": "WS",
+                "typeId": "b755-0ea0-6554-6646"
+              },
+              {
+                "name": "Keywords",
+                "typeId": "a2d2-6932-5906-9eaf",
+                "$text": "mg-own"
+              },
+              {
+                "name": "Num",
+                "typeId": "e4ba-e365-6ee4-10a4"
+              },
+              {
+                "name": "Txt",
+                "typeId": "7e9c-6ea9-9082-981e"
+              }
+            ],
+            "modifiers": [
+              {
+                "field": "a2d2-6932-5906-9eaf",
+                "type": "append",
+                "value": "IF-mg",
+                "join": ", ",
+                "conditions": [
+                  {
+                    "type": "atLeast",
+                    "field": "selections",
+                    "scope": "force",
+                    "childId": "35de-1ff6-5f18-ca4f",
+                    "value": 1,
+                    "shared": true,
+                    "includeChildSelections": true,
+                    "includeChildForces": true
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

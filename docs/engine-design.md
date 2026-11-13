@@ -323,7 +323,7 @@ Each ends with something that runs and is checked.
 | M3 | Modifier pipeline for characteristics and costs, plain numbers and text | T04, T05, T08, T12, T14, T09 pass; costs and profile values match NR exports (done, section 18) |
 | M4 | Number tokens inside dice and compound values, `position` | The 27 observations M3 reported as needing tokens pass, and 248 odd-value profiles match NR; the worked-example replica gives `D6+2` (done, section 19) |
 | M5 | Constraints and validation | Validator messages match NR for the synthetic `M5 Constraints` catalogue (min, max, exactly, percent, hidden, scopes, modified limits, cost fields, groups, roster cost limits). The G1 to G3 cost rules were done in M2/M3; leader/bodyguard messages moved to M7 with associations (done, section 20) |
-| M6 | Automatic instantiation (child forces, force and category constraints, and more modifier fields stay open) | The instantiator matches what NR adds for the synthetic `M5 Constraints` and `M6 Instantiate` catalogues; every unit of the generated scale dataset can be added, instantiated and validated without errors (done, section 21) |
+| M6 | Automatic instantiation (force and category constraints, and more modifier fields stay open) | The instantiator matches what NR adds for the synthetic `M5 Constraints` and `M6 Instantiate` catalogues; every unit of the generated scale dataset can be added, instantiated and validated without errors (done, section 21) |
 | M7 | Associations, `affects` (profiles) including `group`, `traverseAssociationGroup` | The synthetic `M7 Associations` observations match, and the E/F/G4 exported rosters match with and without the attachment: all 141 profile values (done, section 22) |
 | M8 | Differential testing against NR | A corpus of rosters exported from NR for the synthetic systems shows the same totals, values and validation as NR. Real data can be checked locally by anyone who holds it, outside the repository and CI |
 | M9 | Roster file format: read and write | A roster exported from NR loads, evaluates to the same totals, and writes back so that NR opens it; the format is documented in the spec |
@@ -968,6 +968,30 @@ roster, where F's weapon gains E's keyword.
 **Open.** `ids`, `of` and `labelMember` on associations; association scopes other than `force`; `affects` with an id
 filter together with `group`; plural wording of the limit messages ("units"); a leader attached to several units;
 whether the modifier order within a group follows attach order or tree order (they agreed in the sweep).
+
+**Memory.** Unchanged (memory check passes).
+
+## 23. M8: child forces
+
+Done on branch `child-forces`. Scope agreed with the user: the model and counting, observed in New Recruit with a
+synthetic catalogue; force and category constraints, and instantiation of child forces, stay open.
+
+`ForceNode` has a parent and children; `RosterModel.forces()` are the top-level forces and `allForces()` every force,
+parents before children. `RosterModel.addChildForce` adds one, `selections()` and the cost totals include all forces,
+and `ForceNode.costs()` includes the children's (observed). `Roster.Force` has a `forces` array, so exported rosters
+round-trip, and `RosterBinder` binds nested forces. `ForceNode.up()` is the parent force, so scope `ancestor` and
+`instanceOf` with scope `force` follow the tree.
+
+Counting: `Evaluator` descends into child forces only with `includeChildForces` (always for scope `roster`; for costs
+it is implied unless the scope is `force`, which is the spec's rule and was not observed). `forces` counts direct child
+forces, or all below with the flag.
+
+**Tests.** `ChildForceTest`: the tree and totals, selection counts at every scope, force counts in each force, the
+conditions and a binding of the exported m8 roster. `RosterTest` round-trips the export.
+
+**Open.** Force and category constraints; adding child forces automatically; `affects` with the `forces` target
+(HH3's `error` on forces); cost fields at scope `force` with `includeChildForces`; percent values across forces;
+how a child force is chosen when several catalogues offer one.
 
 **Memory.** Unchanged (memory check passes).
 

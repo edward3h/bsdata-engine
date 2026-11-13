@@ -140,7 +140,10 @@ public final class Evaluator {
         if (q.scope().equals("self") && found.nodes().get(0) instanceof Selection self && matchesIds(self, childId)) {
             effective = "any";
         }
-        List<Candidate> candidates = candidates(found, q.includeChildSelections() || cost, !cost);
+        // observed: a count in a force reaches its child forces only with includeChildForces (the roster reaches all
+        // forces); for costs the spec says includeChildForces is implied unless the scope is a force
+        boolean forces = q.includeChildForces() || cost && !q.scope().equals("force");
+        List<Candidate> candidates = candidates(found, q.includeChildSelections() || cost, !cost, forces);
         double sum = 0;
         for (Candidate c : candidates) {
             if (field.equals("forces")) {
@@ -172,8 +175,11 @@ public final class Evaluator {
      *
      * @param deep all depths, or only the next level
      * @param selfCounts whether {@code -self} adds the node (false for cost queries)
+     * @param includeForces whether to look inside child forces of a force (a child force is itself a candidate for
+     *     {@code forces} either way; the roster looks inside every force)
      */
-    private static List<Candidate> candidates(Scopes.Found found, boolean deep, boolean selfCounts) {
+    private static List<Candidate> candidates(
+            Scopes.Found found, boolean deep, boolean selfCounts, boolean includeForces) {
         List<Candidate> out = new ArrayList<>();
         switch (found.kind()) {
             case MEMBERS -> {
@@ -181,7 +187,7 @@ public final class Evaluator {
                     Selection s = (Selection) m;
                     out.add(new Candidate(s, s.amount()));
                     if (deep) {
-                        collect(s, s.amount(), true, out);
+                        collect(s, s.amount(), true, includeForces, out);
                     }
                 }
             }
@@ -195,27 +201,32 @@ public final class Evaluator {
                 if (found.includeSelf() && selfCounts) {
                     out.add(new Candidate(node, node instanceof Selection s ? s.amount() : 1));
                 }
-                collect(node, 1, deep, out);
+                collect(node, 1, deep, includeForces || node instanceof RosterModel, out);
             }
         }
         return out;
     }
 
-    private static void collect(TreeNode node, double weight, boolean deep, List<Candidate> out) {
+    private static void collect(
+            TreeNode node, double weight, boolean deep, boolean includeForces, List<Candidate> out) {
         for (TreeNode child : node.down()) {
-            if (child instanceof ForceNode || child instanceof CategoryNode) {
-                // structure, not something to count by amount: look through it (a force is still a candidate for
-                // "forces" queries)
-                if (child instanceof ForceNode) {
-                    out.add(new Candidate(child, 1));
+            if (child instanceof ForceNode) {
+                // structure, not something to count by amount, but a candidate for "forces" queries; its contents
+                // only count when child forces are included
+                out.add(new Candidate(child, 1));
+                if (includeForces) {
+                    collect(child, weight, deep, true, out);
                 }
-                collect(child, weight, deep, out);
+                continue;
+            }
+            if (child instanceof CategoryNode) {
+                collect(child, weight, deep, includeForces, out);
                 continue;
             }
             double w = weight * (child instanceof Selection s ? s.amount() : 1);
             out.add(new Candidate(child, w));
             if (deep) {
-                collect(child, w, true, out);
+                collect(child, w, true, includeForces, out);
             }
         }
     }
@@ -223,7 +234,7 @@ public final class Evaluator {
     /** The selections a scope finds, at the next level or at all depths (the node itself is not included). */
     static List<Selection> selectionsIn(Scopes.Found found, boolean deep) {
         List<Selection> out = new ArrayList<>();
-        for (Candidate c : candidates(found, deep, false)) {
+        for (Candidate c : candidates(found, deep, false, false)) {
             if (c.node() instanceof Selection s) {
                 out.add(s);
             }
@@ -417,7 +428,8 @@ public final class Evaluator {
         }
         double count = 0;
         // a scope that resolves to nothing has nothing to count: the count is 0, as for any other condition
-        List<Candidate> candidates = found == null ? List.of() : candidates(found, g.includeChildSelections(), true);
+        List<Candidate> candidates =
+                found == null ? List.of() : candidates(found, g.includeChildSelections(), true, g.includeChildForces());
         for (Candidate cd : candidates) {
             if (!(cd.node() instanceof Selection s)) {
                 continue;

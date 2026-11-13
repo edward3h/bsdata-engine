@@ -37,8 +37,38 @@ public final class RosterModel implements TreeNode {
         return name;
     }
 
+    /** The forces at the top of the roster; each holds its child forces. */
     public List<ForceNode> forces() {
         return Collections.unmodifiableList(forces);
+    }
+
+    /** Every force, parents before children, each parent's children in order. */
+    public List<ForceNode> allForces() {
+        List<ForceNode> out = new ArrayList<>();
+        for (ForceNode f : forces) {
+            out.addAll(f.withDescendants());
+        }
+        return out;
+    }
+
+    /** Adds a force under another, with a category node for each category link of its force entry. */
+    public ForceNode addChildForce(ForceNode parent, ForceEntry entry, Catalogue catalogue) {
+        return addChildForce(parent, "f" + nextId++, entry, catalogue, true);
+    }
+
+    /** Adds a child force; the caller adds its categories when {@code categories} is false (a roster file). */
+    public ForceNode addChildForce(
+            ForceNode parent, String id, ForceEntry entry, Catalogue catalogue, boolean categories) {
+        ForceNode f = new ForceNode(this, id, entry, catalogue, parent);
+        parent.addChild(f);
+        if (categories) {
+            for (var link : entry.categoryLinks()) {
+                f.addCategory("c" + nextId++, link.targetId(), link.name(), link.primary());
+            }
+        }
+        order = null;
+        modCount++;
+        return f;
     }
 
     public ForceNode addForce(ForceEntry entry, Catalogue catalogue) {
@@ -56,7 +86,7 @@ public final class RosterModel implements TreeNode {
 
     /** Adds a force with no category nodes; the caller adds them (for example from a roster file). */
     public ForceNode addBareForce(String id, ForceEntry entry, Catalogue catalogue) {
-        ForceNode f = new ForceNode(this, id, entry, catalogue);
+        ForceNode f = new ForceNode(this, id, entry, catalogue, null);
         forces.add(f);
         modCount++;
         return f;
@@ -151,7 +181,7 @@ public final class RosterModel implements TreeNode {
     /** All selections, parents before children. */
     public List<Selection> selections() {
         List<Selection> out = new ArrayList<>();
-        for (ForceNode f : forces) {
+        for (ForceNode f : allForces()) {
             for (Selection s : f.selections()) {
                 collect(s, out);
             }

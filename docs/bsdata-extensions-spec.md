@@ -658,6 +658,21 @@ From the repo READMEs and BlueScribe's behaviour:
 - HH3 uses a **parent/child force model**: a detachment's faction is found
   with "Instance of → in roster → Child: ‹faction catalogue›". BlueScribe's
   README lists child forces as unsupported.
+  **Observed in NR (M8 sweep, catalogue `M8 Child Forces`, a Parent force with
+  Child Force A, B and a Grandchild under A):**
+  - The roster file nests a force's children in a `forces` array on the force.
+    The force entries of a game are chosen from the catalogue's `forceEntries`
+    (a game mode); a child force is added from the entries nested in its
+    parent's entry. A parent force's cost includes its children's.
+  - A query counts the units of its own force only, unless `includeChildForces`
+    is set, which adds the units in every child force below, at any depth (not
+    a parent, and not a sibling). Scope `roster` counts every force.
+  - `field: forces` counts the direct child forces, or with
+    `includeChildForces` every force below, never the force itself; `childId`
+    filters by the force entry id.
+  - `instanceOf` with scope `force` is the nearest force (a child force is
+    itself the child entry, not the parent); with scope `ancestor` it is any
+    force on the way up.
 - References by **name** instead of ID (`childName`; names with leading
   whitespace are used for sort order).
 - Generic library catalogues (weapons, wargear, rules) imported through

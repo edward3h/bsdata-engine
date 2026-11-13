@@ -23,6 +23,7 @@ NR's source. The file shape mirrors BattleScribe's `.ros` XML (`xmlns` is
 force:  { "id", "name", "entryId",
           "catalogueId", "catalogueRevision", "catalogueName",
           "categories": [ category ], "selections": [ selection ],
+          "forces"?: [ force ],   // child forces, nested to any depth
           "profiles": [ ... ], "rules": [ ... ] }
 
 selection: { "id", "name", "entryId", "number", "type", "from",

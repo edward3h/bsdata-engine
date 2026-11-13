@@ -48,7 +48,10 @@ class RosterTest {
     @Test
     void writingARosterReproducesTheFile() throws IOException {
         for (String file : List.of(
-                "dup-constraints.roster.json", "extension-tests.roster.json", "extension-tests-attached.roster.json")) {
+                "dup-constraints.roster.json",
+                "extension-tests.roster.json",
+                "extension-tests-attached.roster.json",
+                "m8-child-forces.roster.json")) {
             DataNode parsed = JSON.parse(resource(file));
             Roster roster = Roster.read(parsed);
             assertEquals(parsed, roster.toNode(), file);

@@ -19,9 +19,12 @@ public final class ForceNode implements TreeNode {
     private final Catalogue catalogue;
     private final List<CategoryNode> categories = new ArrayList<>();
     private final List<Selection> uncategorised = new ArrayList<>();
+    private final @Nullable ForceNode parent;
+    private final List<ForceNode> children = new ArrayList<>();
 
-    ForceNode(RosterModel model, String id, ForceEntry entry, Catalogue catalogue) {
+    ForceNode(RosterModel model, String id, ForceEntry entry, Catalogue catalogue, @Nullable ForceNode parent) {
         this.model = model;
+        this.parent = parent;
         this.id = id;
         this.entry = entry;
         this.catalogue = catalogue;
@@ -71,15 +74,40 @@ public final class ForceNode implements TreeNode {
         return Collections.unmodifiableList(out);
     }
 
+    /** The force this one is a child of, or null for a force at the top of the roster. */
+    public @Nullable ForceNode parent() {
+        return parent;
+    }
+
+    /** The forces added directly under this one, in the order added. */
+    public List<ForceNode> children() {
+        return Collections.unmodifiableList(children);
+    }
+
+    void addChild(ForceNode child) {
+        children.add(child);
+    }
+
+    /** This force and all below it, parents before children. */
+    public List<ForceNode> withDescendants() {
+        List<ForceNode> out = new ArrayList<>();
+        out.add(this);
+        for (ForceNode c : children) {
+            out.addAll(c.withDescendants());
+        }
+        return out;
+    }
+
     @Override
     public TreeNode up() {
-        return model;
+        return parent != null ? parent : model;
     }
 
     @Override
     public List<? extends TreeNode> down() {
         List<TreeNode> out = new ArrayList<>(categories);
         out.addAll(uncategorised);
+        out.addAll(children);
         return out;
     }
 
@@ -100,11 +128,13 @@ public final class ForceNode implements TreeNode {
         return model;
     }
 
-    /** The own costs of all selections in this force. */
+    /** The own costs of all selections in this force and its child forces (observed: a parent's total includes them). */
     public Map<String, Double> costs() {
         Map<String, Double> out = new LinkedHashMap<>();
-        for (Selection s : selections()) {
-            s.subtreeCosts().forEach((type, v) -> out.merge(type, v, Double::sum));
+        for (ForceNode f : withDescendants()) {
+            for (Selection s : f.selections()) {
+                s.subtreeCosts().forEach((type, v) -> out.merge(type, v, Double::sum));
+            }
         }
         return out;
     }

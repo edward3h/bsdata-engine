@@ -57,6 +57,7 @@ public record Roster(
             List<Selection> selections,
             List<DataNode> profiles,
             List<DataNode> rules,
+            List<Force> forces,
             Map<String, DataNode> extra) {}
 
     /**
@@ -135,6 +136,7 @@ public record Roster(
                 list(f, "selections", Roster::selection),
                 f.array("profiles"),
                 f.array("rules"),
+                list(f, "forces", Roster::force),
                 f.rest());
     }
 
@@ -235,6 +237,7 @@ public record Roster(
         putNonEmpty(m, "rules", f.rules());
         putNonEmpty(m, "selections", f.selections().stream().map(Roster::node).toList());
         putNonEmpty(m, "categories", f.categories().stream().map(Roster::node).toList());
+        putNonEmpty(m, "forces", f.forces().stream().map(Roster::node).toList());
         m.put("id", new DataNode.Str(f.id()));
         m.put("name", new DataNode.Str(f.name()));
         m.put("entryId", new DataNode.Str(f.entryId()));

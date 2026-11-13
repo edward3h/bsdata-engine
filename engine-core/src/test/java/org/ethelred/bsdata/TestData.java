@@ -19,7 +19,8 @@ public final class TestData {
         "M2 Scopes",
         "M5 Constraints",
         "M6 Instantiate",
-        "M7 Associations"
+        "M7 Associations",
+        "M8 Child Forces"
     };
 
     private TestData() {}

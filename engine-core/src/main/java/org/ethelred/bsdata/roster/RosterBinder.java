@@ -21,31 +21,48 @@ public final class RosterBinder {
         RosterModel model = new RosterModel(data, file.name());
         List<String> problems = new ArrayList<>();
         for (Roster.Force f : file.forces()) {
-            Catalogue catalogue = data.catalogueById(f.catalogueId());
-            if (catalogue == null) {
-                problems.add("force " + f.name() + ": catalogue " + f.catalogueId() + " not loaded");
-                continue;
-            }
-            ForceEntry entry = data.forceEntry(catalogue.file(), f.entryId());
-            if (entry == null) {
-                problems.add("force " + f.name() + ": force entry " + f.entryId() + " not found");
-                continue;
-            }
-            ForceNode force = model.addBareForce(f.id(), entry, catalogue);
-            // the categories are those the file lists, with the node ids it gave them
-            for (Roster.Category c : f.categories()) {
-                force.addCategory(c.id(), c.entryId(), c.name(), c.primary());
-            }
-            for (Roster.Selection s : f.selections()) {
-                bindSelection(data, model, catalogue.file(), s, null, force, problems);
-            }
+            bindForce(data, model, f, null, problems);
         }
         for (Roster.Force f : file.forces()) {
-            for (Roster.Selection s : f.selections()) {
-                bindAttachments(model, s, problems);
-            }
+            bindForceAttachments(model, f, problems);
         }
         return new Bound(model, problems);
+    }
+
+    private static void bindForce(
+            GameData data, RosterModel model, Roster.Force f, @Nullable ForceNode parent, List<String> problems) {
+        Catalogue catalogue = data.catalogueById(f.catalogueId());
+        if (catalogue == null) {
+            problems.add("force " + f.name() + ": catalogue " + f.catalogueId() + " not loaded");
+            return;
+        }
+        ForceEntry entry = data.forceEntry(catalogue.file(), f.entryId());
+        if (entry == null) {
+            problems.add("force " + f.name() + ": force entry " + f.entryId() + " not found");
+            return;
+        }
+        ForceNode force = parent == null
+                ? model.addBareForce(f.id(), entry, catalogue)
+                : model.addChildForce(parent, f.id(), entry, catalogue, false);
+        // the categories are those the file lists, with the node ids it gave them
+        for (Roster.Category c : f.categories()) {
+            force.addCategory(c.id(), c.entryId(), c.name(), c.primary());
+        }
+        for (Roster.Selection s : f.selections()) {
+            bindSelection(data, model, catalogue.file(), s, null, force, problems);
+        }
+        for (Roster.Force child : f.forces()) {
+            bindForce(data, model, child, force, problems);
+        }
+    }
+
+    private static void bindForceAttachments(RosterModel model, Roster.Force f, List<String> problems) {
+        for (Roster.Selection s : f.selections()) {
+            bindAttachments(model, s, problems);
+        }
+        for (Roster.Force child : f.forces()) {
+            bindForceAttachments(model, child, problems);
+        }
     }
 
     private static void bindAttachments(RosterModel model, Roster.Selection s, List<String> problems) {
