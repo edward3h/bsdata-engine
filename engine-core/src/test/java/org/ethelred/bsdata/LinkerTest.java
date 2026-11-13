@@ -11,10 +11,22 @@ class LinkerTest {
 
     @Test
     void resolvesAcrossFilesAndReportsTheRest() {
-        var a = JSON.parse("{\"catalogue\":{\"id\":\"a\",\"selectionEntries\":[{\"id\":\"b\"}],"
-                + "\"entryLinks\":[{\"id\":\"d\",\"targetId\":\"b\"},{\"id\":\"e\",\"targetId\":\"zzz\"}]}}");
-        var b = JSON.parse("{\"catalogue\":{\"id\":\"f\",\"entryLinks\":[{\"id\":\"g\",\"targetId\":\"b\"}],"
-                + "\"conditions\":[{\"childId\":\"model\"},{\"childId\":\"d\"}]}}");
+        var a = JSON.parse("""
+                {"catalogue": {
+                  "id": "a",
+                  "selectionEntries": [{"id": "b"}],
+                  "entryLinks": [
+                    {"id": "d", "targetId": "b"},
+                    {"id": "e", "targetId": "zzz"}
+                  ]}}
+                """);
+        var b = JSON.parse("""
+                {"catalogue": {
+                  "id": "f",
+                  "entryLinks": [{"id": "g", "targetId": "b"}],
+                  "conditions": [{"childId": "model"}, {"childId": "d"}]
+                }}
+                """);
         var r = Linker.check(Map.of("a.json", a, "b.json", b));
         assertEquals(2, r.files());
         assertEquals(new Linker.Stats(3, 2, 0, 1), r.byField().get("targetId"));
@@ -25,8 +37,12 @@ class LinkerTest {
 
     @Test
     void countsIdsSharedBetweenFiles() {
-        var a = JSON.parse("{\"x\":{\"id\":\"same\"}}");
-        var b = JSON.parse("{\"y\":{\"id\":\"same\"}}");
+        var a = JSON.parse("""
+                {"x": {"id": "same"}}
+                """);
+        var b = JSON.parse("""
+                {"y": {"id": "same"}}
+                """);
         assertEquals(1, Linker.check(Map.of("a", a, "b", b)).idsInSeveralFiles());
     }
 }
