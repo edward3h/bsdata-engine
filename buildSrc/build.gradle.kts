@@ -1,0 +1,14 @@
+plugins {
+    `kotlin-dsl`
+}
+
+repositories {
+    gradlePluginPortal()
+    mavenCentral()
+}
+
+dependencies {
+    implementation("com.github.jakemarsden:git-hooks-gradle-plugin:0.0.2")
+    implementation("com.diffplug.spotless:spotless-plugin-gradle:8.11.0")
+    implementation("org.checkerframework:org.checkerframework.gradle.plugin:1.0.2")
+}
