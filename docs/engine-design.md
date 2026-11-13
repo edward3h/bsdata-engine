@@ -319,7 +319,7 @@ Each ends with something that runs and is checked.
 | M1 | Typed game data, roster tree with explicit selections, costs without modifiers | A unit's base cost sums correctly; hand-made and exported rosters total as NR does (done, section 13). Automatic instantiation is left to M5 |
 | M1a | **Synthetic scale generator** | A deterministic generator writes a game system and catalogues of about 100,000 objects with the shape ratios measured on the real data (section 2); it loads through `Linker` and `GameData` with 0 unresolved links, and JVM and JavaScript reports are byte-identical. It contains no real game content |
 | M1b | **Memory pass** on the loader and typed model | The generated 11e-sized dataset loads in a browser tab within the agreed budget (300 MB peak, agreed 2026-11-13; the real 11e data measured about 930 MB in Node), measured in a real browser and in Node; a half-sized set well inside it; reports unchanged; a regression check records the peak so later milestones cannot quietly undo it (done, section 16) |
-| M2 | Query engine, scopes, conditions, groups | Condition truth tables match the NR notes; T16 passes |
+| M2 | Query engine, scopes, conditions, groups | Condition truth tables match the NR notes; T16 passes; counts match NR on the scope battery (done, section 17) |
 | M3 | Modifier pipeline for plain numbers and text | T04, T05, T08, T12, T14, T09 pass |
 | M4 | Number tokens, `position`, clamps, repeats, `cumulative-*` | All of F01 to F12 in `expected.json` pass except the fractional F08a (informational); the worked-example replica gives `D6+2` |
 | M5 | Constraints and validation | The G1 to G3 cost rules and the leader/bodyguard messages reproduce |
@@ -760,3 +760,50 @@ objects of the largest catalogues until a force uses them.
 **Not done:** measuring on a phone-class browser or with several tabs; a memory budget for
 a roster in play (small next to the data, but unmeasured); and the checker (`Linker`) still
 needs whole trees, so it is not part of the streaming path.
+
+## 17. M2: conditions, scopes and queries
+
+Done on branch `conditions-m2`. Decisions: child forces wait for M6; condition group
+types the editor lists but nothing has observed (numeric and comparison) are parsed and
+reported as unsupported, not guessed; the implementation was written from the spec and
+then checked against NR.
+
+**Code.**
+
+- `rules`: `Condition`, `ConditionGroup`, `LocalGroup`, `Repeat`, `Conditions`,
+  `ModifierDef` (conditions and repeats of a modifier, parsed from the stored text on
+  demand, so retained memory did not grow), and `Evaluator` with `Scopes`.
+- `roster`: the tree now has the levels the scope table assumes, `roster > force >
+  category > selection`, through `TreeNode`, `CategoryNode` and `Selection.up()`, plus
+  an "is" index (`Selection.is`: entry id, link id and target, category links, enclosing
+  groups) and tree order.
+- `Evaluator`: counts (selections, forces, a cost type, `limit::`), conditions,
+  `instanceOf`, `before` (both forms), and/or/not/count groups, local groups, repeat
+  counts. Things it does not support are listed by `diagnostics()` and give a disabled
+  result, not a guess.
+
+**Differential test.** `M2 Scopes` (in `nr-extension-tests`) has profiles whose `Num`
+is incremented once per unit that a repeat's query counts, so the exported `Num` is NR's
+count. `ScopeDifferentialTest` reads the query from each profile, runs it through the
+engine at the selection that owns the profile, and compares. The same trick will test
+modifiers in M3 (a modifier's effect is read off the exported value).
+
+| Result | |
+|---|---|
+| First implementation, from the spec | 681 of 780 profiles matched NR (87%) |
+| After correcting the rules the mismatches showed | 1,224 of 1,284 match; the 60 that do not are all `ancestor` counting |
+| T16 count-group table, `before`, G1 to G3 local groups, APPLY gating | as observed in earlier runs |
+
+**What the mismatches corrected** (all recorded in spec 5.9 and the test repo's
+`RESULTS.md`): counts are relative to the scope node, not total; `-self` counts the node
+at its own amount; a cost query excludes the scope node's own cost; forces and categories
+are transparent; `non-upgrade-entry` falls back to the roster; `group` is a real scope;
+scope `self` with the node's own id counts like `any`; `self-self` is not a scope.
+
+**Still open** (spec section 9): `ancestor` counting, disabled conditions on modifiers,
+`percentValue`, child forces, `-self` on every type scope, and conditions for entries not
+yet in the roster.
+
+**Memory.** The memory check still passes (JVM 64 MB, Node 128 MB; retained 37 MB and
+about 80 MB), because conditions are parsed from text on demand. Typing modifiers in M3
+may change that; re-run the check.

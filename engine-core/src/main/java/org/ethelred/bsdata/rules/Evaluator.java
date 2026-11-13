@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
+import org.ethelred.bsdata.roster.CategoryNode;
 import org.ethelred.bsdata.roster.ForceNode;
 import org.ethelred.bsdata.roster.RosterModel;
 import org.ethelred.bsdata.roster.Selection;
@@ -27,9 +28,12 @@ public final class Evaluator {
         DISABLED
     }
 
-    /** The cost of a selection (its own, not its children's) as it should be seen by a query. */
+    /**
+     * The cost of <em>one</em> of a selection (not times its amount, and not its children's) as a query should see it.
+     * Queries multiply by how many of it they count, relative to the scope node.
+     */
     public interface CostSource {
-        double cost(Selection selection, String costTypeId);
+        double unitCost(Selection selection, String costTypeId);
     }
 
     private final RosterModel model;
@@ -37,7 +41,7 @@ public final class Evaluator {
     private final Set<String> diagnostics = new LinkedHashSet<>();
 
     public Evaluator(RosterModel model) {
-        this(model, (s, type) -> s.costs().getOrDefault(type, 0.0));
+        this(model, (s, type) -> s.unitCosts().getOrDefault(type, 0.0));
     }
 
     public Evaluator(RosterModel model, CostSource costs) {
@@ -83,51 +87,93 @@ public final class Evaluator {
             diagnostics.add("field associations: not supported until M7");
             return null;
         }
-        List<TreeNode> candidates = candidates(
-                found, field.equals("selections") || field.equals("forces") ? q.includeChildSelections() : true);
-        if (field.equals("forces")) {
-            double n = 0;
-            for (TreeNode c : candidates) {
-                if (c instanceof ForceNode f && matches(f, childId)) {
-                    n++;
-                }
-            }
-            return n;
+        if (found.chain()) {
+            diagnostics.add("scope ancestor: counting is not modelled (New Recruit's counts depend on the host in ways"
+                    + " not yet understood); instanceOf works");
+            return null;
         }
+        boolean cost = !field.equals("selections") && !field.equals("forces");
+        // kept from New Recruit: scope self with the scope node's own entry id as childId counts like "any"
+        String effective = childId;
+        if (q.scope().equals("self") && found.nodes().get(0) instanceof Selection self && matchesIds(self, childId)) {
+            effective = "any";
+        }
+        List<Candidate> candidates = candidates(found, q.includeChildSelections() || cost, !cost);
         double sum = 0;
-        for (TreeNode c : candidates) {
-            if (c instanceof Selection s && matches(s, childId)) {
-                sum += field.equals("selections") ? s.total() : costs.cost(s, field);
+        for (Candidate c : candidates) {
+            if (field.equals("forces")) {
+                if (c.node() instanceof ForceNode f && matches(f, effective)) {
+                    sum += 1;
+                }
+            } else if (c.node() instanceof Selection s && matches(s, effective)) {
+                sum += field.equals("selections") ? c.weight() : costs.unitCost(s, field) * c.weight();
             }
         }
         return sum;
     }
 
-    /** What a scope node counts: what is below it (all depths, or only the next level), plus it if {@code -self}. */
-    private static List<TreeNode> candidates(Scopes.Found found, boolean deep) {
-        List<TreeNode> out = new ArrayList<>();
-        if (found.chain()) {
-            out.addAll(found.nodes());
-            return out;
+    private static boolean matchesIds(Selection s, String id) {
+        if (s.entry().id().equals(id)) {
+            return true;
         }
-        TreeNode node = found.nodes().get(0);
-        if (found.includeSelf()) {
-            out.add(node);
+        var link = s.link();
+        return link != null && (link.id().equals(id) || link.targetId().equals(id));
+    }
+
+    /** A node to be counted, with how many of it there are relative to the scope node (amounts below the scope). */
+    private record Candidate(TreeNode node, double weight) {}
+
+    /**
+     * What a scope node counts. Amounts are relative to the scope node: a Qu of 2 inside a Qm of 3 counts as 2 from the
+     * Qm, not 6 (observed). Forces and categories are transparent: the direct children of a roster are the selections
+     * at the top of its forces. With {@code -self} the node itself counts, at its own amount, except for costs.
+     *
+     * @param deep all depths, or only the next level
+     * @param selfCounts whether {@code -self} adds the node (false for cost queries)
+     */
+    private static List<Candidate> candidates(Scopes.Found found, boolean deep, boolean selfCounts) {
+        List<Candidate> out = new ArrayList<>();
+        switch (found.kind()) {
+            case MEMBERS -> {
+                for (TreeNode m : found.nodes()) {
+                    Selection s = (Selection) m;
+                    out.add(new Candidate(s, s.amount()));
+                    if (deep) {
+                        collect(s, s.amount(), true, out);
+                    }
+                }
+            }
+            case CHAIN -> {
+                for (TreeNode n : found.nodes()) {
+                    out.add(new Candidate(n, 1));
+                }
+            }
+            case NODE -> {
+                TreeNode node = found.nodes().get(0);
+                if (found.includeSelf() && selfCounts) {
+                    out.add(new Candidate(node, node instanceof Selection s ? s.amount() : 1));
+                }
+                collect(node, 1, deep, out);
+            }
         }
-        collect(node, deep, out);
         return out;
     }
 
-    private static void collect(TreeNode node, boolean deep, List<TreeNode> out) {
+    private static void collect(TreeNode node, double weight, boolean deep, List<Candidate> out) {
         for (TreeNode child : node.down()) {
-            // categories are structure, not things to count: look through them to the selections
-            if (child instanceof org.ethelred.bsdata.roster.CategoryNode) {
-                collect(child, deep, out);
+            if (child instanceof ForceNode || child instanceof CategoryNode) {
+                // structure, not something to count by amount: look through it (a force is still a candidate for
+                // "forces" queries)
+                if (child instanceof ForceNode) {
+                    out.add(new Candidate(child, 1));
+                }
+                collect(child, weight, deep, out);
                 continue;
             }
-            out.add(child);
+            double w = weight * (child instanceof Selection s ? s.amount() : 1);
+            out.add(new Candidate(child, w));
             if (deep) {
-                collect(child, true, out);
+                collect(child, w, true, out);
             }
         }
     }
@@ -321,8 +367,8 @@ public final class Evaluator {
             return Result.DISABLED;
         }
         double count = 0;
-        for (TreeNode cand : candidates(found, g.includeChildSelections())) {
-            if (!(cand instanceof Selection s)) {
+        for (Candidate cd : candidates(found, g.includeChildSelections(), true)) {
+            if (!(cd.node() instanceof Selection s)) {
                 continue;
             }
             boolean all = true;
@@ -333,7 +379,7 @@ public final class Evaluator {
                 all &= eval(s, here, sub) == Result.TRUE;
             }
             if (all) {
-                count += s.total();
+                count += cd.weight();
             }
         }
         Boolean ok = compare(g.type(), count, g.value());

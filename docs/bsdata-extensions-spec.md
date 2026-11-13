@@ -357,6 +357,30 @@ A scope that resolves to nothing disables the condition (neither true nor
 false). The tree is `roster > force > category > root entry > model / group /
 upgrade`.
 
+**Observed in NR** (1,284 profiles whose `Num` is NR's count for a query; see
+`nr-extension-tests/RESULTS.md`, "Scopes and counting"):
+
+- **Counts are relative to the scope node.** Amounts multiply only below it. From a
+  Qm of amount 3 holding Qu (2 each) holding Qv (2 each), `self` counts 2 for the
+  Qu level and 6 with all depths (2 + 4), not 6 and 18. From the roster it is
+  the full totals, since top-level amounts are 1 there.
+- **`-self` adds the node itself, at its own amount** (not its total). It does not
+  apply to `self` or `ancestor`: `self-self` counted nothing.
+- **A cost query leaves out the scope node's own cost**, even with `-self`. Costs
+  below it are the unit cost times the relative count.
+- **Forces and categories are transparent** when counting the next level: the
+  direct children of the roster are the top-level selections in its forces.
+- **`non-upgrade-entry` falls back to the roster** when no entry above qualifies.
+  The other type scopes (`unit`, `model`, `upgrade`) resolve to nothing in that case.
+- **`group` is a scope.** It counts the members of the group (the entries in the
+  same group below the same parent, including here).
+- **Scope `self` with the node's own entry id (or its link id) as `childId` counts
+  like `any`.** With another id the count is of matching selections below.
+- **`ancestor` counting is not understood.** `instanceOf` at `ancestor` follows the
+  chain; counts do not (most are the same from every host, as if it were the
+  roster, with extra amounts for some hosts and ids).
+- Not confirmed by experiment: the other rows above, which agree with
+  the editor notes and were not contradicted.
 - 11e modifier scopes: `root-entry` (708), `model` (530), `parent` (397),
   `model-or-unit` (240), `upgrade` (181), `roster` (18), `force` (12), `unit`
   (6), `root-entry-self` (5), `model-self` (4), `model-or-unit-self` (2), and
@@ -603,6 +627,13 @@ What it shows:
   to resolve IDs within those paths.
 
 ## 9. Open questions
+
+**Added with the scope experiments (M2):** how `ancestor` counts; whether a condition
+whose scope resolves to nothing stops a modifier from applying; `percentValue` on a
+condition; `includeChildForces` and nested forces; whether `-self` applies to every
+type scope (seen for `root-entry`, `model`, `model-or-unit` and `upgrade`); and how a
+condition is evaluated for an entry that is not yet in the roster (the add list showed
+a cost surcharge for zero copies).
 
 Resolved by the NR notes or by observation in NR: the meaning of `position`
 (0 and unset mean every number; positive is 1-based; negative counts from the

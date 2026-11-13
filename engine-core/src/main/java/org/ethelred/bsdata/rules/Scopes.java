@@ -15,26 +15,43 @@ import org.jspecify.annotations.Nullable;
  * the table in {@code docs/bsdata-extensions-spec.md}, section 5.9, which comes from the New Recruit editor's notes.
  */
 final class Scopes {
+    /** How the nodes of a {@link Found} are used. */
+    enum Kind {
+        /** One node; what is counted is what lies below it. */
+        NODE,
+        /** The chain from here up ({@code ancestor}); only {@code instanceOf} uses it. */
+        CHAIN,
+        /** The members of a group: the entries in the same group as here, below one parent. */
+        MEMBERS
+    }
+
     /**
-     * @param nodes the scope node, or for {@code ancestor} the whole chain from here up
+     * @param nodes the scope node, the chain for {@code ancestor}, or the members of a group
      * @param includeSelf whether the node itself is a candidate for counting ({@code -self} scopes)
-     * @param chain true for {@code ancestor}: the nodes themselves are the candidates, not what is below them
      */
-    record Found(List<TreeNode> nodes, boolean includeSelf, boolean chain) {}
+    record Found(List<TreeNode> nodes, boolean includeSelf, Kind kind) {
+        boolean chain() {
+            return kind == Kind.CHAIN;
+        }
+    }
 
     private Scopes() {}
 
     /** @param unsupported receives the scope word if it cannot be resolved because the tree lacks the node it needs */
     static @Nullable Found resolve(TreeNode here, String scope, RosterModel model, List<String> unsupported) {
-        boolean self = scope.endsWith("-self");
-        String base = self ? scope.substring(0, scope.length() - 5) : scope;
+        boolean suffix = scope.endsWith("-self");
+        String stripped = suffix ? scope.substring(0, scope.length() - 5) : scope;
+        // observed: "self-self" is not a scope (New Recruit counted nothing), so it is looked up as an id
+        boolean invalid = suffix && (stripped.equals("self") || stripped.equals("ancestor"));
+        final boolean self = suffix && !invalid;
+        final String base = invalid ? scope : stripped;
         switch (base) {
             case "self":
                 return one(here, self);
             case "parent":
                 return one(parent(here, model), self);
             case "ancestor":
-                return new Found(chain(here), self, true);
+                return new Found(chain(here), self, Kind.CHAIN);
             case "root-entry":
                 return one(here instanceof Selection s ? s.rootEntry() : null, self);
             case "primary-category":
@@ -45,8 +62,7 @@ final class Scopes {
             case "roster":
                 return one(model, self);
             case "group":
-                unsupported.add("scope group: the roster tree has no group nodes yet");
-                return null;
+                return members(here);
             case "unit":
             case "model":
             case "upgrade":
@@ -58,8 +74,11 @@ final class Scopes {
                                 self,
                                 s -> s.type().equals("model") || s.type().equals("unit")),
                         self);
-            case "non-upgrade-entry":
-                return one(nearest(here, self, s -> !s.type().equals("upgrade")), self);
+            case "non-upgrade-entry": {
+                // the roster is not an upgrade, so it is where this ends if no entry above qualifies (observed)
+                TreeNode found = nearest(here, self, s -> !s.type().equals("upgrade"));
+                return one(found == null ? model : found, self);
+            }
             case "link":
                 return one(nearest(here, self, s -> s.link() != null), self);
             default:
@@ -68,7 +87,7 @@ final class Scopes {
     }
 
     private static @Nullable Found one(@Nullable TreeNode node, boolean self) {
-        return node == null ? null : new Found(List.of(node), self, false);
+        return node == null ? null : new Found(List.of(node), self, Kind.NODE);
     }
 
     /** The nearest ancestor that is an entry (a selection) or the roster; categories and forces are skipped. */
@@ -81,6 +100,25 @@ final class Scopes {
             up = up.up();
         }
         return model;
+    }
+
+    /** The entries in the same group as {@code here} (the nearest group it sits in), below the same parent. */
+    private static @Nullable Found members(TreeNode here) {
+        if (!(here instanceof Selection s) || s.groupIds().isEmpty()) {
+            return null;
+        }
+        Selection parent = s.parent();
+        if (parent == null) {
+            return null;
+        }
+        String group = s.groupIds().get(0);
+        List<TreeNode> out = new ArrayList<>();
+        for (Selection sibling : parent.children()) {
+            if (sibling.groupIds().contains(group)) {
+                out.add(sibling);
+            }
+        }
+        return new Found(out, false, Kind.MEMBERS);
     }
 
     private static List<TreeNode> chain(TreeNode here) {
