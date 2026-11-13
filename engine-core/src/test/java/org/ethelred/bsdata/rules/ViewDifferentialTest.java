@@ -121,9 +121,10 @@ class ViewDifferentialTest {
                 }
             }
         }
-        System.out.println("profiles compared " + compared + ", skipped " + skipped.size() + ": " + skipped);
         assertEquals("", String.join("\n", wrong));
-        assertTrue(compared > 60, "profiles compared: " + compared);
+        // the only profile left out is the one changed by a modifier with affects (M7)
+        assertEquals(List.of("E weapon"), skipped);
+        assertEquals(139, compared);
     }
 
     private static void collectProfiles(Roster.Selection s, Map<String, Map<String, Map<String, String>>> out) {
@@ -209,7 +210,10 @@ class ViewDifferentialTest {
             for (Profile p : s.entry().body().profiles()) {
                 Map<String, String> expected = byProfile.get(p.name());
                 var mods = Modifier.of(p.raw().modifiers());
-                if (expected == null || mods.isEmpty() || !mods.get(0).repeats().isEmpty()) {
+                if (expected == null
+                        || mods.isEmpty()
+                        || !mods.get(0).repeats().isEmpty()
+                        || mods.get(0).conditions().conditions().isEmpty()) {
                     continue;
                 }
                 Condition c = mods.get(0).conditions().conditions().get(0);
@@ -223,6 +227,48 @@ class ViewDifferentialTest {
             }
         }
         assertEquals(300, compared);
+        assertEquals("", String.join("\n", wrong));
+    }
+
+    // ---- number tokens in odd values
+
+    @Test
+    void numberTokenEdgeCasesMatchTheScopeRoster() throws IOException {
+        Roster file = TestData.roster("m2-scopes.roster.json");
+        RosterModel model = bind("m2-scopes.roster.json");
+        Map<String, Map<String, Map<String, String>>> nr = new LinkedHashMap<>();
+        file.forces().forEach(f -> f.selections().forEach(s -> collectProfiles(s, nr)));
+        String txt = TestData.required(model.data().gameSystem()).profileTypes().get(0).characteristicTypes().stream()
+                .filter(c -> c.name().equals("Txt"))
+                .findFirst()
+                .orElseThrow()
+                .id();
+        List<String> wrong = new ArrayList<>();
+        int compared = 0;
+        for (Selection s : model.selections()) {
+            Map<String, Map<String, String>> byProfile = nr.getOrDefault(s.id(), Map.of());
+            for (Profile p : s.entry().body().profiles()) {
+                Map<String, String> expected = byProfile.get(p.name());
+                if (expected == null || !p.name().startsWith("A.K")) {
+                    continue;
+                }
+                Modifier m = Modifier.of(p.raw().modifiers()).get(0);
+                String base = p.characteristics().stream()
+                        .filter(c -> c.typeId().equals(txt))
+                        .findFirst()
+                        .orElseThrow()
+                        .text();
+                String got = new View(model).characteristics(s, p).get(txt);
+                String nrValue = TestData.required(expected.get(txt));
+                compared++;
+                if (!nrValue.equals(got)) {
+                    wrong.add(p.name() + " \"" + base + "\" " + m.type() + " " + m.valueText()
+                            + (m.position() == null ? "" : " at " + m.position()) + ": NR \"" + nrValue
+                            + "\", engine \"" + got + "\"");
+                }
+            }
+        }
+        assertEquals(2 * 124, compared);
         assertEquals("", String.join("\n", wrong));
     }
 }

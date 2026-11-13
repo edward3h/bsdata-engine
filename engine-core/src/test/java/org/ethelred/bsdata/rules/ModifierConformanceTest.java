@@ -15,9 +15,8 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Runs the observations in {@code nr-extension-tests/tests/expected.json} that need no roster: a base value, some
- * modifiers, and the value New Recruit showed. Entries with repeats need a roster to count, and entries with dice or
- * other compound values need number tokens (M4); the engine reports those as unsupported and they are listed, not
- * compared.
+ * modifiers, and the value New Recruit showed. Entries with repeats or conditions need a roster to count, so they are
+ * left to the tests that build one.
  */
 class ModifierConformanceTest {
     private record Case(
@@ -72,12 +71,12 @@ class ModifierConformanceTest {
     @Test
     void everyObservationTheEngineHandlesMatchesNewRecruit() throws IOException {
         List<String> wrong = new ArrayList<>();
-        TreeSet<String> needsRepeats = new TreeSet<>();
-        TreeSet<String> needsTokens = new TreeSet<>();
+        TreeSet<String> needsRoster = new TreeSet<>();
+        TreeSet<String> needsTokens = new TreeSet<>(); // cases the engine reported as unsupported
         int compared = 0;
         for (Case c : cases()) {
             if (c.hasRepeats() || c.hasConditions()) {
-                needsRepeats.add(c.id());
+                needsRoster.add(c.id());
                 continue;
             }
             List<String> diagnostics = new ArrayList<>();
@@ -95,8 +94,10 @@ class ModifierConformanceTest {
                         + "\"");
             }
         }
-        System.out.println(
-                "compared " + compared + "; needs a roster " + needsRepeats + "; needs tokens " + needsTokens);
         assertEquals("", String.join("\n", wrong));
+        // everything that needs no roster is compared, dice and compound values included
+        assertEquals(List.of(), List.copyOf(needsTokens), "observations the engine cannot handle");
+        assertEquals(76, compared);
+        assertEquals(List.of("T16a", "T16b", "T16c"), List.copyOf(needsRoster));
     }
 }

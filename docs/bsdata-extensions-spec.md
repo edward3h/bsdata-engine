@@ -236,6 +236,14 @@ too.
   average for add and power, a sum for multiply), so treat the formulas as
   observed behaviour and not as an intended design.
 - Results are not rounded: `11.666666666666666` was shown unchanged.
+- **What counts as a number** (Observed in NR, 124 profiles on odd values): a run of
+  digits, with a decimal part if a point sits between digits (`2.5` is one number),
+  and with a minus sign if one comes directly before the digits **wherever it is**:
+  `D6-3` has the numbers 6 and -3, so `increment 2` gives `D8-1`, `floor 5` gives
+  `D65` and `power 2` gives `D369`. `1e3` has two numbers (1 and 3). A number the
+  operation leaves unchanged keeps its original text (`floor 5` on `007` stays
+  `007`). An empty value counts as 0 for arithmetic (`increment 2` gives `2`) but
+  `floor` and `ceil` leave it empty. Text with no digits is left alone.
 - **On compound strings** (no `position`) every number is changed: `D6+1` with `multiply 2` or
   `exponent 2` gives `D12+2`; `power 2` gives `D36+1`; `triangular 2` gives `D8+3`;
   `D6+5` with `modulo 2` gives `D0+1`. `N+` strings behave the same (`3+` gives `6+`, `9+`, `5+`).
