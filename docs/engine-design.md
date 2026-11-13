@@ -11,7 +11,7 @@ is still undecided.
 
 **Goals**
 
-1. A library that loads BSData game systems (JSON and XML), builds rosters, and
+1. A library that loads BSData game systems (JSON; XML later), builds rosters, and
    evaluates them: costs, rendered profiles and rules, categories, validation
    messages.
 2. Results that match New Recruit (NR) on the behaviour the data actually uses.
@@ -64,7 +64,7 @@ Java library (`rosterParser`) for both a server and a TeaVM client.
 
 ```
 engine-core     pure Java 25; no platform dependencies; compiled by javac and by TeaVM
-engine-jvm      JVM loaders (files, XML), command-line checker, JUnit conformance runner
+engine-jvm      JVM loaders (files), command-line checker, JUnit conformance runner
 engine-web      TeaVM entry point: JSO bindings, browser loaders (fetch, DOMParser)
 conformance     test data and runner shared by the JVM and JavaScript builds
 ```
@@ -84,16 +84,19 @@ restricted. The following are consequences for the design. Items marked
 - **No reflection, no class-path resources, no reflection-based libraries**
   (Jackson, Gson, JAXB) in the core. Immutable data comes in through the
   `DataNode` interface.
-- **JSON parsing**: a small hand-written parser in `engine-core` that builds
-  `DataNode`s, used on every platform, so JVM and browser parse identically and
-  the core has no dependency. Browsers could use `JSON.parse` via JSO for speed,
-  but only as an optimisation. *Verify* the cost of parsing 49 MB in the
-  browser (see the memory note below).
-- **XML parsing**: `javax.xml` is probably not available under TeaVM (*verify*
-  against the class-library report). Plan: a small streaming XML parser in
-  `engine-core` (the BattleScribe schema is simple: elements, attributes, text),
-  again identical everywhere. XML support can follow JSON, since the current
-  repositories are JSON.
+- **JSON parsing**: use a small existing pure-Java library with no reflection
+  (candidate: `minimal-json`) behind a `JsonSource` interface in `engine-core`,
+  producing `DataNode`s. The same code compiled by javac and TeaVM gives the same
+  behaviour on both, so no custom parser is needed for that. A hand-written
+  parser would need its own edge-case tests (escapes, surrogate pairs, number
+  grammar, duplicate keys, nesting) and upkeep, for no engine benefit. Write one
+  only if the M0 spike shows a concrete failure or a measured memory problem;
+  the interface makes it a swap. Browsers could use `JSON.parse` via JSO as an
+  optimisation. *Verify* under TeaVM, and measure parse time and heap for 49 MB
+  in the browser (see the memory note below).
+- **XML parsing**: out of scope for version 1. Both current repositories are
+  JSON, and `javax.xml` is probably not available under TeaVM. Older `.gst` and
+  `.cat` files could be supported later through a converter or a library.
 - **Numbers**: the data and NR use JavaScript doubles, and NR displays results
   such as `11.666666666666666`, `2.5` and `4.6875`. Use `double` and a
   **JavaScript-compatible number formatter** written in the core (`5` not
@@ -143,10 +146,10 @@ Diagnostics, totals, profile tables
 
 ### 4.1 Loader
 
-- Reads each file into a neutral tree, from JSON (current repos) or XML (older
-  data and original BattleScribe). The two shapes mirror each other: XML child
-  lists become arrays, and attributes become fields. Characteristic text is
-  `$text` in the JSON.
+- Reads each file into a neutral tree from JSON (current repos). XML (older data
+  and original BattleScribe) is deferred; its shape mirrors the JSON, with child
+  lists as arrays and attributes as fields. Characteristic text is `$text` in
+  the JSON.
 - Normalises: tolerant of missing arrays, `hidden`, `import`, numeric vs string
   values (`value` may be `"0"`, `0` or absent).
 - Builds an **ID index** across all files: every object with an `id`, plus its
@@ -300,7 +303,7 @@ Each ends with something that runs and is checked.
 
 | # | Milestone | Done when |
 |---|---|---|
-| M0 | Toolchain spike, loader, ID index, link resolution | Gradle skeleton builds with Java 25 and TeaVM 0.16; one test runs identically on the JVM and in Node; loads `wh40k-11e` and HH3 with zero unresolved references and reports the counts in section 2; records, sealed types and the JSON and XML parsers confirmed under TeaVM; browser parse time and memory measured |
+| M0 | Toolchain spike, loader, ID index, link resolution | Gradle skeleton builds with Java 25 and TeaVM 0.16; one test runs identically on the JVM and in Node; loads `wh40k-11e` and HH3 with zero unresolved references and reports the counts in section 2; records, sealed types and the JSON library confirmed under TeaVM; browser parse time and memory measured |
 | M1 | Roster tree, instantiation, costs without modifiers | A unit's base cost sums correctly; a hand-made roster totals match NR |
 | M2 | Query engine, scopes, conditions, groups | Condition truth tables match the NR notes; T16 passes |
 | M3 | Modifier pipeline for plain numbers and text | T04, T05, T08, T12, T14, T09 pass |
