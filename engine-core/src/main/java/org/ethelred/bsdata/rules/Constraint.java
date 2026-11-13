@@ -75,6 +75,7 @@ public record Constraint(
                 childId.isEmpty() ? ownerEntryId : childId,
                 includeChildSelections,
                 includeChildForces,
-                percentValue);
+                percentValue,
+                traverseAssociationGroup);
     }
 }

@@ -71,12 +71,49 @@ public final class Evaluator {
         if (found == null) {
             return null;
         }
-        Double raw = countFrom(found, q.field(), q.childId(), q);
+        List<Scopes.Found> founds = founds(here, found, q);
+        Double raw = sum(founds, q, q.childId());
         if (raw == null || !q.percentValue()) {
             return raw;
         }
-        Double all = countFrom(found, q.field(), "any", q);
+        Double all = sum(founds, q, "any");
         return all == null || all == 0 ? Double.valueOf(0) : Double.valueOf(raw / all);
+    }
+
+    /**
+     * The scope node, or with {@code traverseAssociationGroup} the nodes the scope finds from each unit in the
+     * attached group, each once (observed: a force counted for a leader and its bodyguard is counted once).
+     */
+    private List<Scopes.Found> founds(TreeNode here, Scopes.Found found, Query q) {
+        if (!q.traverseAssociationGroup() || !(here instanceof Selection s)) {
+            return List.of(found);
+        }
+        List<Scopes.Found> out = new ArrayList<>();
+        List<TreeNode> seen = new ArrayList<>();
+        for (Selection member : model.group(s)) {
+            Scopes.Found f = member == s ? found : Scopes.resolve(member, q.scope(), model, new ArrayList<>());
+            if (f == null || f.kind() != Scopes.Kind.NODE) {
+                continue;
+            }
+            TreeNode node = f.nodes().get(0);
+            if (seen.stream().noneMatch(x -> x == node)) {
+                seen.add(node);
+                out.add(f);
+            }
+        }
+        return out;
+    }
+
+    private @Nullable Double sum(List<Scopes.Found> founds, Query q, String childId) {
+        double total = 0;
+        for (Scopes.Found f : founds) {
+            Double c = countFrom(f, q.field(), childId, q);
+            if (c == null) {
+                return null;
+            }
+            total += c;
+        }
+        return total;
     }
 
     private @Nullable Double countFrom(Scopes.Found found, String field, String childId, Query q) {
@@ -88,8 +125,9 @@ public final class Evaluator {
             return null;
         }
         if (field.equals("associations")) {
-            diagnostics.add("field associations: not supported until M7");
-            return null;
+            // observed: New Recruit counted nothing for this field in every form tried, so a min always fails and a
+            // max never does
+            return 0.0;
         }
         if (found.chain()) {
             diagnostics.add("scope ancestor: counting is not modelled (New Recruit's counts depend on the host in ways"
@@ -182,7 +220,18 @@ public final class Evaluator {
         }
     }
 
-    private static boolean matches(Selection s, String childId) {
+    /** The selections a scope finds, at the next level or at all depths (the node itself is not included). */
+    static List<Selection> selectionsIn(Scopes.Found found, boolean deep) {
+        List<Selection> out = new ArrayList<>();
+        for (Candidate c : candidates(found, deep, false)) {
+            if (c.node() instanceof Selection s) {
+                out.add(s);
+            }
+        }
+        return out;
+    }
+
+    static boolean matches(Selection s, String childId) {
         return switch (childId) {
             case "any" -> true;
             case "unit", "model", "upgrade", "mount", "crew" -> s.type().equals(childId);

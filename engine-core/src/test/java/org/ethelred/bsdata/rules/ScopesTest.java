@@ -172,13 +172,12 @@ class ScopesTest {
 
     @Test
     void unsupportedScopesAndFieldsAreReportedNotGuessed() {
-        assertNull(maybe(gun, "associations", "self", "any", true));
+        // observed: the associations field counts nothing, whatever is attached
+        assertEquals(0.0, TestData.required(maybe(gun, "associations", "self", "any", true)));
         assertNull(maybe(gun, "selections", "ancestor", "any", true));
         assertEquals(
-                List.of(
-                        "field associations: not supported until M7",
-                        "scope ancestor: counting is not modelled (New Recruit's counts depend on the host in ways not"
-                                + " yet understood); instanceOf works"),
+                List.of("scope ancestor: counting is not modelled (New Recruit's counts depend on the host in ways not"
+                        + " yet understood); instanceOf works"),
                 ev.diagnostics());
     }
 

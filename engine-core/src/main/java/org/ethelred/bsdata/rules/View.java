@@ -25,9 +25,9 @@ import org.jspecify.annotations.Nullable;
  *
  * <p>Covered: modifiers on a selection's entry or link that change a cost, a constraint's value or {@code hidden}, and
  * modifiers on a profile that change one of its characteristics, with conditions, condition groups, local groups and
- * repeats. Not yet: {@code affects}
- * (M7) and other fields such as {@code name}. Those are reported in
- * {@link #diagnostics()}.
+ * repeats, and, for characteristics, modifiers on other selections whose {@code affects} path reaches the profile
+ * ({@link Affects}). Not yet: {@code affects} on anything but profiles, and other fields such as {@code name}. Those are
+ * reported in {@link #diagnostics()}.
  */
 public final class View {
     private record Located(Modifier modifier, List<Conditions> inherited, boolean inGroupWithRepeats) {}
@@ -180,14 +180,15 @@ public final class View {
 
     // ---- profiles
 
-    /** The characteristics of a profile of a selection after modifiers, by characteristic type id, in order. */
+    /**
+     * The characteristics of a profile of a selection after modifiers, by characteristic type id, in order: the
+     * profile's own modifiers, then any modifier whose {@code affects} path reaches the profile (the selection's own
+     * first, then the others in tree order, as observed in New Recruit).
+     */
     public Map<String, String> characteristics(Selection s, Profile p) {
-        if (hasAffects(s.rootEntry())) {
-            diagnostics.add("affects: not supported until M7 (a modifier in unit "
-                    + s.rootEntry().name() + " may change this profile)");
-        }
         Map<String, String> out = new LinkedHashMap<>();
         List<Located> mods = collect(p.raw());
+        List<Reach> reaching = reaching(s, p);
         for (Characteristic c : p.characteristics()) {
             List<Located> mine = new ArrayList<>();
             for (Located l : mods) {
@@ -195,34 +196,68 @@ public final class View {
                     mine.add(l);
                 }
             }
+            List<ModifierEngine.Applied> applied = new ArrayList<>(applicable(s, mine));
+            for (Reach r : reaching) {
+                if (r.located().modifier().field().equals(c.typeId())) {
+                    applied.addAll(applicable(r.holder(), List.of(r.located()), true));
+                }
+            }
             List<String> local = new ArrayList<>();
-            String value = ModifierEngine.applyText(c.text(), applicable(s, mine), local);
+            String value = ModifierEngine.applyText(c.text(), applied, local);
             diagnostics.addAll(local);
             out.put(c.typeId(), value);
         }
         return out;
     }
 
-    private final Map<Selection, Boolean> affectsCache = new HashMap<>();
+    /** A modifier on {@code holder} whose {@code affects} path reaches a selection. */
+    private record Reach(Selection holder, Located located, Affects path) {}
 
-    /** Whether any selection in the unit has a modifier that acts on other nodes through {@code affects}. */
-    private boolean hasAffects(Selection root) {
-        Boolean cached = affectsCache.get(root);
-        if (cached != null) {
-            return cached;
+    private @Nullable Map<Selection, List<Reach>> reach;
+
+    /** For each selection, the {@code affects} modifiers that reach it. Built once: the view is a snapshot. */
+    private Map<Selection, List<Reach>> reach() {
+        Map<Selection, List<Reach>> built = reach;
+        if (built != null) {
+            return built;
         }
-        boolean found = false;
-        List<Selection> stack = new ArrayList<>(List.of(root));
-        while (!stack.isEmpty() && !found) {
-            Selection x = stack.remove(stack.size() - 1);
-            for (Located l : allModifiers(x)) {
-                String a = l.modifier().affects();
-                found |= a != null && !a.isEmpty();
+        built = new java.util.IdentityHashMap<>();
+        for (Selection holder : model.selections()) {
+            for (Located l : allModifiers(holder)) {
+                String path = l.modifier().affects();
+                if (path == null || path.isEmpty()) {
+                    continue;
+                }
+                Affects a = Affects.parse(path);
+                if (!a.supported()) {
+                    diagnostics.add("affects target " + path + ": not supported (only profiles)");
+                    continue;
+                }
+                String scope = l.modifier().scope();
+                var start = Scopes.resolve(
+                        holder, scope == null || scope.isEmpty() ? "self" : scope, model, new ArrayList<>());
+                if (start == null || start.nodes().isEmpty()) {
+                    continue;
+                }
+                for (Selection target : a.selections(start.nodes().get(0), model)) {
+                    built.computeIfAbsent(target, k -> new ArrayList<>()).add(new Reach(holder, l, a));
+                }
             }
-            stack.addAll(x.children());
         }
-        affectsCache.put(root, found);
-        return found;
+        reach = built;
+        return built;
+    }
+
+    /** The modifiers reaching a selection's profile of this type: its own holder's first, then tree order. */
+    private List<Reach> reaching(Selection s, Profile p) {
+        List<Reach> out = new ArrayList<>();
+        for (Reach r : reach().getOrDefault(s, List.of())) {
+            if (r.path().reaches(p.typeName(), p.typeId(), null)) {
+                out.add(r);
+            }
+        }
+        out.sort((a, b) -> Boolean.compare(b.holder() == s, a.holder() == s));
+        return out;
     }
 
     // ---- collecting and gating modifiers
@@ -265,13 +300,17 @@ public final class View {
 
     /** The modifiers whose conditions hold at {@code here}, with how many times each applies. */
     private List<ModifierEngine.Applied> applicable(Selection here, List<Located> mods) {
+        return applicable(here, mods, false);
+    }
+
+    /** @param viaAffects whether these modifiers act on other nodes and are being applied to one they reach */
+    private List<ModifierEngine.Applied> applicable(Selection here, List<Located> mods, boolean viaAffects) {
         List<ModifierEngine.Applied> out = new ArrayList<>();
         for (Located l : mods) {
             Modifier m = l.modifier();
             String affects = m.affects();
-            if (affects != null && !affects.isEmpty()) {
-                diagnostics.add("affects: not supported until M7");
-                continue;
+            if (!viaAffects && affects != null && !affects.isEmpty()) {
+                continue; // acts on the nodes its path reaches, not on its holder's own fields (see reach())
             }
             if (l.inGroupWithRepeats()) {
                 diagnostics.add("repeats on a modifier group: not supported");

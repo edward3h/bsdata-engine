@@ -40,7 +40,27 @@ public final class RosterBinder {
                 bindSelection(data, model, catalogue.file(), s, null, force, problems);
             }
         }
+        for (Roster.Force f : file.forces()) {
+            for (Roster.Selection s : f.selections()) {
+                bindAttachments(model, s, problems);
+            }
+        }
         return new Bound(model, problems);
+    }
+
+    private static void bindAttachments(RosterModel model, Roster.Selection s, List<String> problems) {
+        Selection from = model.find(s.id());
+        for (Roster.Association a : s.associations()) {
+            Selection to = model.find(a.selectionId());
+            if (from != null && to != null) {
+                model.attach(from, to, a.associationId());
+            } else {
+                problems.add("association " + a.name() + " of " + s.name() + ": selection not found");
+            }
+        }
+        for (Roster.Selection c : s.selections()) {
+            bindAttachments(model, c, problems);
+        }
     }
 
     private static void bindSelection(

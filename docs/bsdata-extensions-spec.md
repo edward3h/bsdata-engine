@@ -334,6 +334,19 @@ too.
   (`self.entries.recursive.<model id>.profiles.Melee Weapons`) only that
   model's weapon changed. The ID filter works and `recursive` descends into
   child models.
+- **Observed in NR (M7 sweep, units attached as leader and bodyguard).** Which selections the words reach
+  (own = the node's profiles, child = its child upgrades'):
+  | Path | Alone | Attached |
+  |---|---|---|
+  | none, `self` | own | own |
+  | `entries`, `entries.recursive` | child | child |
+  | `group`, `self.group`, `group.recursive` | own | own and the attached units' own |
+  | `group.entries` | child | nothing |
+  | `self.entries.group` | own, child | own and the attached units' own (not children) |
+  Read as: the node itself is taken if the path has `self` or lacks `entries`; `entries` adds children; when attached,
+  `group` replaces both with the whole group's own nodes. The group is every unit joined by attachments, so a
+  bodyguard's modifier reaches its leaders. A unit's own modifier comes first, then the others in roster order.
+  Not tested: an id filter with `group`, and `forces`, `rules` and `associations` targets.
 - The exact serialiser (`construct_affects_query` in the missing
   `nr-shared`) is not available, so edge cases (for example how names versus
   IDs are written) are Unknown.
@@ -621,6 +634,17 @@ comparison types are Unknown.
     message**, though both enhancements remained.
   - The message appears in a title/tooltip attribute and in validation text;
     it did not render as visible page text in the list view.
+- **Observed in NR (M7 sweep, catalogue `M7 Associations`).**
+  - Units offered: every unit in the scope that matches `childId` and passes the association's conditions (each acting
+    as self), except the leader itself.
+  - Limits: the interface does not stop going over `max`. The leader's row reports "{category} {leader} needs N more
+    {childId} selected in {name} ({count}/{min})" or "... has N {childId} too many selected in {name} ({count}/{max})".
+    The plural of `childId` was not observed (the engine adds "s").
+  - A constraint on the `associations` field counts nothing in any form tried (`childId` `any`, the label, the
+    association name, `unit`; scope `self` or `root-entry`): a `min` always fires, a `max` never does.
+  - `traverseAssociationGroup` resolves the constraint's scope from each unit in the group and sums the counts, each
+    node once: scopes `self` and `root-entry` count both units' own trees; `force` counts the force once. It works for
+    `min` as well as `max`.
 - Other association fields in the editor (`ids`, `of`, `labelMember`) were not
   exercised. The `childName` and `action` fields were copied from the data.
 - The Leader/Support caps in the real data (`field: associations`,

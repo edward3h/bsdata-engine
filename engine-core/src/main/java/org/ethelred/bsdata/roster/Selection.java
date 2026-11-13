@@ -30,6 +30,8 @@ public final class Selection implements TreeNode {
     private @Nullable ForceNode force;
     private @Nullable CategoryNode category;
     private @Nullable List<String> groupIds;
+    private final List<Attachment> outgoing = new ArrayList<>();
+    private final List<Attachment> incoming = new ArrayList<>();
 
     Selection(
             RosterModel model,
@@ -99,6 +101,26 @@ public final class Selection implements TreeNode {
      */
     public @Nullable Selection add(Child child, double childAmount) {
         return model.addUnder(this, file, child, childAmount, null);
+    }
+
+    /** Attachments this selection holds as a leader. */
+    public List<Attachment> outgoing() {
+        return Collections.unmodifiableList(outgoing);
+    }
+
+    /** Attachments of other selections to this one. */
+    public List<Attachment> incoming() {
+        return Collections.unmodifiableList(incoming);
+    }
+
+    void addAttachment(Attachment a) {
+        outgoing.add(a);
+        a.target().incoming.add(a);
+    }
+
+    void removeAttachment(Attachment a) {
+        outgoing.remove(a);
+        a.target().incoming.remove(a);
     }
 
     void attach(Selection child) {

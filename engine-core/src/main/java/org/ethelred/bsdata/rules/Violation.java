@@ -27,6 +27,10 @@ public record Violation(
         EXACTLY,
         /** A selection of an entry that is hidden. */
         HIDDEN,
+        /** A leader with fewer attached units than its association's minimum. */
+        ASSOCIATION_MIN,
+        /** A leader with more attached units than its association's maximum. */
+        ASSOCIATION_MAX,
         /** A roster cost above its limit. */
         COST_LIMIT
     }
