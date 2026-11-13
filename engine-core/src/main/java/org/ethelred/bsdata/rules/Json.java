@@ -29,6 +29,11 @@ final class Json {
         return fields.get(key) instanceof DataNode.Str s ? s.value() : null;
     }
 
+    /** A boolean with a default for when the field is absent. */
+    boolean bool(String key, boolean def) {
+        return fields.get(key) instanceof DataNode.Bool b ? b.value() : def;
+    }
+
     boolean bool(String key) {
         return fields.get(key) instanceof DataNode.Bool b && b.value();
     }

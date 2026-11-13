@@ -121,6 +121,32 @@ public final class RosterModel implements TreeNode {
         return out;
     }
 
+    /**
+     * A selection that is not in the tree: it has a parent, so scopes resolve from it as they would for a real child,
+     * but it is not among the parent's children and counts as nothing. The validator uses it to ask what a constraint or
+     * modifier on an entry that is available but not selected would see.
+     *
+     * @return the probe, or null if a link's target cannot be found
+     */
+    public @Nullable Selection probe(Selection parent, Child child) {
+        Entry entry;
+        Link link = null;
+        String entryFile = parent.file();
+        switch (child) {
+            case Entry e -> entry = e;
+            case Link l -> {
+                GameData.Resolved target = data.target(parent.file(), l);
+                if (target == null) {
+                    return null;
+                }
+                entry = target.entry();
+                link = l;
+                entryFile = target.file();
+            }
+        }
+        return new Selection(this, "probe-" + entry.id(), entry, link, entryFile, parent, 0);
+    }
+
     @Nullable
     Selection addUnder(@Nullable Selection parent, String file, Child child, double amount, @Nullable ForceNode force) {
         return addUnder("s" + nextId++, parent, file, child, amount, force);

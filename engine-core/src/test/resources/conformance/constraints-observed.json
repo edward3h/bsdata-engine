@@ -1,0 +1,1565 @@
+{
+ "note": "Observed in New Recruit with M5 Constraints.json: the entries selected under one unit (state) and the messages shown on that unit, sorted. k5 lists the messages on each of n units of K5.",
+ "cases": [
+  {
+   "unit": "K1 Unit",
+   "state": {
+    "K1 a": 0,
+    "K1 b": 0,
+    "K1 c": 0,
+    "K1 d": 0
+   },
+   "messages": [
+    "m2 min 1 of b",
+    "m3 exactly 2 of c"
+   ]
+  },
+  {
+   "unit": "K1 Unit",
+   "state": {
+    "K1 a": 0,
+    "K1 b": 0,
+    "K1 c": 0,
+    "K1 d": 3
+   },
+   "messages": [
+    "m2 min 1 of b",
+    "m3 exactly 2 of c"
+   ]
+  },
+  {
+   "unit": "K1 Unit",
+   "state": {
+    "K1 a": 0,
+    "K1 b": 0,
+    "K1 c": 1,
+    "K1 d": 0
+   },
+   "messages": [
+    "m2 min 1 of b",
+    "m3 exactly 2 of c"
+   ]
+  },
+  {
+   "unit": "K1 Unit",
+   "state": {
+    "K1 a": 0,
+    "K1 b": 0,
+    "K1 c": 1,
+    "K1 d": 3
+   },
+   "messages": [
+    "m2 min 1 of b",
+    "m3 exactly 2 of c"
+   ]
+  },
+  {
+   "unit": "K1 Unit",
+   "state": {
+    "K1 a": 0,
+    "K1 b": 0,
+    "K1 c": 2,
+    "K1 d": 0
+   },
+   "messages": [
+    "m2 min 1 of b"
+   ]
+  },
+  {
+   "unit": "K1 Unit",
+   "state": {
+    "K1 a": 0,
+    "K1 b": 0,
+    "K1 c": 2,
+    "K1 d": 3
+   },
+   "messages": [
+    "m2 min 1 of b"
+   ]
+  },
+  {
+   "unit": "K1 Unit",
+   "state": {
+    "K1 a": 0,
+    "K1 b": 0,
+    "K1 c": 3,
+    "K1 d": 0
+   },
+   "messages": [
+    "m2 min 1 of b",
+    "m3 exactly 2 of c"
+   ]
+  },
+  {
+   "unit": "K1 Unit",
+   "state": {
+    "K1 a": 0,
+    "K1 b": 0,
+    "K1 c": 3,
+    "K1 d": 3
+   },
+   "messages": [
+    "m2 min 1 of b",
+    "m3 exactly 2 of c"
+   ]
+  },
+  {
+   "unit": "K1 Unit",
+   "state": {
+    "K1 a": 0,
+    "K1 b": 1,
+    "K1 c": 0,
+    "K1 d": 0
+   },
+   "messages": [
+    "m3 exactly 2 of c"
+   ]
+  },
+  {
+   "unit": "K1 Unit",
+   "state": {
+    "K1 a": 0,
+    "K1 b": 1,
+    "K1 c": 0,
+    "K1 d": 3
+   },
+   "messages": [
+    "m3 exactly 2 of c"
+   ]
+  },
+  {
+   "unit": "K1 Unit",
+   "state": {
+    "K1 a": 0,
+    "K1 b": 1,
+    "K1 c": 1,
+    "K1 d": 0
+   },
+   "messages": [
+    "m3 exactly 2 of c"
+   ]
+  },
+  {
+   "unit": "K1 Unit",
+   "state": {
+    "K1 a": 0,
+    "K1 b": 1,
+    "K1 c": 1,
+    "K1 d": 3
+   },
+   "messages": [
+    "m3 exactly 2 of c"
+   ]
+  },
+  {
+   "unit": "K1 Unit",
+   "state": {
+    "K1 a": 0,
+    "K1 b": 1,
+    "K1 c": 2,
+    "K1 d": 0
+   },
+   "messages": []
+  },
+  {
+   "unit": "K1 Unit",
+   "state": {
+    "K1 a": 0,
+    "K1 b": 1,
+    "K1 c": 2,
+    "K1 d": 3
+   },
+   "messages": []
+  },
+  {
+   "unit": "K1 Unit",
+   "state": {
+    "K1 a": 0,
+    "K1 b": 1,
+    "K1 c": 3,
+    "K1 d": 0
+   },
+   "messages": [
+    "m3 exactly 2 of c"
+   ]
+  },
+  {
+   "unit": "K1 Unit",
+   "state": {
+    "K1 a": 0,
+    "K1 b": 1,
+    "K1 c": 3,
+    "K1 d": 3
+   },
+   "messages": [
+    "m3 exactly 2 of c"
+   ]
+  },
+  {
+   "unit": "K1 Unit",
+   "state": {
+    "K1 a": 0,
+    "K1 b": 2,
+    "K1 c": 0,
+    "K1 d": 0
+   },
+   "messages": [
+    "m3 exactly 2 of c"
+   ]
+  },
+  {
+   "unit": "K1 Unit",
+   "state": {
+    "K1 a": 0,
+    "K1 b": 2,
+    "K1 c": 0,
+    "K1 d": 3
+   },
+   "messages": [
+    "m3 exactly 2 of c"
+   ]
+  },
+  {
+   "unit": "K1 Unit",
+   "state": {
+    "K1 a": 0,
+    "K1 b": 2,
+    "K1 c": 1,
+    "K1 d": 0
+   },
+   "messages": [
+    "m3 exactly 2 of c"
+   ]
+  },
+  {
+   "unit": "K1 Unit",
+   "state": {
+    "K1 a": 0,
+    "K1 b": 2,
+    "K1 c": 1,
+    "K1 d": 3
+   },
+   "messages": [
+    "m3 exactly 2 of c"
+   ]
+  },
+  {
+   "unit": "K1 Unit",
+   "state": {
+    "K1 a": 0,
+    "K1 b": 2,
+    "K1 c": 2,
+    "K1 d": 0
+   },
+   "messages": []
+  },
+  {
+   "unit": "K1 Unit",
+   "state": {
+    "K1 a": 0,
+    "K1 b": 2,
+    "K1 c": 2,
+    "K1 d": 3
+   },
+   "messages": []
+  },
+  {
+   "unit": "K1 Unit",
+   "state": {
+    "K1 a": 0,
+    "K1 b": 2,
+    "K1 c": 3,
+    "K1 d": 0
+   },
+   "messages": [
+    "m3 exactly 2 of c"
+   ]
+  },
+  {
+   "unit": "K1 Unit",
+   "state": {
+    "K1 a": 0,
+    "K1 b": 2,
+    "K1 c": 3,
+    "K1 d": 3
+   },
+   "messages": [
+    "m3 exactly 2 of c"
+   ]
+  },
+  {
+   "unit": "K1 Unit",
+   "state": {
+    "K1 a": 1,
+    "K1 b": 0,
+    "K1 c": 0,
+    "K1 d": 0
+   },
+   "messages": [
+    "m2 min 1 of b",
+    "m3 exactly 2 of c"
+   ]
+  },
+  {
+   "unit": "K1 Unit",
+   "state": {
+    "K1 a": 1,
+    "K1 b": 0,
+    "K1 c": 0,
+    "K1 d": 3
+   },
+   "messages": [
+    "m2 min 1 of b",
+    "m3 exactly 2 of c"
+   ]
+  },
+  {
+   "unit": "K1 Unit",
+   "state": {
+    "K1 a": 1,
+    "K1 b": 0,
+    "K1 c": 1,
+    "K1 d": 0
+   },
+   "messages": [
+    "m2 min 1 of b",
+    "m3 exactly 2 of c"
+   ]
+  },
+  {
+   "unit": "K1 Unit",
+   "state": {
+    "K1 a": 1,
+    "K1 b": 0,
+    "K1 c": 1,
+    "K1 d": 3
+   },
+   "messages": [
+    "m2 min 1 of b",
+    "m3 exactly 2 of c"
+   ]
+  },
+  {
+   "unit": "K1 Unit",
+   "state": {
+    "K1 a": 1,
+    "K1 b": 0,
+    "K1 c": 2,
+    "K1 d": 0
+   },
+   "messages": [
+    "m2 min 1 of b"
+   ]
+  },
+  {
+   "unit": "K1 Unit",
+   "state": {
+    "K1 a": 1,
+    "K1 b": 0,
+    "K1 c": 2,
+    "K1 d": 3
+   },
+   "messages": [
+    "m2 min 1 of b"
+   ]
+  },
+  {
+   "unit": "K1 Unit",
+   "state": {
+    "K1 a": 1,
+    "K1 b": 0,
+    "K1 c": 3,
+    "K1 d": 0
+   },
+   "messages": [
+    "m2 min 1 of b",
+    "m3 exactly 2 of c"
+   ]
+  },
+  {
+   "unit": "K1 Unit",
+   "state": {
+    "K1 a": 1,
+    "K1 b": 0,
+    "K1 c": 3,
+    "K1 d": 3
+   },
+   "messages": [
+    "m2 min 1 of b",
+    "m3 exactly 2 of c"
+   ]
+  },
+  {
+   "unit": "K1 Unit",
+   "state": {
+    "K1 a": 1,
+    "K1 b": 1,
+    "K1 c": 0,
+    "K1 d": 0
+   },
+   "messages": [
+    "m3 exactly 2 of c"
+   ]
+  },
+  {
+   "unit": "K1 Unit",
+   "state": {
+    "K1 a": 1,
+    "K1 b": 1,
+    "K1 c": 0,
+    "K1 d": 3
+   },
+   "messages": [
+    "m3 exactly 2 of c"
+   ]
+  },
+  {
+   "unit": "K1 Unit",
+   "state": {
+    "K1 a": 1,
+    "K1 b": 1,
+    "K1 c": 1,
+    "K1 d": 0
+   },
+   "messages": [
+    "m3 exactly 2 of c"
+   ]
+  },
+  {
+   "unit": "K1 Unit",
+   "state": {
+    "K1 a": 1,
+    "K1 b": 1,
+    "K1 c": 1,
+    "K1 d": 3
+   },
+   "messages": [
+    "m3 exactly 2 of c"
+   ]
+  },
+  {
+   "unit": "K1 Unit",
+   "state": {
+    "K1 a": 1,
+    "K1 b": 1,
+    "K1 c": 2,
+    "K1 d": 0
+   },
+   "messages": []
+  },
+  {
+   "unit": "K1 Unit",
+   "state": {
+    "K1 a": 1,
+    "K1 b": 1,
+    "K1 c": 2,
+    "K1 d": 3
+   },
+   "messages": []
+  },
+  {
+   "unit": "K1 Unit",
+   "state": {
+    "K1 a": 1,
+    "K1 b": 1,
+    "K1 c": 3,
+    "K1 d": 0
+   },
+   "messages": [
+    "m3 exactly 2 of c"
+   ]
+  },
+  {
+   "unit": "K1 Unit",
+   "state": {
+    "K1 a": 1,
+    "K1 b": 1,
+    "K1 c": 3,
+    "K1 d": 3
+   },
+   "messages": [
+    "m3 exactly 2 of c"
+   ]
+  },
+  {
+   "unit": "K1 Unit",
+   "state": {
+    "K1 a": 1,
+    "K1 b": 2,
+    "K1 c": 0,
+    "K1 d": 0
+   },
+   "messages": [
+    "m3 exactly 2 of c"
+   ]
+  },
+  {
+   "unit": "K1 Unit",
+   "state": {
+    "K1 a": 1,
+    "K1 b": 2,
+    "K1 c": 0,
+    "K1 d": 3
+   },
+   "messages": [
+    "m3 exactly 2 of c"
+   ]
+  },
+  {
+   "unit": "K1 Unit",
+   "state": {
+    "K1 a": 1,
+    "K1 b": 2,
+    "K1 c": 1,
+    "K1 d": 0
+   },
+   "messages": [
+    "m3 exactly 2 of c"
+   ]
+  },
+  {
+   "unit": "K1 Unit",
+   "state": {
+    "K1 a": 1,
+    "K1 b": 2,
+    "K1 c": 1,
+    "K1 d": 3
+   },
+   "messages": [
+    "m3 exactly 2 of c"
+   ]
+  },
+  {
+   "unit": "K1 Unit",
+   "state": {
+    "K1 a": 1,
+    "K1 b": 2,
+    "K1 c": 2,
+    "K1 d": 0
+   },
+   "messages": []
+  },
+  {
+   "unit": "K1 Unit",
+   "state": {
+    "K1 a": 1,
+    "K1 b": 2,
+    "K1 c": 2,
+    "K1 d": 3
+   },
+   "messages": []
+  },
+  {
+   "unit": "K1 Unit",
+   "state": {
+    "K1 a": 1,
+    "K1 b": 2,
+    "K1 c": 3,
+    "K1 d": 0
+   },
+   "messages": [
+    "m3 exactly 2 of c"
+   ]
+  },
+  {
+   "unit": "K1 Unit",
+   "state": {
+    "K1 a": 1,
+    "K1 b": 2,
+    "K1 c": 3,
+    "K1 d": 3
+   },
+   "messages": [
+    "m3 exactly 2 of c"
+   ]
+  },
+  {
+   "unit": "K1 Unit",
+   "state": {
+    "K1 a": 2,
+    "K1 b": 0,
+    "K1 c": 0,
+    "K1 d": 0
+   },
+   "messages": [
+    "m1 max 1 of a",
+    "m2 min 1 of b",
+    "m3 exactly 2 of c"
+   ]
+  },
+  {
+   "unit": "K1 Unit",
+   "state": {
+    "K1 a": 2,
+    "K1 b": 0,
+    "K1 c": 0,
+    "K1 d": 3
+   },
+   "messages": [
+    "m1 max 1 of a",
+    "m2 min 1 of b",
+    "m3 exactly 2 of c"
+   ]
+  },
+  {
+   "unit": "K1 Unit",
+   "state": {
+    "K1 a": 2,
+    "K1 b": 0,
+    "K1 c": 1,
+    "K1 d": 0
+   },
+   "messages": [
+    "m1 max 1 of a",
+    "m2 min 1 of b",
+    "m3 exactly 2 of c"
+   ]
+  },
+  {
+   "unit": "K1 Unit",
+   "state": {
+    "K1 a": 2,
+    "K1 b": 0,
+    "K1 c": 1,
+    "K1 d": 3
+   },
+   "messages": [
+    "m1 max 1 of a",
+    "m2 min 1 of b",
+    "m3 exactly 2 of c"
+   ]
+  },
+  {
+   "unit": "K1 Unit",
+   "state": {
+    "K1 a": 2,
+    "K1 b": 0,
+    "K1 c": 2,
+    "K1 d": 0
+   },
+   "messages": [
+    "m1 max 1 of a",
+    "m2 min 1 of b"
+   ]
+  },
+  {
+   "unit": "K1 Unit",
+   "state": {
+    "K1 a": 2,
+    "K1 b": 0,
+    "K1 c": 2,
+    "K1 d": 3
+   },
+   "messages": [
+    "m1 max 1 of a",
+    "m2 min 1 of b"
+   ]
+  },
+  {
+   "unit": "K1 Unit",
+   "state": {
+    "K1 a": 2,
+    "K1 b": 0,
+    "K1 c": 3,
+    "K1 d": 0
+   },
+   "messages": [
+    "m1 max 1 of a",
+    "m2 min 1 of b",
+    "m3 exactly 2 of c"
+   ]
+  },
+  {
+   "unit": "K1 Unit",
+   "state": {
+    "K1 a": 2,
+    "K1 b": 0,
+    "K1 c": 3,
+    "K1 d": 3
+   },
+   "messages": [
+    "m1 max 1 of a",
+    "m2 min 1 of b",
+    "m3 exactly 2 of c"
+   ]
+  },
+  {
+   "unit": "K1 Unit",
+   "state": {
+    "K1 a": 2,
+    "K1 b": 1,
+    "K1 c": 0,
+    "K1 d": 0
+   },
+   "messages": [
+    "m1 max 1 of a",
+    "m3 exactly 2 of c"
+   ]
+  },
+  {
+   "unit": "K1 Unit",
+   "state": {
+    "K1 a": 2,
+    "K1 b": 1,
+    "K1 c": 0,
+    "K1 d": 3
+   },
+   "messages": [
+    "m1 max 1 of a",
+    "m3 exactly 2 of c"
+   ]
+  },
+  {
+   "unit": "K1 Unit",
+   "state": {
+    "K1 a": 2,
+    "K1 b": 1,
+    "K1 c": 1,
+    "K1 d": 0
+   },
+   "messages": [
+    "m1 max 1 of a",
+    "m3 exactly 2 of c"
+   ]
+  },
+  {
+   "unit": "K1 Unit",
+   "state": {
+    "K1 a": 2,
+    "K1 b": 1,
+    "K1 c": 1,
+    "K1 d": 3
+   },
+   "messages": [
+    "m1 max 1 of a",
+    "m3 exactly 2 of c"
+   ]
+  },
+  {
+   "unit": "K1 Unit",
+   "state": {
+    "K1 a": 2,
+    "K1 b": 1,
+    "K1 c": 2,
+    "K1 d": 0
+   },
+   "messages": [
+    "m1 max 1 of a"
+   ]
+  },
+  {
+   "unit": "K1 Unit",
+   "state": {
+    "K1 a": 2,
+    "K1 b": 1,
+    "K1 c": 2,
+    "K1 d": 3
+   },
+   "messages": [
+    "m1 max 1 of a"
+   ]
+  },
+  {
+   "unit": "K1 Unit",
+   "state": {
+    "K1 a": 2,
+    "K1 b": 1,
+    "K1 c": 3,
+    "K1 d": 0
+   },
+   "messages": [
+    "m1 max 1 of a",
+    "m3 exactly 2 of c"
+   ]
+  },
+  {
+   "unit": "K1 Unit",
+   "state": {
+    "K1 a": 2,
+    "K1 b": 1,
+    "K1 c": 3,
+    "K1 d": 3
+   },
+   "messages": [
+    "m1 max 1 of a",
+    "m3 exactly 2 of c"
+   ]
+  },
+  {
+   "unit": "K1 Unit",
+   "state": {
+    "K1 a": 2,
+    "K1 b": 2,
+    "K1 c": 0,
+    "K1 d": 0
+   },
+   "messages": [
+    "m1 max 1 of a",
+    "m3 exactly 2 of c"
+   ]
+  },
+  {
+   "unit": "K1 Unit",
+   "state": {
+    "K1 a": 2,
+    "K1 b": 2,
+    "K1 c": 0,
+    "K1 d": 3
+   },
+   "messages": [
+    "m1 max 1 of a",
+    "m3 exactly 2 of c"
+   ]
+  },
+  {
+   "unit": "K1 Unit",
+   "state": {
+    "K1 a": 2,
+    "K1 b": 2,
+    "K1 c": 1,
+    "K1 d": 0
+   },
+   "messages": [
+    "m1 max 1 of a",
+    "m3 exactly 2 of c"
+   ]
+  },
+  {
+   "unit": "K1 Unit",
+   "state": {
+    "K1 a": 2,
+    "K1 b": 2,
+    "K1 c": 1,
+    "K1 d": 3
+   },
+   "messages": [
+    "m1 max 1 of a",
+    "m3 exactly 2 of c"
+   ]
+  },
+  {
+   "unit": "K1 Unit",
+   "state": {
+    "K1 a": 2,
+    "K1 b": 2,
+    "K1 c": 2,
+    "K1 d": 0
+   },
+   "messages": [
+    "m1 max 1 of a"
+   ]
+  },
+  {
+   "unit": "K1 Unit",
+   "state": {
+    "K1 a": 2,
+    "K1 b": 2,
+    "K1 c": 2,
+    "K1 d": 3
+   },
+   "messages": [
+    "m1 max 1 of a"
+   ]
+  },
+  {
+   "unit": "K1 Unit",
+   "state": {
+    "K1 a": 2,
+    "K1 b": 2,
+    "K1 c": 3,
+    "K1 d": 0
+   },
+   "messages": [
+    "m1 max 1 of a",
+    "m3 exactly 2 of c"
+   ]
+  },
+  {
+   "unit": "K1 Unit",
+   "state": {
+    "K1 a": 2,
+    "K1 b": 2,
+    "K1 c": 3,
+    "K1 d": 3
+   },
+   "messages": [
+    "m1 max 1 of a",
+    "m3 exactly 2 of c"
+   ]
+  },
+  {
+   "unit": "K3 Unit",
+   "state": {
+    "K3 a": 0,
+    "K3 b": 0,
+    "K3 c": 0,
+    "K3 d": 0
+   },
+   "messages": [
+    "p2 min 50% of b"
+   ]
+  },
+  {
+   "unit": "K3 Unit",
+   "state": {
+    "K3 a": 1,
+    "K3 b": 0,
+    "K3 c": 0,
+    "K3 d": 0
+   },
+   "messages": [
+    "p1 max 50% of a",
+    "p2 min 50% of b"
+   ]
+  },
+  {
+   "unit": "K3 Unit",
+   "state": {
+    "K3 a": 1,
+    "K3 b": 1,
+    "K3 c": 0,
+    "K3 d": 0
+   },
+   "messages": []
+  },
+  {
+   "unit": "K3 Unit",
+   "state": {
+    "K3 a": 2,
+    "K3 b": 1,
+    "K3 c": 0,
+    "K3 d": 0
+   },
+   "messages": [
+    "p1 max 50% of a",
+    "p2 min 50% of b"
+   ]
+  },
+  {
+   "unit": "K3 Unit",
+   "state": {
+    "K3 a": 1,
+    "K3 b": 2,
+    "K3 c": 0,
+    "K3 d": 0
+   },
+   "messages": []
+  },
+  {
+   "unit": "K3 Unit",
+   "state": {
+    "K3 a": 1,
+    "K3 b": 1,
+    "K3 c": 1,
+    "K3 d": 1
+   },
+   "messages": [
+    "p2 min 50% of b"
+   ]
+  },
+  {
+   "unit": "K3 Unit",
+   "state": {
+    "K3 a": 2,
+    "K3 b": 2,
+    "K3 c": 0,
+    "K3 d": 0
+   },
+   "messages": []
+  },
+  {
+   "unit": "K3 Unit",
+   "state": {
+    "K3 a": 1,
+    "K3 b": 0,
+    "K3 c": 1,
+    "K3 d": 0
+   },
+   "messages": [
+    "p2 min 50% of b"
+   ]
+  },
+  {
+   "unit": "K3 Unit",
+   "state": {
+    "K3 a": 0,
+    "K3 b": 1,
+    "K3 c": 0,
+    "K3 d": 0
+   },
+   "messages": []
+  },
+  {
+   "unit": "K3 Unit",
+   "state": {
+    "K3 a": 0,
+    "K3 b": 2,
+    "K3 c": 2,
+    "K3 d": 0
+   },
+   "messages": []
+  },
+  {
+   "unit": "K3 Unit",
+   "state": {
+    "K3 a": 3,
+    "K3 b": 1,
+    "K3 c": 0,
+    "K3 d": 0
+   },
+   "messages": [
+    "p1 max 50% of a",
+    "p2 min 50% of b"
+   ]
+  },
+  {
+   "unit": "K3 Unit",
+   "state": {
+    "K3 a": 1,
+    "K3 b": 3,
+    "K3 c": 0,
+    "K3 d": 0
+   },
+   "messages": []
+  },
+  {
+   "unit": "K8 Unit",
+   "state": {
+    "K8 a": 0,
+    "K8 b": 0,
+    "K8 c": 0
+   },
+   "messages": [
+    "k8 max -1 negative a"
+   ]
+  },
+  {
+   "unit": "K8 Unit",
+   "state": {
+    "K8 a": 1,
+    "K8 b": 0,
+    "K8 c": 0
+   },
+   "messages": [
+    "k8 max -1 negative a"
+   ]
+  },
+  {
+   "unit": "K8 Unit",
+   "state": {
+    "K8 a": 2,
+    "K8 b": 0,
+    "K8 c": 0
+   },
+   "messages": [
+    "k8 max -1 negative a"
+   ]
+  },
+  {
+   "unit": "K8 Unit",
+   "state": {
+    "K8 a": 1,
+    "K8 b": 1,
+    "K8 c": 0
+   },
+   "messages": [
+    "k8 max -1 negative a"
+   ]
+  },
+  {
+   "unit": "K8 Unit",
+   "state": {
+    "K8 a": 2,
+    "K8 b": 1,
+    "K8 c": 0
+   },
+   "messages": [
+    "k8 max -1 negative a",
+    "k8 max 12 pts (deep)",
+    "k8 max 12 pts (shallow)"
+   ]
+  },
+  {
+   "unit": "K8 Unit",
+   "state": {
+    "K8 a": 3,
+    "K8 b": 0,
+    "K8 c": 0
+   },
+   "messages": [
+    "k8 max -1 negative a",
+    "k8 max 12 pts (deep)",
+    "k8 max 12 pts (shallow)"
+   ]
+  },
+  {
+   "unit": "K8 Unit",
+   "state": {
+    "K8 a": 0,
+    "K8 b": 1,
+    "K8 c": 0
+   },
+   "messages": [
+    "k8 max -1 negative a"
+   ]
+  },
+  {
+   "unit": "K8 Unit",
+   "state": {
+    "K8 a": 0,
+    "K8 b": 0,
+    "K8 c": 1
+   },
+   "messages": [
+    "k8 max -1 negative a"
+   ]
+  },
+  {
+   "unit": "K8 Unit",
+   "state": {
+    "K8 a": 1,
+    "K8 b": 1,
+    "K8 c": 1
+   },
+   "messages": [
+    "k8 max -1 negative a",
+    "k8 max 12 pts (deep)",
+    "k8 max 12 pts (shallow)"
+   ]
+  },
+  {
+   "unit": "K8 Unit",
+   "state": {
+    "K8 a": 2,
+    "K8 b": 2,
+    "K8 c": 0
+   },
+   "messages": [
+    "k8 max -1 negative a",
+    "k8 max 12 pts (deep)",
+    "k8 max 12 pts (shallow)"
+   ]
+  },
+  {
+   "unit": "K8 Unit",
+   "state": {
+    "K8 a": 0,
+    "K8 b": 3,
+    "K8 c": 0
+   },
+   "messages": [
+    "k8 max -1 negative a",
+    "k8 max 12 pts (deep)",
+    "k8 max 12 pts (shallow)"
+   ]
+  },
+  {
+   "unit": "K7 Unit",
+   "state": {
+    "K7 a": 0,
+    "K7 b": 0
+   },
+   "messages": []
+  },
+  {
+   "unit": "K7 Unit",
+   "state": {
+    "K7 a": 1,
+    "K7 b": 0
+   },
+   "messages": []
+  },
+  {
+   "unit": "K7 Unit",
+   "state": {
+    "K7 a": 2,
+    "K7 b": 0
+   },
+   "messages": [
+    "k7 max 1 of a (3 if b)"
+   ]
+  },
+  {
+   "unit": "K7 Unit",
+   "state": {
+    "K7 a": 3,
+    "K7 b": 0
+   },
+   "messages": [
+    "k7 max 1 of a (3 if b)"
+   ]
+  },
+  {
+   "unit": "K7 Unit",
+   "state": {
+    "K7 a": 4,
+    "K7 b": 0
+   },
+   "messages": [
+    "k7 max 1 of a (3 if b)"
+   ]
+  },
+  {
+   "unit": "K7 Unit",
+   "state": {
+    "K7 a": 2,
+    "K7 b": 1
+   },
+   "messages": []
+  },
+  {
+   "unit": "K7 Unit",
+   "state": {
+    "K7 a": 3,
+    "K7 b": 1
+   },
+   "messages": []
+  },
+  {
+   "unit": "K7 Unit",
+   "state": {
+    "K7 a": 4,
+    "K7 b": 1
+   },
+   "messages": [
+    "k7 max 1 of a (3 if b)"
+   ]
+  },
+  {
+   "unit": "K7 Unit",
+   "state": {
+    "K7 a": 4,
+    "K7 b": 2
+   },
+   "messages": [
+    "k7 max 1 of a (3 if b)"
+   ]
+  },
+  {
+   "unit": "K9 Unit",
+   "state": {
+    "K9 a": 0,
+    "K9 b": 0,
+    "K9 c": 1,
+    "G9 1": 0,
+    "G9 2": 1
+   },
+   "messages": [
+    "K9 Unit has 1 selections too many (max 1)",
+    "K9 Unit requires 1 more selections of K9 a",
+    "K9 Unit requires 1 selections more of K9 b"
+   ]
+  },
+  {
+   "unit": "K9 Unit",
+   "state": {
+    "K9 a": 1,
+    "K9 b": 0,
+    "K9 c": 1,
+    "G9 1": 0,
+    "G9 2": 1
+   },
+   "messages": [
+    "K9 Unit has 2 selections too many (max 1)",
+    "K9 Unit requires 1 selections more of K9 b"
+   ]
+  },
+  {
+   "unit": "K9 Unit",
+   "state": {
+    "K9 a": 1,
+    "K9 b": 1,
+    "K9 c": 1,
+    "G9 1": 0,
+    "G9 2": 1
+   },
+   "messages": [
+    "K9 Unit has 1 pts too many of K9 b (max 0)",
+    "K9 Unit has 3 selections too many (max 1)"
+   ]
+  },
+  {
+   "unit": "K9 Unit",
+   "state": {
+    "K9 a": 1,
+    "K9 b": 2,
+    "K9 c": 1,
+    "G9 1": 0,
+    "G9 2": 1
+   },
+   "messages": [
+    "K9 Unit has 1 selections too many of named u2 (max 1)",
+    "K9 Unit has 2 pts too many of K9 b (max 0)",
+    "K9 Unit has 4 selections too many (max 1)"
+   ]
+  },
+  {
+   "unit": "K9 Unit",
+   "state": {
+    "K9 a": 1,
+    "K9 b": 3,
+    "K9 c": 1,
+    "G9 1": 0,
+    "G9 2": 1
+   },
+   "messages": [
+    "K9 Unit has 2 selections too many of named u2 (max 1)",
+    "K9 Unit has 3 pts too many of K9 b (max 0)",
+    "K9 Unit has 5 selections too many (max 1)"
+   ]
+  },
+  {
+   "unit": "K9 Unit",
+   "state": {
+    "K9 a": 1,
+    "K9 b": 1,
+    "K9 c": 0,
+    "G9 1": 0,
+    "G9 2": 1
+   },
+   "messages": [
+    "K9 Unit has 1 pts too many of K9 b (max 0)",
+    "K9 Unit has 2 selections too many (max 1)",
+    "K9 Unit requires 1 selections more"
+   ]
+  },
+  {
+   "unit": "K9 Unit",
+   "state": {
+    "K9 a": 0,
+    "K9 b": 2,
+    "K9 c": 0,
+    "G9 1": 0,
+    "G9 2": 1
+   },
+   "messages": [
+    "K9 Unit has 1 selections too many of named u2 (max 1)",
+    "K9 Unit has 2 pts too many of K9 b (max 0)",
+    "K9 Unit has 2 selections too many (max 1)",
+    "K9 Unit requires 1 more selections of K9 a",
+    "K9 Unit requires 1 selections more"
+   ]
+  },
+  {
+   "unit": "K9 Unit",
+   "state": {
+    "K9 a": 0,
+    "K9 b": 3,
+    "K9 c": 1,
+    "G9 1": 0,
+    "G9 2": 1
+   },
+   "messages": [
+    "K9 Unit has 2 selections too many of named u2 (max 1)",
+    "K9 Unit has 3 pts too many of K9 b (max 0)",
+    "K9 Unit has 4 selections too many (max 1)",
+    "K9 Unit requires 1 more selections of K9 a"
+   ]
+  },
+  {
+   "unit": "K4 Unit",
+   "state": {
+    "K4 h": 1,
+    "K4 s": 1,
+    "K4 u": 0
+   },
+   "messages": [
+    "K4 Unit K4 h cannot be selected while hidden"
+   ]
+  },
+  {
+   "unit": "K4 Unit",
+   "state": {
+    "K4 h": 1,
+    "K4 s": 0,
+    "K4 u": 0
+   },
+   "messages": [
+    "K4 Unit K4 h cannot be selected while hidden",
+    "s min 1 (visible)"
+   ]
+  },
+  {
+   "unit": "K4 Unit",
+   "state": {
+    "K4 h": 1,
+    "K4 s": 1,
+    "K4 u": 1
+   },
+   "messages": []
+  },
+  {
+   "unit": "K4 Unit",
+   "state": {
+    "K4 s": 1,
+    "K4 u": 0
+   },
+   "messages": []
+  },
+  {
+   "unit": "K2 Unit",
+   "state": {
+    "K2 x": 2,
+    "K2 z": 1,
+    "GA 1": 1,
+    "GA 2": 0,
+    "GB 1": 0,
+    "GB 2": 0,
+    "GC 1": 0,
+    "GC 2": 1
+   },
+   "messages": [
+    "GB max 1 (parent, any)"
+   ]
+  },
+  {
+   "unit": "K2 Unit",
+   "state": {
+    "K2 x": 2,
+    "K2 z": 1,
+    "GA 1": 0,
+    "GA 2": 0,
+    "GB 1": 0,
+    "GB 2": 0,
+    "GC 1": 0,
+    "GC 2": 1
+   },
+   "messages": [
+    "GA min 1 (self, any)",
+    "GB max 1 (parent, any)"
+   ]
+  },
+  {
+   "unit": "K2 Unit",
+   "state": {
+    "K2 x": 2,
+    "K2 z": 1,
+    "GA 1": 2,
+    "GA 2": 0,
+    "GB 1": 0,
+    "GB 2": 0,
+    "GC 1": 0,
+    "GC 2": 1
+   },
+   "messages": [
+    "GB max 1 (parent, any)"
+   ]
+  },
+  {
+   "unit": "K2 Unit",
+   "state": {
+    "K2 x": 2,
+    "K2 z": 1,
+    "GA 1": 2,
+    "GA 2": 1,
+    "GB 1": 0,
+    "GB 2": 0,
+    "GC 1": 0,
+    "GC 2": 1
+   },
+   "messages": [
+    "GB max 1 (parent, any)"
+   ]
+  },
+  {
+   "unit": "K2 Unit",
+   "state": {
+    "K2 x": 2,
+    "K2 z": 1,
+    "GA 1": 1,
+    "GA 2": 1,
+    "GB 1": 0,
+    "GB 2": 0,
+    "GC 1": 0,
+    "GC 2": 1
+   },
+   "messages": [
+    "GB max 1 (parent, any)"
+   ]
+  },
+  {
+   "unit": "K2 Unit",
+   "state": {
+    "K2 x": 0,
+    "K2 z": 0,
+    "GA 1": 0,
+    "GA 2": 0,
+    "GB 1": 1,
+    "GB 2": 0,
+    "GC 1": 0,
+    "GC 2": 0
+   },
+   "messages": [
+    "GA min 1 (self, any)",
+    "x min 2",
+    "z min 1 no childId"
+   ]
+  },
+  {
+   "unit": "K2 Unit",
+   "state": {
+    "K2 x": 0,
+    "K2 z": 0,
+    "GA 1": 1,
+    "GA 2": 0,
+    "GB 1": 1,
+    "GB 2": 0,
+    "GC 1": 0,
+    "GC 2": 0
+   },
+   "messages": [
+    "GB max 1 (parent, any)",
+    "x min 2",
+    "z min 1 no childId"
+   ]
+  }
+ ],
+ "k5": [
+  {
+   "units": 1,
+   "rows": [
+    []
+   ]
+  },
+  {
+   "units": 2,
+   "rows": [
+    [
+     "k5 max 1 at force",
+     "k5 max 1 at parent",
+     "k5 max 1 at primary-category",
+     "k5 max 1 at roster"
+    ],
+    [
+     "k5 max 1 at force",
+     "k5 max 1 at parent",
+     "k5 max 1 at primary-category",
+     "k5 max 1 at roster"
+    ]
+   ]
+  },
+  {
+   "units": 3,
+   "rows": [
+    [
+     "k5 max 1 at force",
+     "k5 max 1 at parent",
+     "k5 max 1 at primary-category",
+     "k5 max 1 at roster"
+    ],
+    [
+     "k5 max 1 at force",
+     "k5 max 1 at parent",
+     "k5 max 1 at primary-category",
+     "k5 max 1 at roster"
+    ],
+    [
+     "k5 max 1 at force",
+     "k5 max 1 at parent",
+     "k5 max 1 at primary-category",
+     "k5 max 1 at roster"
+    ]
+   ]
+  }
+ ]
+}
