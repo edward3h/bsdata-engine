@@ -341,10 +341,11 @@ the most judgement. M8 is the honest measure of success.
 **Behaviours that may be bugs.** Some observed NR behaviour looks accidental:
 `position 0` meaning "all numbers"; `before` as an ordinary condition being
 true for itself and later nodes; `atLeast 0` in `self` being false (documented
-as kept from BattleScribe). Decision needed: *compat mode* (copy observed
-behaviour exactly) versus *spec mode* (implement the apparent intent and
-document the difference). Suggest compat by default, with the odd cases in one
-list so they can be switched.
+as kept from BattleScribe). **Decided:** *compat mode* by default (copy
+observed NR behaviour exactly), not *spec mode* (implement the apparent intent).
+The odd cases live in one list so each can be switched to spec behaviour later.
+The data was written and tested against NR, so a "fixed" engine could change
+roster results.
 
 **Unknown behaviours.** The open questions in the spec section 9: instantiation
 rules, how `automatic` constraints add selections, `localConditionGroups`
@@ -399,8 +400,8 @@ Still needed:
 1. **Licence** for the engine (the licence header in kv2 is "(C) Edward Harman and contributors").
 2. **Scope of version 1**: headless library and command-line checker (M0 to M7),
    or include a minimal browser UI through `engine-web`.
-3. **Parity bar**: match NR where it differs from original BattleScribe (as in
-   this sketch), or offer both modes.
+3. **Parity bar**: *decided.* Match NR where it differs from original
+   BattleScribe, in compat mode (see section 8).
 4. **Repository layout**: put the Gradle project in this repository next to
    `docs/`, or in a new one. The sketch assumes this repository.
 5. **Whether to start now.** The cheapest next step is the M0 spike: a Gradle
