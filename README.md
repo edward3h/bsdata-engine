@@ -38,6 +38,6 @@ a user.
 
 ## Open decisions
 
-Version 1 scope, whether to match New Recruit's behaviour or the original
-BattleScribe's, repository layout, and the licence. No licence has been
+Version 1 scope, repository layout, and the licence. Decided: match New
+Recruit's behaviour (not the original BattleScribe's), in compat mode. No licence has been
 chosen yet, so until one is added all rights are reserved.
