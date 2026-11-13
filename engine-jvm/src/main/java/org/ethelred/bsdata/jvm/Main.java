@@ -11,15 +11,23 @@ import java.util.stream.Stream;
 import org.ethelred.bsdata.DataNode;
 import org.ethelred.bsdata.Linker;
 import org.ethelred.bsdata.MinimalJsonSource;
+import org.ethelred.bsdata.RosterReport;
 
-/** Command-line checker: {@code Main <directory>} reports id references across all JSON files in it. */
+/**
+ * Command-line checker: {@code Main <directory>} reports id references across all JSON files in it; {@code Main
+ * <file>.roster.json} reads and rewrites a roster and summarises it.
+ */
 public final class Main {
     private Main() {}
 
     public static void main(String[] args) throws IOException {
         if (args.length != 1) {
-            System.err.println("usage: Main <directory of .json files>");
+            System.err.println("usage: Main <directory of .json files> | <file>.roster.json");
             System.exit(2);
+        }
+        if (args[0].endsWith(".roster.json")) {
+            System.out.print(RosterReport.of(Files.readString(Path.of(args[0]), StandardCharsets.UTF_8)));
+            return;
         }
         var json = new MinimalJsonSource();
         Map<String, DataNode> files = new TreeMap<>();
