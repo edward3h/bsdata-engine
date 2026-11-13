@@ -28,7 +28,13 @@ force:  { "id", "name", "entryId",
 selection: { "id", "name", "entryId", "number", "type", "from",
              "entryGroupId"?, "group"?,
              "costs": [ cost ], "categories": [ category ],
+             "associations"?: [ association ], "incomingAssociations"?: [ association ],
              "profiles": [ ... ], "rules": [ ... ], "selections": [ selection ] }
+
+association (outgoing):  { "type": "outgoing", "to": <selection id>,
+                           "associationId", "name", "action" }
+association (incoming):  { "type": "incoming", "from": <selection id>, "amount",
+                           "associationId", "name", "action" }
 
 category: { "id", "entryId", "name", "primary" }
 ```
@@ -64,16 +70,28 @@ category: { "id", "entryId", "name", "primary" }
   fixture has `pts` 0) has no `costs` key, and empty lists are left out entirely.
 - **Catalogue names are copied from the data as is**, including leading
   whitespace (`catalogueName` of Thousand Sons begins with spaces).
+- **Attachment (associations) is stored on both selections.** Ticking "Leading" on
+  leader E for bodyguard F gave E `associations: [{"type": "outgoing", "to": F's
+  selection id, "associationId": "Leading-unit", "name": "Leading", "action":
+  "group"}]` and F `incomingAssociations: [{"type": "incoming", "from": E's
+  selection id, "amount": 1, "associationId": "Leading-unit", "name": "Leading",
+  "action": "group"}]`. The keys are absent when nothing is attached, and detaching
+  is expected to remove them (the tests show the error message going away; the
+  export was not re-checked). `name` and `action` come from the data's association
+  (`Leading`, `group`); `associationId` here is `Leading-unit`, which fits
+  `<name>-<childId>` (the data's association has `childId: "unit"` and no id of its
+  own), from a single sample. Two leaders of the same type, only one attached,
+  export correctly: only the attached one has the key. The target is addressed by
+  the roster selection id, not an entry id. Not yet seen: `amount` other than 1, a
+  leader attached to several units, and the `traverseAssociationGroup` constraint's
+  view of this state (it ran in NR and counts selections in the attached group).
 - **Not present in exports** (as far as seen): cost limits, notes, custom names,
-  attachment state for leaders and bodyguards (associations), and hidden or
-  collapsed state.
+  and hidden or collapsed state.
 
 ## Open questions
 
-- Where, if anywhere, NR stores which unit a leader is **attached** to. The
-  fixture roster has no association field. The association tests in
-  `nr-extension-tests` involve attaching in the UI; export a roster with an
-  attachment to see.
+- How the `associationId` is built when the data's association has an id of its
+  own, and what `amount` means beyond 1.
 - The meaning of cost limits and `costLimits` when a limit is set at list creation.
 - Whether `.ros`/`.rosz` (XML) carry anything the JSON does not, such as the
   per-selection `publications` or `customName`. Comparing a `.ros` export of the

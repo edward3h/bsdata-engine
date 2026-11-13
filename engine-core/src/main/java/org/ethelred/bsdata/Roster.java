@@ -30,6 +30,20 @@ public record Roster(
 
     public record Cost(String name, String typeId, double value, Map<String, DataNode> extra) {}
 
+    /**
+     * Attachment between two selections, stored on both: on the source as {@code type "outgoing"} with {@code to}, on
+     * the target as {@code "incoming"} with {@code from} and an {@code amount}. {@code selectionId} holds whichever of
+     * {@code to} or {@code from} is present.
+     */
+    public record Association(
+            String type,
+            String selectionId,
+            String associationId,
+            String name,
+            String action,
+            @Nullable Double amount,
+            Map<String, DataNode> extra) {}
+
     public record Category(String id, String entryId, String name, boolean primary, Map<String, DataNode> extra) {}
 
     public record Force(
@@ -65,6 +79,8 @@ public record Roster(
             List<Category> categories,
             List<DataNode> profiles,
             List<DataNode> rules,
+            List<Association> associations,
+            List<Association> incomingAssociations,
             List<Selection> selections,
             Map<String, DataNode> extra) {}
 
@@ -136,7 +152,22 @@ public record Roster(
                 categories(f),
                 f.array("profiles"),
                 f.array("rules"),
+                list(f, "associations", Roster::association),
+                list(f, "incomingAssociations", Roster::association),
                 list(f, "selections", Roster::selection),
+                f.rest());
+    }
+
+    private static Association association(Fields f) {
+        String type = f.str("type");
+        String selectionId = type.equals("incoming") ? f.str("from") : f.str("to");
+        return new Association(
+                type,
+                selectionId,
+                f.str("associationId"),
+                f.str("name"),
+                f.str("action"),
+                f.optNum("amount"),
                 f.rest());
     }
 
@@ -174,6 +205,20 @@ public record Roster(
         return new DataNode.Obj(m);
     }
 
+    private static DataNode node(Association a) {
+        Map<String, DataNode> m = new LinkedHashMap<>();
+        m.put("type", new DataNode.Str(a.type()));
+        m.put(a.type().equals("incoming") ? "from" : "to", new DataNode.Str(a.selectionId()));
+        if (a.amount() != null) {
+            m.put("amount", new DataNode.Num(a.amount()));
+        }
+        m.put("associationId", new DataNode.Str(a.associationId()));
+        m.put("name", new DataNode.Str(a.name()));
+        m.put("action", new DataNode.Str(a.action()));
+        m.putAll(a.extra());
+        return new DataNode.Obj(m);
+    }
+
     private static DataNode node(Category c) {
         Map<String, DataNode> m = new LinkedHashMap<>();
         m.put("id", new DataNode.Str(c.id()));
@@ -204,6 +249,12 @@ public record Roster(
         Map<String, DataNode> m = new LinkedHashMap<>();
         putNonEmpty(m, "profiles", s.profiles());
         putNonEmpty(m, "rules", s.rules());
+        putNonEmpty(
+                m, "associations", s.associations().stream().map(Roster::node).toList());
+        putNonEmpty(
+                m,
+                "incomingAssociations",
+                s.incomingAssociations().stream().map(Roster::node).toList());
         putNonEmpty(m, "selections", s.selections().stream().map(Roster::node).toList());
         putNonEmpty(m, "costs", s.costs().stream().map(Roster::node).toList());
         putNonEmpty(m, "categories", s.categories().stream().map(Roster::node).toList());
@@ -276,6 +327,18 @@ public record Roster(
         double num(String key) {
             if (node(key) instanceof DataNode.Num n) {
                 return n.value();
+            }
+            throw new IllegalArgumentException("not a number: " + key);
+        }
+
+        @Nullable
+        Double optNum(String key) {
+            DataNode n = unread.remove(key);
+            if (n == null) {
+                return null;
+            }
+            if (n instanceof DataNode.Num num) {
+                return num.value();
             }
             throw new IllegalArgumentException("not a number: " + key);
         }

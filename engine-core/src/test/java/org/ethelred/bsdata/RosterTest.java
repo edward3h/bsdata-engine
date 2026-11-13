@@ -47,7 +47,8 @@ class RosterTest {
 
     @Test
     void writingARosterReproducesTheFile() throws IOException {
-        for (String file : List.of("dup-constraints.roster.json", "extension-tests.roster.json")) {
+        for (String file : List.of(
+                "dup-constraints.roster.json", "extension-tests.roster.json", "extension-tests-attached.roster.json")) {
             DataNode parsed = JSON.parse(resource(file));
             Roster roster = Roster.read(parsed);
             assertEquals(parsed, roster.toNode(), file);
@@ -65,6 +66,42 @@ class RosterTest {
         r.costs().forEach(c -> expected.put(c.name(), c.value()));
         assertEquals(expected, sums);
         assertEquals(Map.of("pts", 1200.0, "Enh", 2.0), sums);
+    }
+
+    @Test
+    void anAttachmentIsStoredOnBothSelections() throws IOException {
+        Roster r = Roster.read(JSON.parse(resource("extension-tests-attached.roster.json")));
+        List<Roster.Selection> all = new java.util.ArrayList<>();
+        r.forces().forEach(f -> f.selections().forEach(s -> flatten(s, all)));
+        Roster.Selection leader = all.stream()
+                .filter(s -> !s.associations().isEmpty())
+                .findFirst()
+                .orElseThrow();
+        Roster.Selection bodyguard = all.stream()
+                .filter(s -> !s.incomingAssociations().isEmpty())
+                .findFirst()
+                .orElseThrow();
+        Roster.Association out = leader.associations().get(0);
+        Roster.Association in = bodyguard.incomingAssociations().get(0);
+        assertEquals("outgoing", out.type());
+        assertEquals("incoming", in.type());
+        assertEquals(bodyguard.id(), out.selectionId());
+        assertEquals(leader.id(), in.selectionId());
+        assertEquals("Leading-unit", out.associationId());
+        assertEquals(out.associationId(), in.associationId());
+        assertEquals("Leading", out.name());
+        assertEquals("group", out.action());
+        Double amount = in.amount();
+        assertEquals(1.0, amount == null ? -1.0 : amount);
+        // only one of the two E leaders is attached, and the other has no association
+        assertEquals(1, all.stream().filter(s -> !s.associations().isEmpty()).count());
+        assertEquals(
+                2, all.stream().filter(s -> s.name().startsWith("E - Leader")).count());
+    }
+
+    private static void flatten(Roster.Selection s, List<Roster.Selection> out) {
+        out.add(s);
+        s.selections().forEach(c -> flatten(c, out));
     }
 
     private static void addCosts(Roster.Selection s, Map<String, Double> sums) {

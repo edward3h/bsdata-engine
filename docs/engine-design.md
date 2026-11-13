@@ -515,9 +515,12 @@ Findings that affect the engine:
   Fixtures: `edward3h/nr-extension-tests/rosters/`.
 - **A selection's `entryId` is a path** of ids from the catalogue's entry link to
   the entry, so reading a roster needs the scoped link resolution of section 11.
-- **Attachment state is not in the export** (or was not set in the fixtures). It must
-  be settled before M7 (associations) and before writing rosters that NR opens
-  with the same attachments.
+- **Attachment state is in the export**, stored on both selections as `associations`
+  (outgoing, naming the target selection's id) and `incomingAssociations`. So an
+  attachment is roster state between two selections, and the evaluator's
+  `attachedTo` / `attachedGroup` (section 4) can be read directly from a roster, and
+  derived from the data's association when a roster is built. `Roster.Association`
+  models it; the `associationId` rule is a hypothesis from one sample.
 
 Not yet done: the engine side of reading (resolving each selection's `entryId`
 against a `Repository`, which needs the typed model of M1), writing rosters from
