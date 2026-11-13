@@ -573,6 +573,19 @@ comparison types are Unknown.
     type (`1 pts too many of X`). A node's messages are listed sorted alphabetically.
   - Builder behaviour, not validation: NR adds root units and children up to a `min`
     whether or not `automatic` is set; `automatic` stops the UI going below it.
+- **Instantiation (observed in NR, `M6 Instantiate` catalogue).** What NR adds by itself:
+  - A new roster gets each visible root unit as many times (amount 1 each) as the largest
+    `min` or `exactly` on that unit, ignoring `childId` and scope (`force`, `roster`, `parent`
+    and `self` all gave the count); `min 3` with `max 2` gave 3; percentages, `-1` and `max`
+    alone add nothing; a hidden unit is not added.
+  - Adding a selection adds, recursively, each child with a `min` constraint **owned by the
+    child** that counts the child itself (or `any`, or no `childId`) in scope `parent`, `self`
+    or `root-entry`, to that amount. Scope `force`, `exactly`, and constraints on the unit
+    that count one of its children add nothing. A hidden child is added too.
+  - A group with a `min` (scope `self`, `any`) gets its `defaultSelectionEntryId` member, else
+    its first member, that many times. A group member with its own `min` is added.
+  - Constraints on the target entry and on the link both count.
+  - `automatic` makes no difference to any of this.
 - `message` example: "An Attached Unit can only take 1 Enhancement.",
   on a `max 1` constraint over `Enhancements` at `root-entry` scope with
   `traverseAssociationGroup: true`.
