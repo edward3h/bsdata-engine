@@ -17,6 +17,15 @@ open-source readers do not support. This project aims to document those
 extensions from observed behaviour and build an independent, open
 implementation.
 
+**Direction (2026-11-13).** The BSData organisation's repositories are no longer
+available on GitHub. This project is a **game-agnostic engine**: it contains no
+game data and depends on none. The conformance suite is a small synthetic game
+system and rosters exported from New Recruit for it
+([`edward3h/nr-extension-tests`](https://github.com/edward3h/nr-extension-tests)),
+and scale is tested with a generated dataset. Anyone can point the command-line
+checker at their own data directory; nothing in the repository or CI uses real
+game data.
+
 The design is deliberately not based on New Recruit's engine code, which is not
 public. It comes from New Recruit's public documentation, the data editor's
 published UI code, the BSData data itself, and tests run against New Recruit as

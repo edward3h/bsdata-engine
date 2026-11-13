@@ -31,6 +31,10 @@ is still undecided.
 
 ## 2. Size of the problem
 
+*Measured on two real repositories before they became unavailable (see section 14).
+They remain the scale target; the project now reproduces that scale with a
+generated dataset.*
+
 | Dataset | Files | Size | Objects with IDs | Links | Modifiers |
 |---|---|---|---|---|---|
 | `wh40k-11e` | 46 | 49.0 MB | 103,765 | 43,786 | 24,870 |
@@ -299,7 +303,7 @@ and the validation list. A text exporter can come later.
 | 3 file format | Loader | Parse all of HH3 and 11e; counts match section 2 |
 | 5.1 to 5.6, 5.12 | Modifier pipeline | `tests/expected.json` T01 to T19, F01 to F12 |
 | 5.7 `position` | Number-token ops | T01 to T03, T19, F04 to F07 |
-| 5.8 `affects`, 5.9 scopes | Query + relative modifiers | T20; AFF-ALL, AFF-ONE; Wulfen Stone replica |
+| 5.8 `affects`, 5.9 scopes | Query + relative modifiers | T20; AFF-ALL, AFF-ONE; the worked example in the spec |
 | 6.1 conditions, `count`, local groups | Conditions | T16; G1 to G3 rows in RESULTS.md |
 | 6.2 constraints | Validator | NR notes section on constraints; HH3/11e real rosters |
 | 6.3 associations | Roster + Query | E, F, G4 observations |
@@ -313,14 +317,15 @@ Each ends with something that runs and is checked.
 |---|---|---|
 | M0 | Toolchain spike, loader, ID index, link resolution | Gradle skeleton builds with Java 25 and TeaVM 0.16; one test runs identically on the JVM and in Node; loads `wh40k-11e` and HH3 with zero unresolved references and reports the counts in section 2; records, sealed types and the JSON library confirmed under TeaVM; browser parse time and memory measured |
 | M1 | Typed game data, roster tree with explicit selections, costs without modifiers | A unit's base cost sums correctly; hand-made and exported rosters total as NR does (done, section 13). Automatic instantiation is left to M5 |
-| M1b | **Memory pass** on the loader and typed model | `wh40k-11e` loads in a browser tab within the agreed budget (proposed: 300 MB peak, against about 930 MB in Node now), measured in a real browser and in Node; HH3 well inside it; reports unchanged (byte-identical JVM and JavaScript output, same counts); a regression check records the peak so later milestones cannot quietly undo it |
+| M1a | **Synthetic scale generator** | A deterministic generator writes a game system and catalogues of about 100,000 objects with the shape ratios measured on the real data (section 2); it loads through `Linker` and `GameData` with 0 unresolved links, and JVM and JavaScript reports are byte-identical. It contains no real game content |
+| M1b | **Memory pass** on the loader and typed model | The generated 11e-sized dataset loads in a browser tab within the agreed budget (300 MB peak, agreed 2026-11-13; the real 11e data measured about 930 MB in Node), measured in a real browser and in Node; a half-sized set well inside it; reports unchanged; a regression check records the peak so later milestones cannot quietly undo it |
 | M2 | Query engine, scopes, conditions, groups | Condition truth tables match the NR notes; T16 passes |
 | M3 | Modifier pipeline for plain numbers and text | T04, T05, T08, T12, T14, T09 pass |
-| M4 | Number tokens, `position`, clamps, repeats, `cumulative-*` | All of F01 to F12 in `expected.json` pass except the fractional F08a (informational); Wulfen replica gives `D6+2` |
+| M4 | Number tokens, `position`, clamps, repeats, `cumulative-*` | All of F01 to F12 in `expected.json` pass except the fractional F08a (informational); the worked-example replica gives `D6+2` |
 | M5 | Constraints and validation | The G1 to G3 cost rules and the leader/bodyguard messages reproduce |
-| M6 | Force and catalogue linking, hidden entries, categories | HH3 and 11e rosters instantiate without errors |
+| M6 | Force and catalogue linking, hidden entries, categories | The synthetic scale dataset and the exported conformance rosters instantiate without errors |
 | M7 | Associations, `affects` with `group`, `traverseAssociationGroup` | E, F, G4 results match |
-| M8 | Differential testing against NR | A corpus of real rosters shows the same totals and validation as NR |
+| M8 | Differential testing against NR | A corpus of rosters exported from NR for the synthetic systems shows the same totals, values and validation as NR. Real data can be checked locally by anyone who holds it, outside the repository and CI |
 | M9 | Roster file format: read and write | A roster exported from NR loads, evaluates to the same totals, and writes back so that NR opens it; the format is documented in the spec |
 
 M0 to M4 are mostly mechanical and fully specified by the tests. M5 to M7 need
@@ -330,7 +335,7 @@ a roster refers to catalogue entries by id, and on documenting the format first.
 M1b is a planned step, not optional, and comes before M2: typing conditions and
 modifiers (M2, M3) replaces the raw nodes with more objects, so memory only gets
 worse, and the loader's shape is easiest to change now. It is also a precondition for
-any browser UI. The memory budget is a proposal to settle before starting it. See
+any browser UI. The memory budget is agreed: 300 MB peak for the 11e-sized dataset. See
 section 13 for the measurements and the changes it should make.
 
 ## 7. Testing strategy
@@ -591,9 +596,31 @@ walk.
 4. Build `Repository`'s id sets from the typed model instead of a second walk of
    the tree, and use primitive-friendly or sorted-array maps where `HashMap` is
    heavy.
-5. Measure in a browser tab (heap snapshot), not only RSS in Node, and fix the
-   budget before starting.
+5. Measure in a browser tab (heap snapshot), not only RSS in Node, against the
+   agreed 300 MB budget.
 
 **Not done:** automatic instantiation (M5); categories as explicit roster nodes
 (needed for `primary-category`, M2); writing a `RosterModel` back to a roster file;
 profile and rule evaluation.
+
+## 14. Direction: a game-agnostic engine (2026-11-13)
+
+The BSData GitHub organisation, which held the data the project was shaped by, is
+no longer available. The engine never depended on it: it implements a file format.
+What changes is how it is tested and what the repository may contain.
+
+- **No real game data** in this repository, its fixtures, or CI. Only synthetic data.
+- **Conformance** is the Extension Tests system and the rosters exported from NR
+  for it (`edward3h/nr-extension-tests`). Every observed NR behaviour in the spec
+  has a synthetic test; new behaviour questions are answered with new synthetic
+  tests, as before.
+- **Scale** is tested with a generated dataset (milestone M1a) that reproduces the
+  measured size and shape of the real systems: object counts, link and modifier
+  ratios, nesting depth, id duplication. It contains no real names or text.
+- **Real data**, for anyone who holds a copy, stays a local option: the
+  command-line checker accepts any directory. Results from it are not committed.
+- **Earlier measurements** in this document (sections 2, 11 and 13) were taken on
+  the real repositories while they were available, and are kept as the record of
+  what the engine had to handle. They cannot be re-run from this repository.
+- **Open question for users:** which game systems the engine should be checked
+  against next is theirs to decide; the data format is the same.

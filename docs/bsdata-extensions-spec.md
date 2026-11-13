@@ -27,11 +27,10 @@ community rules text.
 | `giloushaker/nr-editor`, `assets/editor/fields.ts`, `components/catalogue/right_panel/fields/{Modifier,ComplexQuery,ConditionGroup}.vue` | The list of extended types and attributes, plus UI wording |
 | `giloushaker/nr-editor`, `assets/editor/mcp_tools.ts` (engine notes, roughly lines 615-745) | Evaluation order, scopes, queries, repeats, constraints, modifier semantics |
 | NR documentation site, `newrecruit-docs.pages.dev` (`guide/concepts/modifiers`, `guide/publishing.html`) | Official wording on modifiers, and how systems are loaded from GitHub |
-| `BSData/horus-heresy-3rd-edition` (JSON, 38 files; HEAD as of 2026-11-10) | Usage counts and patterns ("HH3") |
-| `BSData/wh40k-11e` (JSON, 46 files; HEAD `7eb33b2`, 2026-11-10) | Usage counts and patterns ("11e") |
+| `BSData/horus-heresy-3rd-edition` (JSON, 38 files; HEAD as of 2026-11-10; the organisation was later removed from GitHub) | Usage counts and patterns ("HH3") |
+| `BSData/wh40k-11e` (JSON, 46 files; HEAD `7eb33b2`, 2026-11-10; no longer available) | Usage counts and patterns ("11e") |
 | Git history of both repos | When extensions appeared; commit text |
 | BlueScribe (`BlueWinds/bluescribe`, last commit 2023-08-09) | Observed failures on the XML-era HH3 data |
-| Wahapedia rules text (supplied by the user) | Rule wording for HH3 `position` |
 
 Confidence labels used below (**Observed in NR** means the behaviour was seen
 in New Recruit's roster builder on 2026-11-12, using
@@ -125,7 +124,7 @@ too.
 - HH3 patterns: `arg: "X"`, `value: 1` turns "Line (X)" into "Line (1)";
   `arg: "Sergeant"`, `value: "Sergeant, Champion"`.
 - `replace` runs in the last stage, after arithmetic and clamps (5.12), which
-  is why the Wulfen Stone cleanup works whatever the array order.
+  is why the cleanup in the worked example (section 8) works whatever the array order.
 - **Observed in NR:**
   - `arg` is matched **literally**, not as a pattern: `arg: "e."` on `Heavy` changed nothing.
   - **Every match** is replaced: `Heavy, Heavy` with `Heavy` -> `Light` gave `Light, Light`.
@@ -168,11 +167,10 @@ too.
   with it, doubles without it). **Ignored** on `replace` (`Sustained Hits 1`
   became `Sustained Hits 2` despite `skipIfPresent: "Sustained Hits"`) and
   on `increment` (`3` + 2 gave `5` despite `skipIfPresent: "3"`).
-- On `replace` it is not described, so it was ignored, as predicted. That
-  explains Wulfen Stone: its `replace "Sustained Hits 1" -> "Sustained Hits
-  2"` carries `skipIfPresent: "Sustained Hits"`, which would always skip if
-  honoured, but the two `append` modifiers beside it use it correctly. It was
-  probably copied across.
+- On `replace` it is not described, so it was ignored, as predicted. In the
+  data a `replace` of a keyword ("Ability 1" to "Ability 2") carried
+  `skipIfPresent` with a value that would always skip if honoured, while the two
+  `append` modifiers beside it used it correctly, so it was probably copied across.
 - 11e also has it on `increment S` (12 times). It is ignored there, so those
   are inert (Observed in NR).
 
@@ -281,7 +279,7 @@ too.
     inert. They do no harm.
   - 11e uses `-1` (147 uses), mostly on `increment`/`decrement` of weapon `A`
     and `D`, so that only the trailing number of a dice expression changes.
-    See the Wulfen Stone example (section 8), which reproduced as `D6+2`.
+    See the worked example (section 8), which reproduced as `D6+2`.
   - Without `position`, `increment A +2` on `D6` gives `D8`, a dice-size
     change, which is why the data first appends `+0`.
 - `position -1` on an `append` of `Keywords` has no effect (`A, B` as without
@@ -566,41 +564,29 @@ From the repo READMEs and BlueScribe's behaviour:
 - 11e treats **weapon profiles as targets**: faction rules and upgrades
   modify them through `affects` instead of duplicating them.
 
-## 8. Worked example: Wulfen Stone (11e)
+## 8. Worked example: adding to a dice expression
 
-Location: `wh40k-11e/Imperium - Space Marines.json`, under "Space Wolves
-Crusade Relics" > "Legendary Relics" (the only entry in that group). Type
-`upgrade`. It is a Crusade relic carried over from the 10th edition rules:
-factions that have not yet had an 11th edition Codex keep their 10th edition
-content, which can include Crusade rules. 11th edition has no Crusade mode,
-so this content does not matter for engine design and can be ignored, apart
-from serving as a technical example. It was in the repo's initial commit
-(2026-05-12), whose message only says "File format changed to json".
+This pattern occurs in real data (the 11e repository used it on a relic-like
+upgrade). It is described here with neutral names, because the mechanics matter
+and the item does not. It reproduced in NR as `D6+2`.
 
-Rules text in the profile: "Add 2 to the Attacks and Strength
-characteristics of the bearer's melee weapons. While the bearer is leading a
-unit, melee weapons equipped by models in that unit have the [SUSTAINED HITS
-1] ability. If the bearer is a Wolf Guard Battle Leader, while the bearer is
-leading a unit, [...] [SUSTAINED HITS 2] instead."
-
-Other data on the entry: a Crusade cost of 3 points and 1 Battle Honour; a
-`max 1` constraint at roster scope; hidden unless the unit has at least 51
-Crusade Experience (and while one is already taken).
-
-The modifier group, with IDs resolved to names:
+An upgrade "Example Item" that gives its bearer's melee weapons +2 Attacks.
+Attacks (`A`) hold plain numbers on some weapons and dice expressions on
+others (`D3`, `D6`). The upgrade carries one modifier group, with IDs resolved
+to names:
 
 | # | Modifier | Purpose |
 |---|---|---|
-| 1 | `append` annotation "Wulfen Stone" to melee weapons (`affects: self.entries.recursive.profiles.Melee Weapons`) | Show the source on the weapon |
+| 1 | `append` an annotation "Example Item" to melee weapons (`affects: self.entries.recursive.profiles.Melee Weapons`) | Show the source on the weapon |
 | 2 | `increment` S by 2, same targets | Strength +2 |
-| 3 | `append` "+0" to `A` for weapons in the category "Attacks Dx Weapon" (`arg: "+0"`, `join: ""`) | Give dice-attack weapons (D3, D6) a trailing number |
-| 4 | `replace` `A` "+0" with nothing, for weapons in the category "Attacks Dx+0 Modifier" | Clean up |
+| 3 | `append` "+0" to `A` for weapons in the category "Dice Attack Weapon" (`arg: "+0"`, `join: ""`) | Give dice attacks (D3, D6) a trailing number |
+| 4 | `replace` `A` "+0" with nothing, for weapons in the category "Dice Attack Marker" | Clean up |
 | 5 | `increment` `A` by 2, `position: -1`, all melee weapons | Attacks +2 |
 | 6 | `decrement` `A` by 2, `position: -1`, for weapons in another category | Undo the +2 for that category |
 | 7 | `replace` `A` "+0" with nothing, all melee weapons | Final cleanup |
-| 8 | `add` category "Attacks Dx+0 Modifier" to the "Attacks Dx Weapon" entries | Mark the weapons touched in step 3 |
-| 9 | `append` Keywords "Sustained Hits 1" / "Sustained Hits 2" (conditional, `skipIfPresent: "Sustained Hits"`) | Grant the ability |
-| 10 | `replace` Keywords "Sustained Hits 1" with "Sustained Hits 2", `position: 1`, conditional | Upgrade an existing 1 to 2 for a Battle Leader |
+| 8 | `add` category "Dice Attack Marker" to the "Dice Attack Weapon" entries | Mark the weapons touched in step 3 |
+| 9 | `append` Keywords "Ability 1" / "Ability 2" (conditional, `skipIfPresent`) | Grant an ability |
+| 10 | `replace` Keywords "Ability 1" with "Ability 2", `position: 1`, conditional | Upgrade an existing 1 to 2 for a stronger bearer |
 
 What it shows:
 
@@ -611,10 +597,10 @@ What it shows:
   This matches the NR note on `position` (section 5.7).
 - **Categories are used as flags** (steps 3, 4, 8): a modifier adds a
   category to the weapon, and later modifiers test for it.
-- Melee Strength values in 11e are all plain integers (2 to 24), so step 2
-  needs no such trick. Attacks (`A`) are where dice expressions occur.
-- Several modifiers name entries by raw ID inside `affects` (four distinct
-  IDs in this group), so an engine has to resolve IDs within those paths.
+- Plain integer values (Strength here) need no such trick. Attacks are where
+  dice expressions occur.
+- Several modifiers name entries by raw ID inside `affects`, so an engine has
+  to resolve IDs within those paths.
 
 ## 9. Open questions
 

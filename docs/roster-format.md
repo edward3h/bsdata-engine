@@ -73,7 +73,7 @@ category: { "id", "entryId", "name", "primary" }
 - **Zero or empty values are omitted.** A unit whose only cost is 0 (UNIT A in the
   fixture has `pts` 0) has no `costs` key, and empty lists are left out entirely.
 - **Catalogue names are copied from the data as is**, including leading
-  whitespace (`catalogueName` of Thousand Sons begins with spaces).
+  whitespace (one catalogue name in the real data began with spaces).
 - **Attachment (associations) is stored on both selections.** Ticking "Leading" on
   leader E for bodyguard F gave E `associations: [{"type": "outgoing", "to": F's
   selection id, "associationId": "Leading-unit", "name": "Leading", "action":
