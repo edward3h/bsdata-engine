@@ -318,7 +318,7 @@ Each ends with something that runs and is checked.
 | M0 | Toolchain spike, loader, ID index, link resolution | Gradle skeleton builds with Java 25 and TeaVM 0.16; one test runs identically on the JVM and in Node; loads `wh40k-11e` and HH3 with zero unresolved references and reports the counts in section 2; records, sealed types and the JSON library confirmed under TeaVM; browser parse time and memory measured |
 | M1 | Typed game data, roster tree with explicit selections, costs without modifiers | A unit's base cost sums correctly; hand-made and exported rosters total as NR does (done, section 13). Automatic instantiation is left to M5 |
 | M1a | **Synthetic scale generator** | A deterministic generator writes a game system and catalogues of about 100,000 objects with the shape ratios measured on the real data (section 2); it loads through `Linker` and `GameData` with 0 unresolved links, and JVM and JavaScript reports are byte-identical. It contains no real game content |
-| M1b | **Memory pass** on the loader and typed model | The generated 11e-sized dataset loads in a browser tab within the agreed budget (proposed: 300 MB peak; the real 11e data measured about 930 MB in Node), measured in a real browser and in Node; a half-sized set well inside it; reports unchanged; a regression check records the peak so later milestones cannot quietly undo it |
+| M1b | **Memory pass** on the loader and typed model | The generated 11e-sized dataset loads in a browser tab within the agreed budget (300 MB peak, agreed 2026-11-13; the real 11e data measured about 930 MB in Node), measured in a real browser and in Node; a half-sized set well inside it; reports unchanged; a regression check records the peak so later milestones cannot quietly undo it |
 | M2 | Query engine, scopes, conditions, groups | Condition truth tables match the NR notes; T16 passes |
 | M3 | Modifier pipeline for plain numbers and text | T04, T05, T08, T12, T14, T09 pass |
 | M4 | Number tokens, `position`, clamps, repeats, `cumulative-*` | All of F01 to F12 in `expected.json` pass except the fractional F08a (informational); the worked-example replica gives `D6+2` |
@@ -335,7 +335,7 @@ a roster refers to catalogue entries by id, and on documenting the format first.
 M1b is a planned step, not optional, and comes before M2: typing conditions and
 modifiers (M2, M3) replaces the raw nodes with more objects, so memory only gets
 worse, and the loader's shape is easiest to change now. It is also a precondition for
-any browser UI. The memory budget is a proposal to settle before starting it. See
+any browser UI. The memory budget is agreed: 300 MB peak for the 11e-sized dataset. See
 section 13 for the measurements and the changes it should make.
 
 ## 7. Testing strategy
@@ -596,8 +596,8 @@ walk.
 4. Build `Repository`'s id sets from the typed model instead of a second walk of
    the tree, and use primitive-friendly or sorted-array maps where `HashMap` is
    heavy.
-5. Measure in a browser tab (heap snapshot), not only RSS in Node, and fix the
-   budget before starting.
+5. Measure in a browser tab (heap snapshot), not only RSS in Node, against the
+   agreed 300 MB budget.
 
 **Not done:** automatic instantiation (M5); categories as explicit roster nodes
 (needed for `primary-category`, M2); writing a `RosterModel` back to a roster file;
