@@ -36,8 +36,14 @@ a user.
   and a machine-readable list of expected values (`tests/expected.json`). It is
   the starting point for the conformance suite.
 
-## Open decisions
+## Decisions
 
-Version 1 scope, repository layout, and the licence. Decided: match New
-Recruit's behaviour (not the original BattleScribe's), in compat mode. No licence has been
-chosen yet, so until one is added all rights are reserved.
+Decided: Java 25 with TeaVM; match New Recruit's behaviour (not the original
+BattleScribe's), in compat mode; Apache-2.0 (see `LICENSE`); version 1 is a
+headless library and command-line checker plus a roster file format, with no
+browser UI; the Gradle project lives in this repository. Still open: which roster
+formats come first. See `docs/engine-design.md`, section 10.
+
+## Licence
+
+Apache License 2.0. See [`LICENSE`](LICENSE).

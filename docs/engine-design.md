@@ -58,7 +58,8 @@ Java library (`rosterParser`) for both a server and a TeaVM client.
   checker with JSpecify annotations (`@NullMarked` in `package-info.java`),
   JUnit 6 on the JUnit Platform, and a `pre-commit` git hook that runs `build`.
 - The licence header text in kv2 is `(C) Edward Harman and contributors $YEAR`;
-  use the same unless the licence decision says otherwise.
+  it is kept (the licence is Apache-2.0, see section 10; per-file headers are not
+  required by the licence).
 
 ### 3.2 Modules
 
@@ -318,9 +319,11 @@ Each ends with something that runs and is checked.
 | M6 | Force and catalogue linking, hidden entries, categories | HH3 and 11e rosters instantiate without errors |
 | M7 | Associations, `affects` with `group`, `traverseAssociationGroup` | E, F, G4 results match |
 | M8 | Differential testing against NR | A corpus of real rosters shows the same totals and validation as NR |
+| M9 | Roster file format: read and write | A roster exported from NR loads, evaluates to the same totals, and writes back so that NR opens it; the format is documented in the spec |
 
 M0 to M4 are mostly mechanical and fully specified by the tests. M5 to M7 need
-the most judgement. M8 is the honest measure of success.
+the most judgement. M8 is the honest measure of success. M9 depends on M6, since
+a roster refers to catalogue entries by id, and on documenting the format first.
 
 ## 7. Testing strategy
 
@@ -365,8 +368,8 @@ leaked or decompiled sources. That makes the project defensible as an
 independent implementation.
 
 **Licence and prior art.** BlueScribe is GPL-3.0; reading it for ideas is fine
-but copying code would bind the result to GPL-3.0. Decide the project licence
-(GPL-3.0, MIT or Apache-2.0) before taking any code from it. Phalanx (BSData,
+but copying code would bind the result to GPL-3.0. The project is Apache-2.0,
+so no code is taken from BlueScribe. Phalanx (BSData,
 .NET) is reportedly abandoned; check its licence if you want to borrow its
 loader design.
 
@@ -400,21 +403,24 @@ Resolved:
 
 - **Language and platform**: Java 25, with TeaVM for the browser, following
   `kv2` (sections 3.1 to 3.4).
+- **Parity bar**: match NR where it differs from original BattleScribe, in compat
+  mode (section 8).
+- **Licence**: Apache-2.0 (`LICENSE`). Permissive with an explicit patent grant;
+  no code is copied from GPL projects such as BlueScribe.
+- **Scope of version 1**: a headless library and command-line checker (M0 to M7)
+  plus a **roster file format** (M9): reading and writing rosters so lists can move
+  between tools. No browser UI in version 1; `engine-web` only proves the engine
+  runs in a browser and serves as the base for a later UI.
+- **Repository layout**: the Gradle project lives in this repository next to
+  `docs/` (as built).
+- **Whether to start**: yes; M0 is done (section 11).
 
 Still needed:
 
-1. **Licence** for the engine (the licence header in kv2 is "(C) Edward Harman and contributors").
-2. **Scope of version 1**: headless library and command-line checker (M0 to M7),
-   or include a minimal browser UI through `engine-web`.
-3. **Parity bar**: *decided.* Match NR where it differs from original
-   BattleScribe, in compat mode (see section 8).
-4. **Repository layout**: put the Gradle project in this repository next to
-   `docs/`, or in a new one. The sketch assumes this repository.
-5. **Whether to start now.** The cheapest next step is the M0 spike: a Gradle
-   skeleton following kv2, one pure-Java class compiled by both javac and
-   TeaVM, a loader for the JSON data, and the conformance runner executing
-   `tests/expected.json` against an empty evaluator so every test fails for a
-   known reason.
+1. **Which roster formats**: NR's JSON roster format first (the JSON parser is
+   there), then BattleScribe `.ros`/`.rosz` (XML in a zip), which needs the
+   deferred XML parser and a zip reader that work under TeaVM. The roster format
+   is not yet documented in the spec; M9 starts by observing exported rosters.
 
 ## 11. M0 spike results
 
