@@ -338,6 +338,25 @@ worse, and the loader's shape is easiest to change now. It is also a preconditio
 any browser UI. The memory budget is agreed: 300 MB peak for the 11e-sized dataset. See
 section 13 for the measurements and the changes it should make.
 
+**Planned task outside the milestones: command line on picocli.** The command line
+(`engine-jvm`) parses its arguments by hand and picks a mode by guessing (a
+`.roster.json` suffix, a directory, or the words `scale` and `generate`). That is fine
+for a handful of one-argument modes. Switch to [picocli](https://picocli.info) with
+subcommands (`check`, `roster`, `scale`, `generate`, and whatever comes next) as the
+first step of whichever change adds either of these:
+
+- a command that takes two inputs, such as `bind <data directory> <roster file>`; or
+- the first real options (a seed, a report type, `--max-problems`, an output format).
+
+Scope and constraints: picocli goes in `engine-jvm` only. The TeaVM entry point in
+`engine-web` stays hand-written, because picocli needs reflection that TeaVM does not
+support and that entry point is only a test harness. Use picocli's annotation
+processor to avoid reflection, and check first that annotated fields work with the
+EISOP nullness checker, which the build enforces (not yet tried). Done when each
+subcommand has `--help`, a bad number or missing file gives a one-line error and a
+non-zero exit code instead of a stack trace, and the existing modes behave as before
+(their reports are compared byte for byte).
+
 ## 7. Testing strategy
 
 1. **Unit tests per rule**, run on both the JVM (JUnit) and as compiled JavaScript (Node), generated from `tests/expected.json` (each entry has
