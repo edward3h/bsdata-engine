@@ -39,6 +39,15 @@ a user.
 | [`docs/roster-format.md`](docs/roster-format.md) | New Recruit's JSON roster export format as observed, with open questions |
 | [`docs/engine-design.md`](docs/engine-design.md) | Sketch of a minimal engine: layers, milestones, risks, and the decisions still open |
 
+## Command line
+
+`./gradlew :engine-jvm:installDist`, then `engine-jvm/build/install/engine-jvm/bin/engine-jvm`:
+
+- `<directory>` checks references across all JSON files in it and loads them into the typed model.
+- `<file>.roster.json` reads a New Recruit roster export, writes it back and summarises it.
+- `scale [scale [seed]]` generates a synthetic dataset in memory and reports on it.
+- `generate <dir> [scale [seed]]` writes a synthetic dataset as JSON files.
+
 ## Related repositories
 
 - [`edward3h/nr-extension-tests`](https://github.com/edward3h/nr-extension-tests):
