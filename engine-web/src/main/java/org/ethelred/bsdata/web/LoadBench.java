@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import org.ethelred.bsdata.MinimalJsonSource;
 import org.ethelred.bsdata.model.GameData;
+import org.ethelred.bsdata.model.LoadStrategies;
 import org.ethelred.bsdata.model.ModelReport;
 import org.ethelred.bsdata.model.TextSource;
 import org.teavm.jso.JSBody;
@@ -33,12 +34,7 @@ final class LoadBench {
             }
         };
         double t0 = Main.nowMs();
-        GameData data = switch (strategy) {
-            case "tree" -> GameData.loadTrees(source, new MinimalJsonSource());
-            case "file" -> GameData.loadPerFile(source, new MinimalJsonSource());
-            case "stream" -> GameData.loadStreaming(source);
-            default -> throw new IllegalArgumentException("unknown strategy " + strategy);
-        };
+        GameData data = LoadStrategies.load(strategy, source, new MinimalJsonSource());
         double t1 = Main.nowMs();
         Main.print(ModelReport.of(data));
         Main.print("strategy=" + strategy + " loadMs=" + Math.round(t1 - t0) + " " + memory() + "\n");

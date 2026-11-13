@@ -43,9 +43,9 @@ class LoadersAgreeTest {
             texts.put(f + ".json", TestData.resource("/data/extension-tests/" + f + ".json"));
         }
         TextSource source = source(texts);
-        GameData trees = GameData.loadTrees(source, JSON);
-        assertSame(trees, GameData.loadPerFile(source, JSON));
-        assertSame(trees, GameData.loadStreaming(source));
+        GameData trees = LoadStrategies.load("tree", source, JSON);
+        assertSame(trees, LoadStrategies.load("file", source, JSON));
+        assertSame(trees, GameData.load(source));
     }
 
     @Test
@@ -55,8 +55,8 @@ class LoadersAgreeTest {
         Map<String, String> texts = new TreeMap<>();
         files.forEach((name, tree) -> texts.put(name, JSON.writePretty(tree)));
         TextSource source = source(texts);
-        GameData trees = GameData.loadTrees(source, JSON);
-        assertSame(trees, GameData.loadStreaming(source));
+        GameData trees = LoadStrategies.load("tree", source, JSON);
+        assertSame(trees, GameData.load(source));
         assertEquals(46, trees.catalogues().size());
     }
 }

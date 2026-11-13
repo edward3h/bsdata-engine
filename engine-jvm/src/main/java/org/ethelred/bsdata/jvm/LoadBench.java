@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.stream.Stream;
 import org.ethelred.bsdata.MinimalJsonSource;
 import org.ethelred.bsdata.model.GameData;
+import org.ethelred.bsdata.model.LoadStrategies;
 import org.ethelred.bsdata.model.ModelReport;
 import org.ethelred.bsdata.model.TextSource;
 
@@ -22,11 +23,11 @@ final class LoadBench {
 
     static void run(String[] args) throws IOException {
         if (args.length < 2) {
-            System.err.println("usage: load <directory> [tree]");
+            System.err.println("usage: load <directory> [tree|file|stream]");
             System.exit(2);
         }
         Path dir = Path.of(args[1]);
-        String strategy = args.length > 2 ? args[2] : "tree";
+        String strategy = args.length > 2 ? args[2] : "stream";
         TextSource source = new TextSource() {
             @Override
             public List<String> names() {
@@ -50,7 +51,7 @@ final class LoadBench {
             }
         };
         long t0 = System.nanoTime();
-        GameData data = load(strategy, source);
+        GameData data = LoadStrategies.load(strategy, source, new MinimalJsonSource());
         long t1 = System.nanoTime();
         double peak = peakHeapMb();
         System.gc();
@@ -58,15 +59,6 @@ final class LoadBench {
         System.out.print(ModelReport.of(data));
         System.out.println("strategy=" + strategy + " loadMs=" + (t1 - t0) / 1_000_000 + " peakHeapMB="
                 + Math.round(peak) + " retainedMB=" + Math.round(retained));
-    }
-
-    private static GameData load(String strategy, TextSource source) {
-        return switch (strategy) {
-            case "tree" -> GameData.loadTrees(source, new MinimalJsonSource());
-            case "file" -> GameData.loadPerFile(source, new MinimalJsonSource());
-            case "stream" -> GameData.loadStreaming(source);
-            default -> throw new IllegalArgumentException("unknown strategy " + strategy);
-        };
     }
 
     private static double usedMb() {

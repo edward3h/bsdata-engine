@@ -731,10 +731,12 @@ that survives):
 - `Scope` (new) holds which files see which, built from the catalogue links alone.
   `Repository` keeps the id sets for the reference checker (`Linker`), which still works on
   trees; `GameData` no longer holds them.
-- `GameData.loadStreaming(TextSource)` uses `StreamingParser`, a handler on the JSON
-  library's event parser that builds `DataNode`s without the library's own tree and hands
-  the elements of top-level arrays to the caller one at a time. `Parse.Assembler` types
-  them. `loadTrees` and `loadPerFile` remain as comparisons.
+- `GameData.load(TextSource)` uses `StreamingParser`, a handler on the JSON library's
+  event parser that builds `DataNode`s without the library's own tree and hands the
+  elements of top-level arrays to the caller one at a time. `Parse.Assembler` types them.
+  `GameData.load(Map)` is for callers that already hold trees. The earlier loaders
+  (`tree`: every file parsed first, then typed; `file`: one tree per file) are not part of
+  `GameData`; they live in `LoadStrategies`, used by the benchmarks and `LoadersAgreeTest`.
 - `Raw` now holds four JSON strings with accessors that parse on demand. M2 and M3 will type
   these parts; until then nothing reads them.
 - `Pool` shares equal strings of up to 64 characters (not rule text or characteristic values).

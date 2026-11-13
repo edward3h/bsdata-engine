@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 import org.ethelred.bsdata.DataNode;
-import org.ethelred.bsdata.JsonSource;
 import org.ethelred.bsdata.Scope;
 import org.ethelred.bsdata.model.Parts.CostType;
 import org.ethelred.bsdata.model.Parts.ForceEntry;
@@ -88,33 +87,12 @@ public final class GameData {
      * Loads every file of a source one at a time and keeps only the typed result. Each file is typed element by
      * element as it is parsed, so the largest thing alive at once is one entry.
      */
-    public static GameData loadStreaming(TextSource source) {
+    public static GameData load(TextSource source) {
         Builder b = builder();
         for (String name : source.names()) {
             b.addText(name, source.read(name));
         }
         return b.build();
-    }
-
-    /** Loads every file of a source one at a time, building a tree of each file before typing it. */
-    public static GameData loadPerFile(TextSource source, JsonSource json) {
-        Builder b = builder();
-        for (String name : source.names()) {
-            b.add(name, json.parse(source.read(name)));
-        }
-        return b.build();
-    }
-
-    /**
-     * Loads every file of a source by first parsing all of them, then typing them: the first loader, kept as the
-     * baseline for the memory pass.
-     */
-    public static GameData loadTrees(TextSource source, JsonSource json) {
-        Map<String, DataNode> files = new TreeMap<>();
-        for (String name : source.names()) {
-            files.put(name, json.parse(source.read(name)));
-        }
-        return load(files);
     }
 
     private void add(Catalogue c) {

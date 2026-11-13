@@ -19,7 +19,7 @@ public final class Main {
         String dir = args.length > 0 ? args[args.length - 1] : lastArgument();
         if (dir.startsWith("load:")) {
             String[] parts = dir.split(":", 3);
-            LoadBench.run(parts[1], parts.length > 2 ? parts[2] : "tree");
+            LoadBench.run(parts[1], parts.length > 2 ? parts[2] : "stream");
             return;
         }
         if (dir.startsWith("scale:")) {
