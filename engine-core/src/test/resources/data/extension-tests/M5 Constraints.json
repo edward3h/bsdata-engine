@@ -1,0 +1,1342 @@
+{
+  "catalogue": {
+    "name": "M5 Constraints",
+    "id": "c7c9-5096-beaf-c9cd",
+    "authorName": "extension-tests",
+    "battleScribeVersion": 2.03,
+    "gameSystemId": "11a0-a9a3-bb5c-de4b",
+    "gameSystemRevision": 1,
+    "library": false,
+    "revision": 1,
+    "type": "catalogue",
+    "xmlns": "http://www.battlescribe.net/schema/catalogueSchema",
+    "entryLinks": [
+      {
+        "name": "K1 Unit",
+        "id": "1531-be0b-36d7-9355",
+        "hidden": false,
+        "import": true,
+        "targetId": "1b6f-a364-7897-3f18",
+        "type": "selectionEntry",
+        "categoryLinks": [
+          {
+            "name": "Units",
+            "id": "c321-4303-9fe8-904b",
+            "primary": true,
+            "targetId": "8e51-8031-ab34-a492"
+          }
+        ]
+      },
+      {
+        "name": "K0 Unit",
+        "id": "f98a-bd0a-207c-f641",
+        "hidden": false,
+        "import": true,
+        "targetId": "508e-cbb9-94b9-eedf",
+        "type": "selectionEntry",
+        "categoryLinks": [
+          {
+            "name": "Units",
+            "id": "4a16-3af0-e882-0ae4",
+            "primary": true,
+            "targetId": "8e51-8031-ab34-a492"
+          }
+        ]
+      },
+      {
+        "name": "K2 Unit",
+        "id": "9b27-d012-5ddc-7497",
+        "hidden": false,
+        "import": true,
+        "targetId": "00b0-26a4-e61f-50b4",
+        "type": "selectionEntry",
+        "categoryLinks": [
+          {
+            "name": "Units",
+            "id": "8577-f6b9-dfb5-8909",
+            "primary": true,
+            "targetId": "8e51-8031-ab34-a492"
+          }
+        ]
+      },
+      {
+        "name": "K3 Unit",
+        "id": "b581-4790-2874-0cb4",
+        "hidden": false,
+        "import": true,
+        "targetId": "ad1a-88bc-ca5d-0691",
+        "type": "selectionEntry",
+        "categoryLinks": [
+          {
+            "name": "Units",
+            "id": "3493-2772-3e42-e997",
+            "primary": true,
+            "targetId": "8e51-8031-ab34-a492"
+          }
+        ]
+      },
+      {
+        "name": "K4 Unit",
+        "id": "06de-cfb9-0904-8505",
+        "hidden": false,
+        "import": true,
+        "targetId": "c877-9490-53fe-7374",
+        "type": "selectionEntry",
+        "categoryLinks": [
+          {
+            "name": "Units",
+            "id": "91e2-a9a3-753f-a2af",
+            "primary": true,
+            "targetId": "8e51-8031-ab34-a492"
+          }
+        ]
+      },
+      {
+        "name": "K5 Unit",
+        "id": "3771-4597-effa-eebd",
+        "hidden": false,
+        "import": true,
+        "targetId": "8596-a673-3fd7-9877",
+        "type": "selectionEntry",
+        "categoryLinks": [
+          {
+            "name": "Units",
+            "id": "6322-4495-50a9-4c7a",
+            "primary": true,
+            "targetId": "8e51-8031-ab34-a492"
+          }
+        ]
+      },
+      {
+        "name": "K6 Unit",
+        "id": "5537-c24f-ec50-ece5",
+        "hidden": false,
+        "import": true,
+        "targetId": "097a-8d40-fff7-43e1",
+        "type": "selectionEntry",
+        "categoryLinks": [
+          {
+            "name": "Units",
+            "id": "fbb2-c426-9426-cfa1",
+            "primary": true,
+            "targetId": "8e51-8031-ab34-a492"
+          }
+        ]
+      },
+      {
+        "name": "K7 Unit",
+        "id": "0d85-476f-3c8e-1d07",
+        "hidden": false,
+        "import": true,
+        "targetId": "08e2-d2fd-9fff-c9cf",
+        "type": "selectionEntry",
+        "categoryLinks": [
+          {
+            "name": "Units",
+            "id": "46c3-cb78-589f-017a",
+            "primary": true,
+            "targetId": "8e51-8031-ab34-a492"
+          }
+        ]
+      },
+      {
+        "name": "K8 Unit",
+        "id": "6011-55f0-4671-638e",
+        "hidden": false,
+        "import": true,
+        "targetId": "ddfd-6e64-bbad-f06a",
+        "type": "selectionEntry",
+        "categoryLinks": [
+          {
+            "name": "Units",
+            "id": "2032-0fab-0764-c260",
+            "primary": true,
+            "targetId": "8e51-8031-ab34-a492"
+          }
+        ]
+      },
+      {
+        "name": "K9 Unit",
+        "id": "5e1d-8877-59b4-3398",
+        "hidden": false,
+        "import": true,
+        "targetId": "f429-601c-b3bd-2bcd",
+        "type": "selectionEntry",
+        "categoryLinks": [
+          {
+            "name": "Units",
+            "id": "c44c-f463-2ad9-1acb",
+            "primary": true,
+            "targetId": "8e51-8031-ab34-a492"
+          }
+        ]
+      }
+    ],
+    "sharedSelectionEntries": [
+      {
+        "name": "K1 Unit",
+        "id": "1b6f-a364-7897-3f18",
+        "hidden": false,
+        "type": "unit",
+        "costs": [
+          {
+            "name": "pts",
+            "typeId": "a2d8-5d18-80b9-4be2",
+            "value": 10
+          }
+        ],
+        "selectionEntries": [
+          {
+            "name": "K1 a",
+            "id": "a115-591c-4110-abfd",
+            "hidden": false,
+            "type": "upgrade",
+            "costs": [
+              {
+                "name": "pts",
+                "typeId": "a2d8-5d18-80b9-4be2",
+                "value": 1
+              }
+            ]
+          },
+          {
+            "name": "K1 b",
+            "id": "8c02-cc1f-deec-a96f",
+            "hidden": false,
+            "type": "upgrade",
+            "costs": [
+              {
+                "name": "pts",
+                "typeId": "a2d8-5d18-80b9-4be2",
+                "value": 1
+              }
+            ]
+          },
+          {
+            "name": "K1 c",
+            "id": "66a6-80e9-b4e9-8584",
+            "hidden": false,
+            "type": "upgrade",
+            "costs": [
+              {
+                "name": "pts",
+                "typeId": "a2d8-5d18-80b9-4be2",
+                "value": 1
+              }
+            ]
+          },
+          {
+            "name": "K1 d",
+            "id": "7a80-14da-512d-70e3",
+            "hidden": false,
+            "type": "upgrade",
+            "costs": [
+              {
+                "name": "pts",
+                "typeId": "a2d8-5d18-80b9-4be2",
+                "value": 1
+              }
+            ]
+          },
+          {
+            "name": "K1 e",
+            "id": "00fb-81f7-fbc1-5398",
+            "hidden": false,
+            "type": "upgrade",
+            "costs": [
+              {
+                "name": "pts",
+                "typeId": "a2d8-5d18-80b9-4be2",
+                "value": 1
+              }
+            ]
+          }
+        ],
+        "constraints": [
+          {
+            "type": "max",
+            "value": 1,
+            "field": "selections",
+            "scope": "self",
+            "childId": "a115-591c-4110-abfd",
+            "shared": true,
+            "includeChildSelections": true,
+            "id": "3caf-9b31-1c44-0144",
+            "name": "m1 max 1 of a",
+            "message": "m1 max 1 of a"
+          },
+          {
+            "type": "min",
+            "value": 1,
+            "field": "selections",
+            "scope": "self",
+            "childId": "8c02-cc1f-deec-a96f",
+            "shared": true,
+            "includeChildSelections": true,
+            "id": "8982-edb3-5787-ccd3",
+            "name": "m2 min 1 of b",
+            "message": "m2 min 1 of b"
+          },
+          {
+            "type": "exactly",
+            "value": 2,
+            "field": "selections",
+            "scope": "self",
+            "childId": "66a6-80e9-b4e9-8584",
+            "shared": true,
+            "includeChildSelections": true,
+            "id": "e784-54a0-5a3b-057d",
+            "name": "m3 exactly 2 of c",
+            "message": "m3 exactly 2 of c"
+          },
+          {
+            "type": "max",
+            "value": -1,
+            "field": "selections",
+            "scope": "self",
+            "childId": "7a80-14da-512d-70e3",
+            "shared": true,
+            "includeChildSelections": true,
+            "id": "0ee2-58c2-00c9-ff5a",
+            "name": "m4 max -1 of d",
+            "message": "m4 max -1 of d"
+          }
+        ]
+      },
+      {
+        "name": "K0 Unit",
+        "id": "508e-cbb9-94b9-eedf",
+        "hidden": false,
+        "type": "unit",
+        "costs": [
+          {
+            "name": "pts",
+            "typeId": "a2d8-5d18-80b9-4be2",
+            "value": 10
+          }
+        ],
+        "selectionEntries": [
+          {
+            "name": "K0 a",
+            "id": "e48b-e71a-2bec-00ba",
+            "hidden": false,
+            "type": "upgrade",
+            "costs": [
+              {
+                "name": "pts",
+                "typeId": "a2d8-5d18-80b9-4be2",
+                "value": 1
+              }
+            ]
+          },
+          {
+            "name": "K0 b",
+            "id": "92cd-581f-771c-b70d",
+            "hidden": false,
+            "type": "upgrade",
+            "costs": [
+              {
+                "name": "pts",
+                "typeId": "a2d8-5d18-80b9-4be2",
+                "value": 1
+              }
+            ]
+          }
+        ],
+        "constraints": [
+          {
+            "type": "min",
+            "value": 3,
+            "field": "selections",
+            "scope": "self",
+            "childId": "e48b-e71a-2bec-00ba",
+            "shared": true,
+            "includeChildSelections": true,
+            "id": "3caf-9b31-1c44-0144",
+            "name": "k0 min 3 of a",
+            "message": "k0 min 3 of a"
+          }
+        ]
+      },
+      {
+        "name": "K2 Unit",
+        "id": "00b0-26a4-e61f-50b4",
+        "hidden": false,
+        "type": "unit",
+        "costs": [
+          {
+            "name": "pts",
+            "typeId": "a2d8-5d18-80b9-4be2",
+            "value": 10
+          }
+        ],
+        "selectionEntries": [
+          {
+            "name": "K2 x",
+            "id": "dbb9-7453-b72b-fba0",
+            "hidden": false,
+            "type": "upgrade",
+            "costs": [
+              {
+                "name": "pts",
+                "typeId": "a2d8-5d18-80b9-4be2",
+                "value": 1
+              }
+            ],
+            "constraints": [
+              {
+                "type": "min",
+                "value": 2,
+                "field": "selections",
+                "scope": "parent",
+                "childId": "dbb9-7453-b72b-fba0",
+                "shared": true,
+                "includeChildSelections": true,
+                "id": "3cb7-4f2d-f617-dcab",
+                "name": "x min 2",
+                "message": "x min 2"
+              }
+            ]
+          },
+          {
+            "name": "K2 y",
+            "id": "e879-9b17-e171-6df5",
+            "hidden": false,
+            "type": "upgrade",
+            "costs": [
+              {
+                "name": "pts",
+                "typeId": "a2d8-5d18-80b9-4be2",
+                "value": 1
+              }
+            ],
+            "constraints": [
+              {
+                "type": "max",
+                "value": 2,
+                "field": "selections",
+                "scope": "parent",
+                "childId": "any",
+                "shared": true,
+                "includeChildSelections": true,
+                "id": "9f71-95ae-5d1b-e8e6",
+                "name": "y max 2",
+                "message": "y max 2"
+              }
+            ]
+          },
+          {
+            "name": "K2 z",
+            "id": "a562-449f-d67f-426f",
+            "hidden": false,
+            "type": "upgrade",
+            "costs": [
+              {
+                "name": "pts",
+                "typeId": "a2d8-5d18-80b9-4be2",
+                "value": 1
+              }
+            ],
+            "constraints": [
+              {
+                "type": "min",
+                "value": 1,
+                "field": "selections",
+                "scope": "parent",
+                "shared": true,
+                "includeChildSelections": true,
+                "id": "daa0-f058-0f64-c876",
+                "name": "z min 1 no childId",
+                "message": "z min 1 no childId"
+              }
+            ]
+          }
+        ],
+        "selectionEntryGroups": [
+          {
+            "name": "GA",
+            "id": "abd8-e475-ceee-9adf",
+            "hidden": false,
+            "selectionEntries": [
+              {
+                "name": "GA 1",
+                "id": "2593-cb1e-bfd4-bc9f",
+                "hidden": false,
+                "type": "upgrade",
+                "costs": [
+                  {
+                    "name": "pts",
+                    "typeId": "a2d8-5d18-80b9-4be2",
+                    "value": 1
+                  }
+                ]
+              },
+              {
+                "name": "GA 2",
+                "id": "c0bf-6575-4435-23f8",
+                "hidden": false,
+                "type": "upgrade",
+                "costs": [
+                  {
+                    "name": "pts",
+                    "typeId": "a2d8-5d18-80b9-4be2",
+                    "value": 1
+                  }
+                ]
+              }
+            ],
+            "constraints": [
+              {
+                "type": "min",
+                "value": 1,
+                "field": "selections",
+                "scope": "self",
+                "childId": "any",
+                "shared": true,
+                "includeChildSelections": true,
+                "id": "64a8-4d1c-6817-776b",
+                "name": "GA min 1 (self, any)",
+                "message": "GA min 1 (self, any)"
+              }
+            ]
+          },
+          {
+            "name": "GB",
+            "id": "92a6-1300-f4ec-8efb",
+            "hidden": false,
+            "selectionEntries": [
+              {
+                "name": "GB 1",
+                "id": "281f-3c4c-d5ba-3120",
+                "hidden": false,
+                "type": "upgrade",
+                "costs": [
+                  {
+                    "name": "pts",
+                    "typeId": "a2d8-5d18-80b9-4be2",
+                    "value": 1
+                  }
+                ]
+              },
+              {
+                "name": "GB 2",
+                "id": "937a-a187-4c97-05bc",
+                "hidden": false,
+                "type": "upgrade",
+                "costs": [
+                  {
+                    "name": "pts",
+                    "typeId": "a2d8-5d18-80b9-4be2",
+                    "value": 1
+                  }
+                ]
+              }
+            ],
+            "constraints": [
+              {
+                "type": "max",
+                "value": 1,
+                "field": "selections",
+                "scope": "parent",
+                "childId": "any",
+                "shared": true,
+                "includeChildSelections": true,
+                "id": "05c2-7daa-8f20-a2f3",
+                "name": "GB max 1 (parent, any)",
+                "message": "GB max 1 (parent, any)"
+              }
+            ]
+          },
+          {
+            "name": "GC",
+            "id": "e5b6-b9b5-ed4d-a02c",
+            "hidden": false,
+            "selectionEntries": [
+              {
+                "name": "GC 1",
+                "id": "d6b2-0368-b4b6-f5f2",
+                "hidden": false,
+                "type": "upgrade",
+                "costs": [
+                  {
+                    "name": "pts",
+                    "typeId": "a2d8-5d18-80b9-4be2",
+                    "value": 1
+                  }
+                ]
+              },
+              {
+                "name": "GC 2",
+                "id": "ccc5-451b-3883-3548",
+                "hidden": false,
+                "type": "upgrade",
+                "costs": [
+                  {
+                    "name": "pts",
+                    "typeId": "a2d8-5d18-80b9-4be2",
+                    "value": 1
+                  }
+                ]
+              }
+            ],
+            "constraints": [
+              {
+                "type": "max",
+                "value": 1,
+                "field": "selections",
+                "scope": "parent",
+                "childId": "e5b6-b9b5-ed4d-a02c",
+                "shared": true,
+                "includeChildSelections": true,
+                "id": "9f77-29e1-9b21-8ee6",
+                "name": "GC max 1 (parent, own id)",
+                "message": "GC max 1 (parent, own id)"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "K3 Unit",
+        "id": "ad1a-88bc-ca5d-0691",
+        "hidden": false,
+        "type": "unit",
+        "costs": [
+          {
+            "name": "pts",
+            "typeId": "a2d8-5d18-80b9-4be2",
+            "value": 10
+          }
+        ],
+        "selectionEntries": [
+          {
+            "name": "K3 a",
+            "id": "7169-f066-7cad-078d",
+            "hidden": false,
+            "type": "upgrade",
+            "costs": [
+              {
+                "name": "pts",
+                "typeId": "a2d8-5d18-80b9-4be2",
+                "value": 1
+              }
+            ]
+          },
+          {
+            "name": "K3 b",
+            "id": "8377-9baa-5c79-76e7",
+            "hidden": false,
+            "type": "upgrade",
+            "costs": [
+              {
+                "name": "pts",
+                "typeId": "a2d8-5d18-80b9-4be2",
+                "value": 1
+              }
+            ]
+          },
+          {
+            "name": "K3 c",
+            "id": "697f-5c66-6e17-1a65",
+            "hidden": false,
+            "type": "upgrade",
+            "costs": [
+              {
+                "name": "pts",
+                "typeId": "a2d8-5d18-80b9-4be2",
+                "value": 1
+              }
+            ]
+          },
+          {
+            "name": "K3 d",
+            "id": "637e-eb50-6c3c-66f7",
+            "hidden": false,
+            "type": "upgrade",
+            "costs": [
+              {
+                "name": "pts",
+                "typeId": "a2d8-5d18-80b9-4be2",
+                "value": 1
+              }
+            ]
+          }
+        ],
+        "constraints": [
+          {
+            "type": "max",
+            "value": 50,
+            "field": "selections",
+            "scope": "self",
+            "childId": "7169-f066-7cad-078d",
+            "shared": true,
+            "includeChildSelections": true,
+            "id": "1280-9df7-33e7-94e2",
+            "name": "p1 max 50% of a",
+            "message": "p1 max 50% of a",
+            "percentValue": true
+          },
+          {
+            "type": "min",
+            "value": 50,
+            "field": "selections",
+            "scope": "self",
+            "childId": "8377-9baa-5c79-76e7",
+            "shared": true,
+            "includeChildSelections": true,
+            "id": "35e9-8191-cf1e-3bd3",
+            "name": "p2 min 50% of b",
+            "message": "p2 min 50% of b",
+            "percentValue": true
+          }
+        ]
+      },
+      {
+        "name": "K4 Unit",
+        "id": "c877-9490-53fe-7374",
+        "hidden": false,
+        "type": "unit",
+        "costs": [
+          {
+            "name": "pts",
+            "typeId": "a2d8-5d18-80b9-4be2",
+            "value": 10
+          }
+        ],
+        "selectionEntries": [
+          {
+            "name": "K4 s",
+            "id": "19b2-b69a-b4af-6195",
+            "hidden": false,
+            "type": "upgrade",
+            "costs": [
+              {
+                "name": "pts",
+                "typeId": "a2d8-5d18-80b9-4be2",
+                "value": 1
+              }
+            ],
+            "constraints": [
+              {
+                "type": "min",
+                "value": 1,
+                "field": "selections",
+                "scope": "parent",
+                "childId": "19b2-b69a-b4af-6195",
+                "shared": true,
+                "includeChildSelections": true,
+                "id": "0e63-f4a0-b501-3959",
+                "name": "s min 1 (visible)",
+                "message": "s min 1 (visible)"
+              }
+            ]
+          },
+          {
+            "name": "K4 h",
+            "id": "0bb6-5af0-718f-e1a6",
+            "hidden": true,
+            "type": "upgrade",
+            "costs": [
+              {
+                "name": "pts",
+                "typeId": "a2d8-5d18-80b9-4be2",
+                "value": 1
+              }
+            ],
+            "constraints": [
+              {
+                "type": "min",
+                "value": 1,
+                "field": "selections",
+                "scope": "parent",
+                "childId": "0bb6-5af0-718f-e1a6",
+                "shared": true,
+                "includeChildSelections": true,
+                "id": "b0c1-4560-b5e6-b152",
+                "name": "h min 1 (hidden)",
+                "message": "h min 1 (hidden)"
+              }
+            ],
+            "modifiers": [
+              {
+                "type": "set",
+                "field": "hidden",
+                "value": false,
+                "conditions": [
+                  {
+                    "type": "atLeast",
+                    "value": 1,
+                    "field": "selections",
+                    "scope": "parent",
+                    "childId": "ea9e-8840-e575-de22",
+                    "shared": true,
+                    "includeChildSelections": true
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "name": "K4 u",
+            "id": "ea9e-8840-e575-de22",
+            "hidden": false,
+            "type": "upgrade",
+            "costs": [
+              {
+                "name": "pts",
+                "typeId": "a2d8-5d18-80b9-4be2",
+                "value": 1
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "K5 Unit",
+        "id": "8596-a673-3fd7-9877",
+        "hidden": false,
+        "type": "unit",
+        "costs": [
+          {
+            "name": "pts",
+            "typeId": "a2d8-5d18-80b9-4be2",
+            "value": 10
+          }
+        ],
+        "constraints": [
+          {
+            "type": "max",
+            "value": 1,
+            "field": "selections",
+            "scope": "parent",
+            "childId": "8596-a673-3fd7-9877",
+            "shared": true,
+            "includeChildSelections": true,
+            "id": "0a11-00ac-f5ef-a441",
+            "name": "k5 max 1 at parent",
+            "message": "k5 max 1 at parent"
+          },
+          {
+            "type": "max",
+            "value": 1,
+            "field": "selections",
+            "scope": "force",
+            "childId": "8596-a673-3fd7-9877",
+            "shared": true,
+            "includeChildSelections": true,
+            "id": "6bf3-3af0-9f4d-262f",
+            "name": "k5 max 1 at force",
+            "message": "k5 max 1 at force"
+          },
+          {
+            "type": "max",
+            "value": 1,
+            "field": "selections",
+            "scope": "roster",
+            "childId": "8596-a673-3fd7-9877",
+            "shared": true,
+            "includeChildSelections": true,
+            "id": "b901-8183-179d-f752",
+            "name": "k5 max 1 at roster",
+            "message": "k5 max 1 at roster"
+          },
+          {
+            "type": "max",
+            "value": 1,
+            "field": "selections",
+            "scope": "primary-category",
+            "childId": "8596-a673-3fd7-9877",
+            "shared": true,
+            "includeChildSelections": true,
+            "id": "221e-c2ee-5e91-9a30",
+            "name": "k5 max 1 at primary-category",
+            "message": "k5 max 1 at primary-category"
+          },
+          {
+            "type": "max",
+            "value": 1,
+            "field": "selections",
+            "scope": "root-entry",
+            "childId": "8596-a673-3fd7-9877",
+            "shared": true,
+            "includeChildSelections": true,
+            "id": "c713-28a9-993b-a827",
+            "name": "k5 max 1 at root-entry",
+            "message": "k5 max 1 at root-entry"
+          },
+          {
+            "type": "max",
+            "value": 1,
+            "field": "selections",
+            "scope": "self",
+            "childId": "8596-a673-3fd7-9877",
+            "shared": true,
+            "includeChildSelections": true,
+            "id": "2769-55d1-fa1b-93e8",
+            "name": "k5 max 1 at self",
+            "message": "k5 max 1 at self"
+          }
+        ]
+      },
+      {
+        "name": "K6 Unit",
+        "id": "097a-8d40-fff7-43e1",
+        "hidden": false,
+        "type": "unit",
+        "costs": [
+          {
+            "name": "pts",
+            "typeId": "a2d8-5d18-80b9-4be2",
+            "value": 10
+          }
+        ],
+        "selectionEntries": [
+          {
+            "name": "K6 a",
+            "id": "a479-3ce8-0f4d-5f53",
+            "hidden": false,
+            "type": "upgrade",
+            "costs": [
+              {
+                "name": "pts",
+                "typeId": "a2d8-5d18-80b9-4be2",
+                "value": 1
+              }
+            ],
+            "constraints": [
+              {
+                "type": "min",
+                "value": 1,
+                "field": "selections",
+                "scope": "parent",
+                "childId": "a479-3ce8-0f4d-5f53",
+                "shared": true,
+                "includeChildSelections": true,
+                "id": "81d8-962a-7ae0-b721",
+                "name": "a min 1 auto",
+                "message": "a min 1 auto",
+                "automatic": true
+              }
+            ]
+          },
+          {
+            "name": "K6 b",
+            "id": "63db-028f-328b-98ff",
+            "hidden": false,
+            "type": "upgrade",
+            "costs": [
+              {
+                "name": "pts",
+                "typeId": "a2d8-5d18-80b9-4be2",
+                "value": 1
+              }
+            ],
+            "constraints": [
+              {
+                "type": "min",
+                "value": 2,
+                "field": "selections",
+                "scope": "parent",
+                "childId": "63db-028f-328b-98ff",
+                "shared": true,
+                "includeChildSelections": true,
+                "id": "e08a-4065-997e-c41c",
+                "name": "b min 2 auto",
+                "message": "b min 2 auto",
+                "automatic": true
+              }
+            ]
+          },
+          {
+            "name": "K6 c",
+            "id": "c79e-ec39-fbed-f73d",
+            "hidden": false,
+            "type": "upgrade",
+            "costs": [
+              {
+                "name": "pts",
+                "typeId": "a2d8-5d18-80b9-4be2",
+                "value": 1
+              }
+            ],
+            "constraints": [
+              {
+                "type": "min",
+                "value": 1,
+                "field": "selections",
+                "scope": "parent",
+                "childId": "c79e-ec39-fbed-f73d",
+                "shared": true,
+                "includeChildSelections": true,
+                "id": "83c0-1450-cbc0-b50b",
+                "name": "c min 1 not auto",
+                "message": "c min 1 not auto"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "K7 Unit",
+        "id": "08e2-d2fd-9fff-c9cf",
+        "hidden": false,
+        "type": "unit",
+        "costs": [
+          {
+            "name": "pts",
+            "typeId": "a2d8-5d18-80b9-4be2",
+            "value": 10
+          }
+        ],
+        "selectionEntries": [
+          {
+            "name": "K7 a",
+            "id": "8a32-4fa7-efc2-2eea",
+            "hidden": false,
+            "type": "upgrade",
+            "costs": [
+              {
+                "name": "pts",
+                "typeId": "a2d8-5d18-80b9-4be2",
+                "value": 1
+              }
+            ]
+          },
+          {
+            "name": "K7 b",
+            "id": "178a-3be3-7284-9b87",
+            "hidden": false,
+            "type": "upgrade",
+            "costs": [
+              {
+                "name": "pts",
+                "typeId": "a2d8-5d18-80b9-4be2",
+                "value": 1
+              }
+            ]
+          },
+          {
+            "name": "K7 c",
+            "id": "4da6-bb2d-392c-af06",
+            "hidden": false,
+            "type": "upgrade",
+            "costs": [
+              {
+                "name": "pts",
+                "typeId": "a2d8-5d18-80b9-4be2",
+                "value": 1
+              }
+            ]
+          }
+        ],
+        "constraints": [
+          {
+            "type": "max",
+            "value": 1,
+            "field": "selections",
+            "scope": "self",
+            "childId": "8a32-4fa7-efc2-2eea",
+            "shared": true,
+            "includeChildSelections": true,
+            "id": "3caf-9b31-1c44-0144",
+            "name": "k7 max 1 of a (3 if b)",
+            "message": "k7 max 1 of a (3 if b)"
+          }
+        ],
+        "modifiers": [
+          {
+            "type": "set",
+            "field": "3caf-9b31-1c44-0144",
+            "value": 3,
+            "conditions": [
+              {
+                "type": "atLeast",
+                "value": 1,
+                "field": "selections",
+                "scope": "self",
+                "childId": "178a-3be3-7284-9b87",
+                "shared": true,
+                "includeChildSelections": true
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "K8 Unit",
+        "id": "ddfd-6e64-bbad-f06a",
+        "hidden": false,
+        "type": "unit",
+        "costs": [
+          {
+            "name": "pts",
+            "typeId": "a2d8-5d18-80b9-4be2",
+            "value": 10
+          }
+        ],
+        "selectionEntries": [
+          {
+            "name": "K8 a",
+            "id": "580b-ab00-7090-8c6a",
+            "hidden": false,
+            "type": "upgrade",
+            "costs": [
+              {
+                "name": "pts",
+                "typeId": "a2d8-5d18-80b9-4be2",
+                "value": 5
+              }
+            ]
+          },
+          {
+            "name": "K8 b",
+            "id": "b83f-cf1e-a4fa-55db",
+            "hidden": false,
+            "type": "upgrade",
+            "costs": [
+              {
+                "name": "pts",
+                "typeId": "a2d8-5d18-80b9-4be2",
+                "value": 5
+              }
+            ]
+          },
+          {
+            "name": "K8 c",
+            "id": "4fd8-e75b-4779-0655",
+            "hidden": false,
+            "type": "upgrade",
+            "costs": [
+              {
+                "name": "pts",
+                "typeId": "a2d8-5d18-80b9-4be2",
+                "value": 5
+              }
+            ]
+          }
+        ],
+        "constraints": [
+          {
+            "type": "max",
+            "value": 12,
+            "field": "a2d8-5d18-80b9-4be2",
+            "scope": "self",
+            "childId": "any",
+            "shared": true,
+            "includeChildSelections": true,
+            "id": "94a3-b648-66c5-23bf",
+            "name": "k8 max 12 pts (deep)",
+            "message": "k8 max 12 pts (deep)"
+          },
+          {
+            "type": "max",
+            "value": 12,
+            "field": "a2d8-5d18-80b9-4be2",
+            "scope": "self",
+            "childId": "any",
+            "shared": true,
+            "includeChildSelections": false,
+            "id": "f3f7-a72b-b650-1a8a",
+            "name": "k8 max 12 pts (shallow)",
+            "message": "k8 max 12 pts (shallow)"
+          },
+          {
+            "type": "max",
+            "value": -1,
+            "field": "selections",
+            "scope": "self",
+            "childId": "580b-ab00-7090-8c6a",
+            "shared": true,
+            "includeChildSelections": true,
+            "id": "adc5-4f92-bd42-d295",
+            "name": "k8 max -1 negative a",
+            "message": "k8 max -1 negative a",
+            "negative": true
+          },
+          {
+            "type": "min",
+            "value": -1,
+            "field": "selections",
+            "scope": "self",
+            "childId": "b83f-cf1e-a4fa-55db",
+            "shared": true,
+            "includeChildSelections": true,
+            "id": "5555-b93e-23a5-a3ad",
+            "name": "k8 min -1 negative b",
+            "message": "k8 min -1 negative b",
+            "negative": true
+          }
+        ]
+      },
+      {
+        "name": "K9 Unit",
+        "id": "f429-601c-b3bd-2bcd",
+        "hidden": false,
+        "type": "unit",
+        "costs": [
+          {
+            "name": "pts",
+            "typeId": "a2d8-5d18-80b9-4be2",
+            "value": 10
+          }
+        ],
+        "selectionEntries": [
+          {
+            "name": "K9 a",
+            "id": "2b0c-7d81-1c75-cd4f",
+            "hidden": false,
+            "type": "upgrade",
+            "costs": [
+              {
+                "name": "pts",
+                "typeId": "a2d8-5d18-80b9-4be2",
+                "value": 1
+              }
+            ],
+            "constraints": [
+              {
+                "type": "max",
+                "value": 1,
+                "field": "selections",
+                "scope": "parent",
+                "childId": "2b0c-7d81-1c75-cd4f",
+                "shared": true,
+                "includeChildSelections": true,
+                "id": "81d8-962a-7ae0-b721"
+              }
+            ]
+          },
+          {
+            "name": "K9 b",
+            "id": "8b5e-cded-883b-01c6",
+            "hidden": false,
+            "type": "upgrade",
+            "costs": [
+              {
+                "name": "pts",
+                "typeId": "a2d8-5d18-80b9-4be2",
+                "value": 1
+              }
+            ]
+          },
+          {
+            "name": "K9 c",
+            "id": "d915-8b71-6134-436f",
+            "hidden": false,
+            "type": "upgrade",
+            "costs": [
+              {
+                "name": "pts",
+                "typeId": "a2d8-5d18-80b9-4be2",
+                "value": 1
+              }
+            ],
+            "constraints": [
+              {
+                "type": "min",
+                "value": 1,
+                "field": "selections",
+                "scope": "parent",
+                "childId": "d915-8b71-6134-436f",
+                "shared": true,
+                "includeChildSelections": true,
+                "id": "83c0-1450-cbc0-b50b",
+                "automatic": false
+              }
+            ]
+          }
+        ],
+        "selectionEntryGroups": [
+          {
+            "name": "G9",
+            "id": "5228-9c80-f2c9-5081",
+            "hidden": false,
+            "selectionEntries": [
+              {
+                "name": "G9 1",
+                "id": "d278-24c3-160e-6868",
+                "hidden": false,
+                "type": "upgrade",
+                "costs": [
+                  {
+                    "name": "pts",
+                    "typeId": "a2d8-5d18-80b9-4be2",
+                    "value": 1
+                  }
+                ]
+              },
+              {
+                "name": "G9 2",
+                "id": "47b4-cd4b-85d9-8820",
+                "hidden": false,
+                "type": "upgrade",
+                "costs": [
+                  {
+                    "name": "pts",
+                    "typeId": "a2d8-5d18-80b9-4be2",
+                    "value": 1
+                  }
+                ]
+              }
+            ],
+            "constraints": [
+              {
+                "type": "max",
+                "value": 1,
+                "field": "selections",
+                "scope": "parent",
+                "childId": "any",
+                "shared": true,
+                "includeChildSelections": true,
+                "id": "0234-9131-1f8d-c59d"
+              }
+            ]
+          }
+        ],
+        "constraints": [
+          {
+            "type": "min",
+            "value": 1,
+            "field": "selections",
+            "scope": "self",
+            "childId": "8b5e-cded-883b-01c6",
+            "shared": true,
+            "includeChildSelections": true,
+            "id": "cbf7-3c10-c234-a7f0"
+          },
+          {
+            "type": "max",
+            "value": 1,
+            "field": "selections",
+            "scope": "self",
+            "childId": "8b5e-cded-883b-01c6",
+            "shared": true,
+            "includeChildSelections": true,
+            "id": "8b21-2c1e-bfa1-243e",
+            "name": "named u2"
+          },
+          {
+            "type": "exactly",
+            "value": 1,
+            "field": "selections",
+            "scope": "self",
+            "childId": "2b0c-7d81-1c75-cd4f",
+            "shared": true,
+            "includeChildSelections": true,
+            "id": "cc9e-f689-0c21-6ed1"
+          },
+          {
+            "type": "max",
+            "value": 0,
+            "field": "a2d8-5d18-80b9-4be2",
+            "scope": "self",
+            "childId": "8b5e-cded-883b-01c6",
+            "shared": true,
+            "includeChildSelections": true,
+            "id": "6ac7-0ba7-b378-a051"
+          }
+        ]
+      }
+    ]
+  }
+}

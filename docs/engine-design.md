@@ -322,8 +322,8 @@ Each ends with something that runs and is checked.
 | M2 | Query engine, scopes, conditions, groups | Condition truth tables match the NR notes; T16 passes; counts match NR on the scope battery (done, section 17) |
 | M3 | Modifier pipeline for characteristics and costs, plain numbers and text | T04, T05, T08, T12, T14, T09 pass; costs and profile values match NR exports (done, section 18) |
 | M4 | Number tokens inside dice and compound values, `position` | The 27 observations M3 reported as needing tokens pass, and 248 odd-value profiles match NR; the worked-example replica gives `D6+2` (done, section 19) |
-| M5 | Constraints and validation | The G1 to G3 cost rules and the leader/bodyguard messages reproduce |
-| M6 | Force and catalogue linking, hidden entries, categories | The synthetic scale dataset and the exported conformance rosters instantiate without errors |
+| M5 | Constraints and validation | Validator messages match NR for the synthetic `M5 Constraints` catalogue (min, max, exactly, percent, hidden, scopes, modified limits, cost fields, groups, roster cost limits). The G1 to G3 cost rules were done in M2/M3; leader/bodyguard messages moved to M7 with associations (done, section 20) |
+| M6 | Force and catalogue linking, hidden entries, categories, automatic instantiation, force and category constraints | The synthetic scale dataset and the exported conformance rosters instantiate without errors |
 | M7 | Associations, `affects` with `group`, `traverseAssociationGroup` | E, F, G4 results match |
 | M8 | Differential testing against NR | A corpus of rosters exported from NR for the synthetic systems shows the same totals, values and validation as NR. Real data can be checked locally by anyone who holds it, outside the repository and CI |
 | M9 | Roster file format: read and write | A roster exported from NR loads, evaluates to the same totals, and writes back so that NR opens it; the format is documented in the spec |
@@ -884,3 +884,34 @@ unchanged keeps its original text.
 `append` and `prepend` is inert, as observed, and not modelled further.
 
 **Memory.** Unchanged (the memory check passes at JVM 64 MB, Node 128 MB).
+
+## 20. M5: constraints and validation
+
+Done on branch `constraints-m5`. `Constraint` (parsed from the raw JSON), `Validator`
+(returns `Violation`s), and two additions to `View`: `constraintValue` (a constraint's limit
+after modifiers whose field is its id) and `hidden` (the `hidden` flag after modifiers).
+`RosterModel.probe` makes a detached selection under a parent, so an entry that is available
+but not selected can be asked what its constraints see, with every scope resolving as for a
+real child.
+
+The rules were found by experiment with the `M5 Constraints` catalogue (test repo
+`RESULTS.md`, `tests/constraints-observed.json`). `ConstraintConformanceTest` replays 123
+recorded states and the K5 scope cases; all match, including the message text.
+
+Decided with the user: leader/bodyguard messages and `traverseAssociationGroup` wait for M7;
+`automatic` constraints were observed first and are recorded below, with instantiation itself
+left to M6.
+
+**What the experiments corrected.** I had assumed an absent child's `max` constraint would
+fire like its `min`; NR does not evaluate it (nothing is selected). I had also assumed a
+constraint with no `childId` counts everything (`any`); NR counts the owner's own entry.
+
+**Observed, not built (M6).** NR instantiates the roster itself: new rosters get each root
+unit as many times as its largest `min` or `exactly`, ignoring `childId` and scope; adding
+a unit selects children up to their `min`, and a group's first member when the group has a
+`min`, whether or not `automatic` is set. `automatic` only stops the input going below the
+minimum. A group whose `max 1` counts `any` acts as a radio group in the UI, clearing the
+other selections. Constraints on forces and categories, and `shared: false`, are untested.
+
+**Memory.** The validator parses constraints on demand and caches them per body for one run;
+the memory check is unchanged (JVM 64 MB, Node 128 MB).

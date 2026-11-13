@@ -547,6 +547,32 @@ comparison types are Unknown.
   value, evaluated from the owning entry; `shared: false` remaps the scope
   (`parent`, `force`, `primary-catalogue` and `primary-category` become here or
   here's parent).
+- **Observed in NR (M5 Constraints catalogue).**
+  - `min` fails below the limit, `max` above, `exactly` on any difference. A `-1` limit is
+    no limit; with `negative: true` it is a real number (`max -1` fails even at 0).
+  - A constraint counts like a condition's query: `selections` or a cost type id (a unit's
+    own cost is not counted), with `childId`, scope and `includeChildSelections`. A constraint
+    with no `childId` counts the owner's own entry (not `any`).
+  - `percentValue`: the limit is a percentage of everything in the scope (`max 50` passes at
+    exactly half); 0 of 0 is 0%.
+  - A child's constraint with scope `parent` is checked under every selected parent, whether or
+    not the child is selected: an absent child fails its `min` (and `exactly`), but its `max`
+    is not evaluated. A group's constraints are checked under each parent with `self` meaning
+    the group's members and `parent` the whole parent.
+  - A `min` on a hidden entry does not fire. A selected hidden entry is an error of its
+    own: "{parent} {entry} cannot be selected while hidden".
+  - A modifier whose field is the constraint's id changes its limit (`set 3` when a condition
+    holds), evaluated from the owner.
+  - Scopes `force`, `parent`, `primary-category` and `roster` counted two units of the same
+    entry on each; `root-entry` and `self` (with the unit's own id) did not.
+  - Roster cost limit: "Roster has N pts too many (max L)"; equal passes, -1 is none.
+  - Default wording (no `message`): `{host} has N selections too many (max M)`,
+    `{host} requires N selections more of X` (min) and `{host} requires N more selections of
+    X` (exactly, below). " of X" is the constraint's `name` if it has one, else the counted
+    entry's name unless that is the owner or `any`; for a cost field the unit word is the cost
+    type (`1 pts too many of X`). A node's messages are listed sorted alphabetically.
+  - Builder behaviour, not validation: NR adds root units and children up to a `min`
+    whether or not `automatic` is set; `automatic` stops the UI going below it.
 - `message` example: "An Attached Unit can only take 1 Enhancement.",
   on a `max 1` constraint over `Enhancements` at `root-entry` scope with
   `traverseAssociationGroup: true`.

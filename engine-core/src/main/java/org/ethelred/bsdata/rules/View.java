@@ -23,9 +23,10 @@ import org.jspecify.annotations.Nullable;
  *
  * <p>A view is a snapshot: build a new one after the roster changes.
  *
- * <p>Covered: modifiers on a selection's entry or link that change a cost, and modifiers on a profile that change one
- * of its characteristics, with conditions, condition groups, local groups and repeats. Not yet: {@code affects}
- * (M7), other fields such as {@code hidden} and {@code name}, and dice or compound values (M4). Those are reported in
+ * <p>Covered: modifiers on a selection's entry or link that change a cost, a constraint's value or {@code hidden}, and
+ * modifiers on a profile that change one of its characteristics, with conditions, condition groups, local groups and
+ * repeats. Not yet: {@code affects}
+ * (M7) and other fields such as {@code name}. Those are reported in
  * {@link #diagnostics()}.
  */
 public final class View {
@@ -131,6 +132,50 @@ public final class View {
             }
         }
         return out;
+    }
+
+    // ---- constraints and hidden entries
+
+    /**
+     * A constraint's limit for a selection after modifiers: those on the selection's entry or link whose field is the
+     * constraint's id, evaluated from the owner (observed in New Recruit).
+     */
+    public double constraintValue(Selection owner, Constraint c) {
+        if (c.id().isEmpty()) {
+            return c.value();
+        }
+        List<Located> mine = new ArrayList<>();
+        for (Located l : allModifiers(owner)) {
+            if (l.modifier().field().equals(c.id())) {
+                mine.add(l);
+            }
+        }
+        if (mine.isEmpty()) {
+            return c.value();
+        }
+        List<String> local = new ArrayList<>();
+        double value = ModifierEngine.applyNumber(c.value(), applicable(owner, mine), local);
+        diagnostics.addAll(local);
+        return value;
+    }
+
+    /** Whether the selection's entry is hidden: its own flag (or its link's), then any {@code hidden} modifiers. */
+    public boolean hidden(Selection s) {
+        var link = s.link();
+        boolean base = s.entry().hidden() || link != null && link.hidden();
+        List<Located> mine = new ArrayList<>();
+        for (Located l : allModifiers(s)) {
+            if (l.modifier().field().equals("hidden")) {
+                mine.add(l);
+            }
+        }
+        if (mine.isEmpty()) {
+            return base;
+        }
+        List<String> local = new ArrayList<>();
+        String value = ModifierEngine.applyText(String.valueOf(base), applicable(s, mine), local);
+        diagnostics.addAll(local);
+        return value.equals("true");
     }
 
     // ---- profiles

@@ -30,7 +30,7 @@ class GameDataTest {
                 List.of("pts", "Enh"),
                 gs.costTypes().stream().map(Parts.CostType::name).toList());
         assertNull(data.catalogueById("no-such-id"));
-        assertEquals(3, data.catalogues().stream().filter(c -> !c.gameSystem()).count());
+        assertEquals(4, data.catalogues().stream().filter(c -> !c.gameSystem()).count());
     }
 
     @Test
