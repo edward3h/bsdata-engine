@@ -116,7 +116,8 @@ restricted. The following are consequences for the design. Items marked
   insertion-ordered collections or sort explicitly, so both builds agree.
 - **Memory**: the 11e data is about 104,000 objects. Do not keep both a raw
   `DataNode` tree and a typed model. Convert straight into the typed model
-  while parsing and drop the raw tree.
+  while parsing and drop the raw tree. M1 does not do this yet (it measured about
+  930 MB peak for `wh40k-11e` in Node); the memory pass is milestone M1b.
 
 ### 3.4 What kv2 already gives
 
@@ -312,6 +313,7 @@ Each ends with something that runs and is checked.
 |---|---|---|
 | M0 | Toolchain spike, loader, ID index, link resolution | Gradle skeleton builds with Java 25 and TeaVM 0.16; one test runs identically on the JVM and in Node; loads `wh40k-11e` and HH3 with zero unresolved references and reports the counts in section 2; records, sealed types and the JSON library confirmed under TeaVM; browser parse time and memory measured |
 | M1 | Typed game data, roster tree with explicit selections, costs without modifiers | A unit's base cost sums correctly; hand-made and exported rosters total as NR does (done, section 13). Automatic instantiation is left to M5 |
+| M1b | **Memory pass** on the loader and typed model | `wh40k-11e` loads in a browser tab within the agreed budget (proposed: 300 MB peak, against about 930 MB in Node now), measured in a real browser and in Node; HH3 well inside it; reports unchanged (byte-identical JVM and JavaScript output, same counts); a regression check records the peak so later milestones cannot quietly undo it |
 | M2 | Query engine, scopes, conditions, groups | Condition truth tables match the NR notes; T16 passes |
 | M3 | Modifier pipeline for plain numbers and text | T04, T05, T08, T12, T14, T09 pass |
 | M4 | Number tokens, `position`, clamps, repeats, `cumulative-*` | All of F01 to F12 in `expected.json` pass except the fractional F08a (informational); Wulfen replica gives `D6+2` |
@@ -324,6 +326,12 @@ Each ends with something that runs and is checked.
 M0 to M4 are mostly mechanical and fully specified by the tests. M5 to M7 need
 the most judgement. M8 is the honest measure of success. M9 depends on M6, since
 a roster refers to catalogue entries by id, and on documenting the format first.
+
+M1b is a planned step, not optional, and comes before M2: typing conditions and
+modifiers (M2, M3) replaces the raw nodes with more objects, so memory only gets
+worse, and the loader's shape is easiest to change now. It is also a precondition for
+any browser UI. The memory budget is a proposal to settle before starting it. See
+section 13 for the measurements and the changes it should make.
 
 ## 7. Testing strategy
 
@@ -486,9 +494,9 @@ Findings:
   defined elsewhere, and a condition `childId` that is another catalogue's root id
   (6,112 in HH3). So `Linker` applies the scoped lookup to `targetId` only, and for
   every other field any definition anywhere counts as resolved.
-- **Cost on a 5 MB file:** Node loads and parses all 46 `wh40k-11e` files in
-  about 1.4 s and links them in about 0.2 s; HH3 takes 0.7 s and 0.1 s. Peak
-  memory for the whole-repository runs has not been measured yet.
+- **Time:** Node loads and parses all 46 `wh40k-11e` files in about 1.4 s and links
+  them in about 0.2 s; HH3 takes 0.7 s and 0.1 s. Peak memory for the
+  whole-repository runs is in section 13 (about 930 MB for 11e).
 
 Scoped resolution is implemented (`Repository`, `Linker`), with unit tests that mirror
 tests D1a to D1g. On both full repositories it reports 0 out-of-scope `targetId`s,
@@ -567,10 +575,24 @@ to the data).
 **Memory (a concern).** The whole `wh40k-11e` repository peaks at about 930 MB RSS in
 Node and 590 MB on the JVM; HH3 about 430 MB and 330 MB. That is with the parsed
 JSON trees still held (for `Raw` and for the id sets in `Repository`). A browser tab
-will not take 930 MB, so the loader needs a memory pass before any UI: drop the
+will not take 930 MB, so the loader needs a memory pass (milestone M1b, planned
+next, before M2 and before any UI): drop the
 tree after typing, intern repeated strings (type ids, names), keep `Raw` as compact
 nodes, and build `Repository` id sets from the typed model instead of a second tree
 walk.
+
+**The memory pass (M1b) should include**, in order of expected effect:
+
+1. Parse straight into the typed model and release the `DataNode` tree (the
+   largest single cost, since both trees are held now).
+2. Keep `Raw` as compact node trees, or a lazily parsed string, until M2 and M3
+   type them.
+3. Intern repeated strings (cost and profile type ids, entry names, type names).
+4. Build `Repository`'s id sets from the typed model instead of a second walk of
+   the tree, and use primitive-friendly or sorted-array maps where `HashMap` is
+   heavy.
+5. Measure in a browser tab (heap snapshot), not only RSS in Node, and fix the
+   budget before starting.
 
 **Not done:** automatic instantiation (M5); categories as explicit roster nodes
 (needed for `primary-category`, M2); writing a `RosterModel` back to a roster file;
