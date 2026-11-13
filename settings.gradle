@@ -1,0 +1,10 @@
+pluginManagement {
+	repositories {
+		maven { url = uri("https://teavm.org/maven/repository") }
+		gradlePluginPortal()
+	}
+}
+rootProject.name = "bsdata-engine"
+
+include 'engine-core'
+include 'engine-web'

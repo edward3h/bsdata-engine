@@ -409,3 +409,29 @@ Still needed:
    TeaVM, a loader for the JSON data, and the conformance runner executing
    `tests/expected.json` against an empty evaluator so every test fails for a
    known reason.
+
+## 11. M0 spike results
+
+First pass, on the `m0-spike` branch (Gradle skeleton following kv2; `engine-core`
+and `engine-web`; a `Census` that counts objects, ids and `targetId` references).
+
+| Question | Result |
+|---|---|
+| Java 25 records, sealed interface, pattern-matching `switch` under TeaVM 0.16 | Compile and run correctly |
+| `minimal-json` 0.9.5 under TeaVM | Works unchanged |
+| Spotless, EISOP nullness checker and JUnit on `engine-core` | Pass (`./gradlew build`) |
+| JVM and Node results agree | The Node counts match an independent Python count exactly, for three files |
+| TeaVM `long` and JSO | `long` is a BigInt in TeaVM, so JSO bindings must use `double` or `int` |
+
+Measurements, Node 24 (compiled JavaScript), single file each:
+
+| File | Size | Objects | Parse | Peak RSS |
+|---|---|---|---|---|
+| `wh40k-11e/Imperium - Space Marines.json` | 5.1 MB | 28,549 | 209 ms | 231 MB |
+| `horus-heresy-3rd-edition/Alpha Legion.json` | small | 1,296 | 30 ms | 68 MB |
+
+Not yet done: loading a whole repository and resolving links across files
+(unresolved references within one file are expected, since links cross files);
+browser (as opposed to Node) timing and heap; a JVM-side comparison of the same
+files; the exit criterion that wh40k-11e and HH3 load with zero unresolved
+references.
