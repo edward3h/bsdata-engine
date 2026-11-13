@@ -100,9 +100,8 @@ restricted. The following are consequences for the design. Items marked
 - **Numbers**: the games in scope use integer values, so exact matching of NR's
   floating-point rounding and display is not a goal. Use `double` internally,
   print whole numbers without a decimal point, and accept whatever the platform
-  prints for fractions. Conformance tests with fractional results (such as the
-  divide and `cumulative-power` cases in `expected.json`) are informational, not
-  pass or fail. No custom number formatter is needed.
+  prints for fractions. Only two of the 135 cases in `expected.json` have fractional
+  results (T11e and F08a); they are informational, not pass or fail. No custom number formatter is needed.
 - **Java class library coverage**: TeaVM implements `BigDecimal` almost fully
   and `java.util.regex` only partly. Prefer plain collections, `String` and
   `StringBuilder`, avoid regex in hot paths and avoid `java.time`, locale
@@ -308,7 +307,7 @@ Each ends with something that runs and is checked.
 | M1 | Roster tree, instantiation, costs without modifiers | A unit's base cost sums correctly; a hand-made roster totals match NR |
 | M2 | Query engine, scopes, conditions, groups | Condition truth tables match the NR notes; T16 passes |
 | M3 | Modifier pipeline for plain numbers and text | T04, T05, T08, T12, T14, T09 pass |
-| M4 | Number tokens, `position`, clamps, repeats, `cumulative-*` | All of F01 to F12 in `expected.json` pass; Wulfen replica gives `D6+2` |
+| M4 | Number tokens, `position`, clamps, repeats, `cumulative-*` | All of F01 to F12 in `expected.json` pass except the fractional F08a (informational); Wulfen replica gives `D6+2` |
 | M5 | Constraints and validation | The G1 to G3 cost rules and the leader/bodyguard messages reproduce |
 | M6 | Force and catalogue linking, hidden entries, categories | HH3 and 11e rosters instantiate without errors |
 | M7 | Associations, `affects` with `group`, `traverseAssociationGroup` | E, F, G4 results match |
@@ -320,7 +319,7 @@ the most judgement. M8 is the honest measure of success.
 ## 7. Testing strategy
 
 1. **Unit tests per rule**, run on both the JVM (JUnit) and as compiled JavaScript (Node), generated from `tests/expected.json` (each entry has
-   its base value, modifiers and the value NR showed). The runner builds the
+   its base value, modifiers and the value NR showed; the two fractional cases, T11e and F08a, are reported but do not fail the run). The runner builds the
    scratch roster programmatically (UNIT A, select `APPLY`, read the profile)
    so the same files serve as engine tests. Repeat tests need models toggled to
    give `k` = 0, 1 and 2.
