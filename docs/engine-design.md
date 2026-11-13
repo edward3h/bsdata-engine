@@ -318,7 +318,7 @@ Each ends with something that runs and is checked.
 | M0 | Toolchain spike, loader, ID index, link resolution | Gradle skeleton builds with Java 25 and TeaVM 0.16; one test runs identically on the JVM and in Node; loads `wh40k-11e` and HH3 with zero unresolved references and reports the counts in section 2; records, sealed types and the JSON library confirmed under TeaVM; browser parse time and memory measured |
 | M1 | Typed game data, roster tree with explicit selections, costs without modifiers | A unit's base cost sums correctly; hand-made and exported rosters total as NR does (done, section 13). Automatic instantiation is left to M5 |
 | M1a | **Synthetic scale generator** | A deterministic generator writes a game system and catalogues of about 100,000 objects with the shape ratios measured on the real data (section 2); it loads through `Linker` and `GameData` with 0 unresolved links, and JVM and JavaScript reports are byte-identical. It contains no real game content |
-| M1b | **Memory pass** on the loader and typed model | The generated 11e-sized dataset loads in a browser tab within the agreed budget (300 MB peak, agreed 2026-11-13; the real 11e data measured about 930 MB in Node), measured in a real browser and in Node; a half-sized set well inside it; reports unchanged; a regression check records the peak so later milestones cannot quietly undo it |
+| M1b | **Memory pass** on the loader and typed model | The generated 11e-sized dataset loads in a browser tab within the agreed budget (300 MB peak, agreed 2026-11-13; the real 11e data measured about 930 MB in Node), measured in a real browser and in Node; a half-sized set well inside it; reports unchanged; a regression check records the peak so later milestones cannot quietly undo it (done, section 16) |
 | M2 | Query engine, scopes, conditions, groups | Condition truth tables match the NR notes; T16 passes |
 | M3 | Modifier pipeline for plain numbers and text | T04, T05, T08, T12, T14, T09 pass |
 | M4 | Number tokens, `position`, clamps, repeats, `cumulative-*` | All of F01 to F12 in `expected.json` pass except the fractional F08a (informational); the worked-example replica gives `D6+2` |
@@ -690,3 +690,73 @@ Command line (`engine-jvm`, and in Node via the TeaVM build):
 Not modelled: the exact split of costs, constraints and modifiers between kinds of host,
 the real distribution of file sizes, and string content (names are `Entry 123`; text is
 random words with the measured length distribution).
+
+## 16. M1b: memory pass
+
+Done on branch `memory-pass`. Measured on the generated 11e-sized dataset (section 15)
+written as pretty-printed files (65 MB of JSON, the largest file 11.8 MB), loaded from
+disk (JVM, Node) or over HTTP (Chrome), one file at a time as a real client would.
+
+**Result against the budget (300 MB peak in a browser tab): met with a wide margin.**
+
+| Measure | Original loader | Now |
+|---|---|---|
+| Chrome tab: peak JavaScript heap in use (sampled as each file is read) | 361 MB | **116 MB** |
+| Chrome tab: peak total JavaScript heap | 417 MB | **160 MB** |
+| Chrome tab: load time | 2.2 s | 1.9 s |
+| Node: smallest V8 heap the load survives | 600 MB | **100 MB** |
+| Node: heap retained by the typed model after a collection | 540 MB | **79 MB** |
+| Node: peak resident size, no limit | 830 MB | 319 MB |
+| JVM: smallest heap the load survives | 275 MB | **50 MB** |
+| JVM: heap retained after a collection | 151 MB | **37 MB** |
+
+The Chrome figures are samples taken as each file is read (`performance.memory`), so
+they can miss a short peak between samples; the survivable-heap figures are the firmer
+ones. The model is identical before and after (same counts, and the three loaders
+produce equal typed models; see `LoadersAgreeTest`).
+
+**What each change bought** (Node: model retained after a collection / smallest heap
+that survives):
+
+| Change | Retained | Survives |
+|---|---|---|
+| Original: parse every file into a tree, then type them all | 540 MB | 600 MB |
+| Load one file at a time; `Scope` holds only the link graph, not every id | 237 MB | 275 MB |
+| Keep the untyped parts (`Raw`: constraints, modifiers, modifier groups, associations) as compact JSON text, parsed when asked for | 117 MB | 200 MB |
+| Share equal short strings (type ids, cost names, entry names) | 106 MB | 200 MB |
+| Stream each file: type every top-level element as it is parsed and drop it, so no tree of the whole file exists | **79 MB** | **100 MB** |
+
+**Changes in the code.**
+
+- `Scope` (new) holds which files see which, built from the catalogue links alone.
+  `Repository` keeps the id sets for the reference checker (`Linker`), which still works on
+  trees; `GameData` no longer holds them.
+- `GameData.load(TextSource)` uses `StreamingParser`, a handler on the JSON library's
+  event parser that builds `DataNode`s without the library's own tree and hands the
+  elements of top-level arrays to the caller one at a time. `Parse.Assembler` types them.
+  `GameData.load(Map)` is for callers that already hold trees. The earlier loaders
+  (`tree`: every file parsed first, then typed; `file`: one tree per file) are not part of
+  `GameData`; they live in `LoadStrategies`, used by the benchmarks and `LoadersAgreeTest`.
+- `Raw` now holds four JSON strings with accessors that parse on demand. M2 and M3 will type
+  these parts; until then nothing reads them.
+- `Pool` shares equal strings of up to 64 characters (not rule text or characteristic values).
+- The TeaVM entry point works in a browser (synchronous HTTP reads in place of the file
+  system, `console.log` for output), and `load:<directory or URL>:<strategy>` loads and
+  reports. The command line has `load <dir> [tree|file|stream]` for the JVM.
+
+**Regression guard.** `scripts/memory-check.sh`, run in CI, generates the full-size dataset
+and loads it with the streaming loader under a 64 MB JVM heap and a 128 MB Node heap
+(about 30% above what is needed now), and fails if either runs out of memory or the model's
+counts change. Raise the limits only deliberately, with a note here, when a milestone
+legitimately needs more.
+
+**Headroom, and what will eat it.** M2 and M3 turn `Raw` into typed objects, which cost
+more per item than text, so retained memory will rise. There is room (79 MB retained and
+116 MB peak against 300 MB), but the check should be re-run, and the budget re-read, at the
+end of each of M2, M3, M4 and M8. Further savings are available if needed: a more compact
+`DataNode` for the transient parse, primitive-keyed index maps, and dropping the typed
+objects of the largest catalogues until a force uses them.
+
+**Not done:** measuring on a phone-class browser or with several tabs; a memory budget for
+a roster in play (small next to the data, but unmeasured); and the checker (`Linker`) still
+needs whole trees, so it is not part of the streaming path.

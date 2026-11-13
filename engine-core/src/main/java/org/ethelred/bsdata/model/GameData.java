@@ -7,35 +7,92 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 import org.ethelred.bsdata.DataNode;
-import org.ethelred.bsdata.Repository;
+import org.ethelred.bsdata.Scope;
 import org.ethelred.bsdata.model.Parts.CostType;
 import org.ethelred.bsdata.model.Parts.ForceEntry;
 import org.jspecify.annotations.Nullable;
 
 /**
  * The typed, immutable game data of one repository: the game system and its catalogues, with links resolved by the
- * scoped lookup of {@link Repository} (see {@code docs/engine-design.md}, section 11).
+ * scoped lookup of {@link Scope} (see {@code docs/engine-design.md}, section 11).
  */
 public final class GameData {
     /** A resolved entry together with the link that led to it, and the file where the entry lives. */
     public record Resolved(Entry entry, @Nullable Link link, String file) {}
 
-    private final Repository repository;
+    private final Scope scope;
     private final Map<String, Catalogue> byFile = new TreeMap<>();
     private final Map<String, Catalogue> byRootId = new HashMap<>();
     private final Map<String, Map<String, Entry>> entriesByFile = new HashMap<>();
     private final Map<String, Map<String, ForceEntry>> forceEntriesByFile = new HashMap<>();
     private final Map<String, Map<String, CostType>> costTypesByFile = new HashMap<>();
 
-    private GameData(Repository repository) {
-        this.repository = repository;
+    private GameData(Scope scope) {
+        this.scope = scope;
     }
 
-    /** @param files file name to parsed tree */
+    /** Adds files one at a time, so only one parsed tree needs to be alive at once. */
+    public static final class Builder {
+        private final Scope scope = new Scope();
+        private final GameData data = new GameData(scope);
+        private final Pool pool = new Pool();
+
+        public Builder add(String file, DataNode tree) {
+            Catalogue c = Parse.catalogue(file, tree, pool);
+            scope.add(
+                    file,
+                    c.gameSystem(),
+                    c.id(),
+                    c.catalogueLinks().stream()
+                            .map(Parts.CatalogueLink::targetId)
+                            .toList());
+            data.add(c);
+            return this;
+        }
+
+        /** Types a file from its text without building a tree of the whole file. */
+        public Builder addText(String file, String text) {
+            return register(Parse.catalogue(file, text, pool));
+        }
+
+        private Builder register(Catalogue c) {
+            scope.add(
+                    c.file(),
+                    c.gameSystem(),
+                    c.id(),
+                    c.catalogueLinks().stream()
+                            .map(Parts.CatalogueLink::targetId)
+                            .toList());
+            data.add(c);
+            return this;
+        }
+
+        public GameData build() {
+            return data;
+        }
+    }
+
+    public static Builder builder() {
+        return new Builder();
+    }
+
+    /** @param files file name to parsed tree; all are held by the caller at once */
     public static GameData load(Map<String, DataNode> files) {
-        GameData data = new GameData(new Repository(files));
-        new TreeMap<>(files).forEach((name, tree) -> data.add(Parse.catalogue(name, tree)));
-        return data;
+        Builder b = builder();
+        new TreeMap<>(files).forEach(b::add);
+        return b.build();
+    }
+
+    /**
+     * Loads every file of a source one at a time and keeps only the typed result. Each file is typed element by
+     * element as it is parsed, so the largest thing alive at once is one entry.
+     */
+    public static GameData load(TextSource source) {
+        Builder b = builder();
+        for (String name : source.names()) {
+            b.addText(name, source.read(name));
+        }
+        return b.build();
     }
 
     private void add(Catalogue c) {
@@ -73,10 +130,6 @@ public final class GameData {
         f.children().forEach(c -> indexForce(c, out));
     }
 
-    public Repository repository() {
-        return repository;
-    }
-
     public List<Catalogue> catalogues() {
         return new ArrayList<>(byFile.values());
     }
@@ -101,7 +154,7 @@ public final class GameData {
 
     /** The entry or group with this id as seen from {@code file}, and the file that defines it. */
     public @Nullable Resolved entry(String file, String id) {
-        for (String f : repository.scope(file)) {
+        for (String f : scope.scope(file)) {
             Entry e = entriesByFile.getOrDefault(f, Map.of()).get(id);
             if (e != null) {
                 return new Resolved(e, null, f);
@@ -118,7 +171,7 @@ public final class GameData {
 
     /** The force entry with this id as seen from {@code file}. */
     public @Nullable ForceEntry forceEntry(String file, String id) {
-        for (String f : repository.scope(file)) {
+        for (String f : scope.scope(file)) {
             ForceEntry e = forceEntriesByFile.getOrDefault(f, Map.of()).get(id);
             if (e != null) {
                 return e;
@@ -128,7 +181,7 @@ public final class GameData {
     }
 
     public @Nullable CostType costType(String file, String id) {
-        for (String f : repository.scope(file)) {
+        for (String f : scope.scope(file)) {
             CostType t = costTypesByFile.getOrDefault(f, Map.of()).get(id);
             if (t != null) {
                 return t;
@@ -148,7 +201,7 @@ public final class GameData {
         }
         Child current = null;
         String file = catalogueFile;
-        for (String f : repository.scope(catalogueFile)) {
+        for (String f : scope.scope(catalogueFile)) {
             Catalogue c = byFile.get(f);
             Child top = c == null ? null : findTop(c, segments.get(0));
             if (top != null) {

@@ -16,7 +16,10 @@ public final class ModelReport {
     private ModelReport() {}
 
     public static String of(Map<String, DataNode> files) {
-        GameData data = GameData.load(files);
+        return of(GameData.load(files));
+    }
+
+    public static String of(GameData data) {
         ModelReport r = new ModelReport();
         for (Catalogue c : data.catalogues()) {
             c.rootEntries().forEach(r::entry);
