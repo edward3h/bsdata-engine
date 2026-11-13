@@ -216,9 +216,14 @@ class ScopesTest {
     }
 
     @Test
-    void aScopeThatResolvesToNothingDisablesTheCondition() {
-        Condition c = new Condition("atLeast", "selections", "no-such-id", "any", 1, true, false, false, true);
-        assertEquals(Result.DISABLED, ev.eval(gun, c));
+    void aScopeThatResolvesToNothingCountsAsZero() {
+        // observed in NR (condition battery): not disabled; the comparison is made with 0
+        Condition atLeast1 = new Condition("atLeast", "selections", "no-such-id", "any", 1, true, false, false, true);
+        Condition atMost0 = new Condition("atMost", "selections", "no-such-id", "any", 0, true, false, false, true);
+        Condition atLeast0 = new Condition("atLeast", "selections", "no-such-id", "any", 0, true, false, false, true);
+        assertEquals(Result.FALSE, ev.eval(gun, atLeast1));
+        assertEquals(Result.TRUE, ev.eval(gun, atMost0));
+        assertEquals(Result.TRUE, ev.eval(gun, atLeast0));
     }
 
     @Test

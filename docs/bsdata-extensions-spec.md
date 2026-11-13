@@ -353,8 +353,10 @@ node the item sits on):
 | `<scope>-self` | as above, but here itself is a candidate; counts then include here's own amount |
 | any entry or category ID | here if its ID, link ID or target ID matches, else the nearest ancestor that does, else a child of the force with that ID |
 
-A scope that resolves to nothing disables the condition (neither true nor
-false). The tree is `roster > force > category > root entry > model / group /
+A scope that resolves to nothing is **not** disabled (as the NR notes imply):
+**Observed in NR**, the count is 0 and the comparison is made with it, so `atMost 0`
+holds and `atLeast 1` does not (the `atLeast` at `self` quirk below still applies).
+The tree is `roster > force > category > root entry > model / group /
 upgrade`.
 
 **Observed in NR** (1,284 profiles whose `Num` is NR's count for a query; see
@@ -632,9 +634,8 @@ What it shows:
 
 ## 9. Open questions
 
-**Added with the scope experiments (M2):** how `ancestor` counts; whether a condition
-whose scope resolves to nothing stops a modifier from applying; `percentValue` on a
-condition; `includeChildForces` and nested forces; whether `-self` applies to every
+**Added with the scope experiments (M2):** how `ancestor` counts; `instanceOf` when its
+scope resolves to nothing; `percentValue` on a condition; `includeChildForces` and nested forces; whether `-self` applies to every
 type scope (seen for `root-entry`, `model`, `model-or-unit` and `upgrade`); and how a
 condition is evaluated for an entry that is not yet in the roster (the add list showed
 a cost surcharge for zero copies).

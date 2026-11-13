@@ -21,7 +21,11 @@ import org.jspecify.annotations.Nullable;
  * <p>Costs come from {@link CostSource}. M2 uses base costs; the modifier pipeline of M3 supplies evaluated ones.
  */
 public final class Evaluator {
-    /** The outcome of a condition. {@code DISABLED}: its scope resolved to nothing, so it is neither true nor false. */
+    /**
+     * The outcome of a condition. {@code DISABLED} is for things the engine does not support (a condition type or group
+     * type it cannot evaluate, an {@code instanceOf} whose scope resolves to nothing). A count whose scope resolves to
+     * nothing is not disabled: New Recruit compares it as 0 (observed).
+     */
     public enum Result {
         TRUE,
         FALSE,
@@ -235,10 +239,9 @@ public final class Evaluator {
             default:
                 break;
         }
-        Double count = count(here, Conditions.query(c));
-        if (count == null) {
-            return Result.DISABLED;
-        }
+        Double counted = count(here, Conditions.query(c));
+        // a scope that resolves to nothing counts as 0, so "at most 0" holds and "at least 1" does not (observed)
+        double count = counted == null ? 0 : counted;
         Boolean ok = compare(c.type(), count, c.value());
         if (ok == null) {
             diagnostics.add("condition type " + c.type() + ": not supported");
@@ -359,15 +362,14 @@ public final class Evaluator {
         List<String> unsupported = new ArrayList<>();
         Scopes.Found found = Scopes.resolve(here, g.scope(), model, unsupported);
         diagnostics.addAll(unsupported);
-        if (found == null) {
-            return Result.DISABLED;
-        }
         if (!g.field().equals("selections")) {
             diagnostics.add("local group field " + g.field() + ": not supported");
             return Result.DISABLED;
         }
         double count = 0;
-        for (Candidate cd : candidates(found, g.includeChildSelections(), true)) {
+        // a scope that resolves to nothing has nothing to count: the count is 0, as for any other condition
+        List<Candidate> candidates = found == null ? List.of() : candidates(found, g.includeChildSelections(), true);
+        for (Candidate cd : candidates) {
             if (!(cd.node() instanceof Selection s)) {
                 continue;
             }

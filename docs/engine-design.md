@@ -320,8 +320,8 @@ Each ends with something that runs and is checked.
 | M1a | **Synthetic scale generator** | A deterministic generator writes a game system and catalogues of about 100,000 objects with the shape ratios measured on the real data (section 2); it loads through `Linker` and `GameData` with 0 unresolved links, and JVM and JavaScript reports are byte-identical. It contains no real game content |
 | M1b | **Memory pass** on the loader and typed model | The generated 11e-sized dataset loads in a browser tab within the agreed budget (300 MB peak, agreed 2026-11-13; the real 11e data measured about 930 MB in Node), measured in a real browser and in Node; a half-sized set well inside it; reports unchanged; a regression check records the peak so later milestones cannot quietly undo it (done, section 16) |
 | M2 | Query engine, scopes, conditions, groups | Condition truth tables match the NR notes; T16 passes; counts match NR on the scope battery (done, section 17) |
-| M3 | Modifier pipeline for plain numbers and text | T04, T05, T08, T12, T14, T09 pass |
-| M4 | Number tokens, `position`, clamps, repeats, `cumulative-*` | All of F01 to F12 in `expected.json` pass except the fractional F08a (informational); the worked-example replica gives `D6+2` |
+| M3 | Modifier pipeline for characteristics and costs, plain numbers and text | T04, T05, T08, T12, T14, T09 pass; costs and profile values match NR exports (done, section 18) |
+| M4 | Number tokens inside dice and compound values, `position` | The 27 observations M3 reports as needing tokens pass (F04 to F08, F11, T01 to T03, T19); the worked-example replica gives `D6+2`. Repeat counts and the arithmetic and `cumulative-*` formulas already work on plain numbers (M3) |
 | M5 | Constraints and validation | The G1 to G3 cost rules and the leader/bodyguard messages reproduce |
 | M6 | Force and catalogue linking, hidden entries, categories | The synthetic scale dataset and the exported conformance rosters instantiate without errors |
 | M7 | Associations, `affects` with `group`, `traverseAssociationGroup` | E, F, G4 results match |
@@ -807,3 +807,56 @@ yet in the roster.
 **Memory.** The memory check still passes (JVM 64 MB, Node 128 MB; retained 37 MB and
 about 80 MB), because conditions are parsed from text on demand. Typing modifiers in M3
 may change that; re-run the check.
+
+## 18. M3: the modifier pipeline
+
+Done on branch `modifiers-m3`. Decisions: characteristics and costs only (names, hidden
+state, categories, constraint values, descriptions and messages come later); `affects`
+waits for M7; dice and compound values wait for M4.
+
+**Code (`rules`).**
+
+- `Modifier` (typed from the stored text on demand, so retained memory is unchanged):
+  type, field, value, arg, join, position, skipIfPresent, affects, scope, conditions,
+  repeats; `Modifier.Group` for nested modifier groups.
+- `ModifierEngine`: applies modifiers to one field value, ordered by type stage (set, add,
+  remove, primary; append, prepend; arithmetic; floor, ceil; cumulative and replace), with
+  the fitted formulas for repetitions (`n + v*k`, `n * v^k`, `triangular`,
+  `cumulative-*`). Text rules: literal replace of every match, a missing value deletes,
+  an empty `arg` sets only an empty field, `skipIfPresent` honoured only on append and
+  prepend, no leading separator on an empty field, default join a space. Numbers are
+  plain numbers or `N+`; anything with several numbers is skipped with a diagnostic (M4).
+- `View`: the effective cost of a selection and the characteristics of its profiles,
+  worked out lazily and remembered, with cycle detection (a cost condition that depends on
+  the cost it changes uses the base value and reports it). It gathers the modifiers of an
+  entry and its link (for costs) and of a profile (for characteristics), gates them with
+  conditions, condition groups and local groups, and takes the repeat count for how many
+  times each applies. A repeat counting 0 disables the modifier; a negative count applies.
+  Modifiers with `affects`, and units containing them, are reported as unsupported (M7).
+
+**Results.**
+
+| Check | Result |
+|---|---|
+| Observations in `expected.json` that need no roster | 49 match NR; 27 need number tokens (M4) and 3 need a roster (T16, covered by the evaluator tests) |
+| Costs of every selection in three exported rosters, and the roster totals | all match (52 selections; G1 to G3 conditional costs, link overrides, E and F) |
+| T10 cost units (divide 3, divide 7, multiply 2, floor 150, ceil 60) | 33.33, 14.29, 200, 150, 60 as NR |
+| Profile values on the test unit | 112 match NR; 28 skipped as unsupported (27 tokens, 1 `affects`) |
+| Repeat-driven values through the whole pipeline (scope roster) | all 1,224 match NR; the 60 `ancestor` profiles are the known gap |
+| Condition-gated modifiers, 300 profiles | all match NR |
+
+The profile comparison includes the repeat and `cumulative-*` profiles (F09, F10, F12),
+so those formulas are verified on plain numbers through the pipeline, ahead of M4.
+
+**Found by experiment.** A condition whose scope resolves to nothing is not disabled: NR
+compares a count of 0 (spec 5.9, test repo `RESULTS.md`). The earlier "disables the
+condition" reading was wrong, and the evaluator now follows NR. A negative repeat count
+still applies the modifier.
+
+**Open.** `affects` and relative modifiers (M7), dice and compound values with `position`
+(M4), other fields (names, hidden, categories, constraint values), and `instanceOf` when its
+scope resolves to nothing.
+
+**Memory.** Unchanged: the memory check passes at JVM 64 MB and Node 128 MB, because
+modifiers are parsed on demand and not retained. A typed, cached form would cost more;
+decide that with measurements when it is needed.

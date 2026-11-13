@@ -1,0 +1,2761 @@
+[
+  {
+    "id": "T01a",
+    "title": "position 0 on D6+1",
+    "base": {
+      "A": "D6+1"
+    },
+    "modifiers": [
+      {
+        "field": "4c71-02b5-b294-444d",
+        "type": "increment",
+        "value": 2,
+        "position": 0
+      }
+    ],
+    "expect": "D8+3",
+    "note": "observed in NR: position 0 behaves like unset (all numbers) | observed in NR"
+  },
+  {
+    "id": "T01b",
+    "title": "position -1 on D6+1",
+    "base": {
+      "A": "D6+1"
+    },
+    "modifiers": [
+      {
+        "field": "4c71-02b5-b294-444d",
+        "type": "increment",
+        "value": 2,
+        "position": -1
+      }
+    ],
+    "expect": "D6+3",
+    "note": "last number | observed in NR"
+  },
+  {
+    "id": "T01c",
+    "title": "position unset on D6+1",
+    "base": {
+      "A": "D6+1"
+    },
+    "modifiers": [
+      {
+        "field": "4c71-02b5-b294-444d",
+        "type": "increment",
+        "value": 2
+      }
+    ],
+    "expect": "D8+3",
+    "note": "observed in NR: unset changes every number | observed in NR"
+  },
+  {
+    "id": "T02",
+    "title": "position -2 on D6+1",
+    "base": {
+      "A": "D6+1"
+    },
+    "modifiers": [
+      {
+        "field": "4c71-02b5-b294-444d",
+        "type": "increment",
+        "value": 2,
+        "position": -2
+      }
+    ],
+    "expect": "D8+1",
+    "note": "second from last = first of two | observed in NR"
+  },
+  {
+    "id": "T03a",
+    "title": "two arithmetic mods, same number",
+    "base": {
+      "A": "D6+1"
+    },
+    "modifiers": [
+      {
+        "field": "4c71-02b5-b294-444d",
+        "type": "increment",
+        "value": 2,
+        "position": -1
+      },
+      {
+        "field": "4c71-02b5-b294-444d",
+        "type": "decrement",
+        "value": 1,
+        "position": -1
+      }
+    ],
+    "expect": "D6+2",
+    "note": " | observed in NR"
+  },
+  {
+    "id": "T03b",
+    "title": "position -1 on a plain number",
+    "base": {
+      "A": "3"
+    },
+    "modifiers": [
+      {
+        "field": "4c71-02b5-b294-444d",
+        "type": "increment",
+        "value": 2,
+        "position": -1
+      }
+    ],
+    "expect": "5",
+    "note": " | observed in NR"
+  },
+  {
+    "id": "T04a",
+    "title": "order: replace listed first",
+    "base": {
+      "Keywords": "Assault"
+    },
+    "modifiers": [
+      {
+        "field": "a2d2-6932-5906-9eaf",
+        "type": "replace",
+        "value": "Pistol",
+        "arg": "Assault"
+      },
+      {
+        "field": "a2d2-6932-5906-9eaf",
+        "type": "append",
+        "value": "Heavy",
+        "join": ", "
+      }
+    ],
+    "expect": "Pistol, Heavy",
+    "note": "type order: append then replace | observed in NR"
+  },
+  {
+    "id": "T04b",
+    "title": "order: append listed first",
+    "base": {
+      "Keywords": "Assault"
+    },
+    "modifiers": [
+      {
+        "field": "a2d2-6932-5906-9eaf",
+        "type": "append",
+        "value": "Heavy",
+        "join": ", "
+      },
+      {
+        "field": "a2d2-6932-5906-9eaf",
+        "type": "replace",
+        "value": "Pistol",
+        "arg": "Assault"
+      }
+    ],
+    "expect": "Pistol, Heavy",
+    "note": "must equal T04a | observed in NR"
+  },
+  {
+    "id": "T05",
+    "title": "replace basic",
+    "base": {
+      "Keywords": "Assault, Heavy"
+    },
+    "modifiers": [
+      {
+        "field": "a2d2-6932-5906-9eaf",
+        "type": "replace",
+        "value": "Pistol",
+        "arg": "Heavy"
+      }
+    ],
+    "expect": "Assault, Pistol",
+    "note": " | observed in NR"
+  },
+  {
+    "id": "T06",
+    "title": "replace: literal or pattern?",
+    "base": {
+      "Keywords": "Heavy"
+    },
+    "modifiers": [
+      {
+        "field": "a2d2-6932-5906-9eaf",
+        "type": "replace",
+        "value": "X",
+        "arg": "e."
+      }
+    ],
+    "expect": "Heavy",
+    "note": "unchanged if literal; \"HXvy\" if the arg is a pattern | observed in NR"
+  },
+  {
+    "id": "T07",
+    "title": "replace: first or all matches?",
+    "base": {
+      "Keywords": "Heavy, Heavy"
+    },
+    "modifiers": [
+      {
+        "field": "a2d2-6932-5906-9eaf",
+        "type": "replace",
+        "value": "Light",
+        "arg": "Heavy"
+      }
+    ],
+    "expect": "Light, Light",
+    "note": "observed in NR: all matches replaced | observed in NR"
+  },
+  {
+    "id": "T08a",
+    "title": "replace, empty arg, empty field",
+    "base": {
+      "Txt": ""
+    },
+    "modifiers": [
+      {
+        "field": "7e9c-6ea9-9082-981e",
+        "type": "replace",
+        "value": "5+",
+        "arg": ""
+      }
+    ],
+    "expect": "5+",
+    "note": " | observed in NR"
+  },
+  {
+    "id": "T08b",
+    "title": "replace, empty arg, non-empty field",
+    "base": {
+      "Txt": "6+"
+    },
+    "modifiers": [
+      {
+        "field": "7e9c-6ea9-9082-981e",
+        "type": "replace",
+        "value": "5+",
+        "arg": ""
+      }
+    ],
+    "expect": "6+",
+    "note": "unchanged | observed in NR"
+  },
+  {
+    "id": "T08c",
+    "title": "replace with no value (delete)",
+    "base": {
+      "Txt": "D6+0"
+    },
+    "modifiers": [
+      {
+        "field": "7e9c-6ea9-9082-981e",
+        "type": "replace",
+        "arg": "+0"
+      }
+    ],
+    "expect": "D6",
+    "note": " | observed in NR"
+  },
+  {
+    "id": "T09a",
+    "title": "floor 2 on 3+",
+    "base": {
+      "WS": "3+"
+    },
+    "modifiers": [
+      {
+        "field": "b755-0ea0-6554-6646",
+        "type": "floor",
+        "value": 2
+      }
+    ],
+    "expect": "3+",
+    "note": " | observed in NR"
+  },
+  {
+    "id": "T09b",
+    "title": "floor 4 on 3+",
+    "base": {
+      "WS": "3+"
+    },
+    "modifiers": [
+      {
+        "field": "b755-0ea0-6554-6646",
+        "type": "floor",
+        "value": 4
+      }
+    ],
+    "expect": "4+",
+    "note": " | observed in NR"
+  },
+  {
+    "id": "T09c",
+    "title": "ceil 2 on 3+",
+    "base": {
+      "WS": "3+"
+    },
+    "modifiers": [
+      {
+        "field": "b755-0ea0-6554-6646",
+        "type": "ceil",
+        "value": 2
+      }
+    ],
+    "expect": "2+",
+    "note": " | observed in NR"
+  },
+  {
+    "id": "T09d",
+    "title": "ceil 4 on 3+",
+    "base": {
+      "WS": "3+"
+    },
+    "modifiers": [
+      {
+        "field": "b755-0ea0-6554-6646",
+        "type": "ceil",
+        "value": 4
+      }
+    ],
+    "expect": "3+",
+    "note": " | observed in NR"
+  },
+  {
+    "id": "T11a",
+    "title": "modulo 3 on 5",
+    "base": {
+      "Num": "5"
+    },
+    "modifiers": [
+      {
+        "field": "e4ba-e365-6ee4-10a4",
+        "type": "modulo",
+        "value": 3
+      }
+    ],
+    "expect": "2",
+    "note": " | observed in NR"
+  },
+  {
+    "id": "T11b",
+    "title": "power 2 on 5",
+    "base": {
+      "Num": "5"
+    },
+    "modifiers": [
+      {
+        "field": "e4ba-e365-6ee4-10a4",
+        "type": "power",
+        "value": 2
+      }
+    ],
+    "expect": "25",
+    "note": "observed in NR | observed in NR"
+  },
+  {
+    "id": "T11c",
+    "title": "exponent 2 on 5",
+    "base": {
+      "Num": "5"
+    },
+    "modifiers": [
+      {
+        "field": "e4ba-e365-6ee4-10a4",
+        "type": "exponent",
+        "value": 2
+      }
+    ],
+    "expect": "10",
+    "note": "observed in NR (unexplained) | observed in NR"
+  },
+  {
+    "id": "T11d",
+    "title": "triangular 3 on 5",
+    "base": {
+      "Num": "5"
+    },
+    "modifiers": [
+      {
+        "field": "e4ba-e365-6ee4-10a4",
+        "type": "triangular",
+        "value": 3
+      }
+    ],
+    "expect": "8",
+    "note": "observed in NR (unexplained) | observed in NR"
+  },
+  {
+    "id": "T11e",
+    "title": "divide 2 on 5",
+    "base": {
+      "Num": "5"
+    },
+    "modifiers": [
+      {
+        "field": "e4ba-e365-6ee4-10a4",
+        "type": "divide",
+        "value": 2
+      }
+    ],
+    "expect": "2.5",
+    "note": "observed in NR: no rounding | observed in NR"
+  },
+  {
+    "id": "T11f",
+    "title": "multiply 3 on 5",
+    "base": {
+      "Num": "5"
+    },
+    "modifiers": [
+      {
+        "field": "e4ba-e365-6ee4-10a4",
+        "type": "multiply",
+        "value": 3
+      }
+    ],
+    "expect": "15",
+    "note": " | observed in NR"
+  },
+  {
+    "id": "T12a",
+    "title": "append with skipIfPresent",
+    "base": {
+      "Keywords": "Ignores Cover"
+    },
+    "modifiers": [
+      {
+        "field": "a2d2-6932-5906-9eaf",
+        "type": "append",
+        "value": "Ignores Cover",
+        "join": ", ",
+        "skipIfPresent": "Ignores Cover"
+      }
+    ],
+    "expect": "Ignores Cover",
+    "note": " | observed in NR"
+  },
+  {
+    "id": "T12b",
+    "title": "append without skipIfPresent",
+    "base": {
+      "Keywords": "Ignores Cover"
+    },
+    "modifiers": [
+      {
+        "field": "a2d2-6932-5906-9eaf",
+        "type": "append",
+        "value": "Ignores Cover",
+        "join": ", "
+      }
+    ],
+    "expect": "Ignores Cover, Ignores Cover",
+    "note": " | observed in NR"
+  },
+  {
+    "id": "T12c",
+    "title": "skipIfPresent on replace",
+    "base": {
+      "Keywords": "Sustained Hits 1"
+    },
+    "modifiers": [
+      {
+        "field": "a2d2-6932-5906-9eaf",
+        "type": "replace",
+        "value": "Sustained Hits 2",
+        "arg": "Sustained Hits 1",
+        "skipIfPresent": "Sustained Hits"
+      }
+    ],
+    "expect": "Sustained Hits 2",
+    "note": "if ignored on replace; unchanged if honoured | observed in NR"
+  },
+  {
+    "id": "T12d",
+    "title": "skipIfPresent on increment",
+    "base": {
+      "A": "3"
+    },
+    "modifiers": [
+      {
+        "field": "4c71-02b5-b294-444d",
+        "type": "increment",
+        "value": 2,
+        "skipIfPresent": "3"
+      }
+    ],
+    "expect": "5",
+    "note": "observed in NR: skipIfPresent ignored on increment | observed in NR"
+  },
+  {
+    "id": "T14a",
+    "title": "append, join unset",
+    "base": {
+      "Keywords": "A"
+    },
+    "modifiers": [
+      {
+        "field": "a2d2-6932-5906-9eaf",
+        "type": "append",
+        "value": "B"
+      }
+    ],
+    "expect": "A B",
+    "note": " | observed in NR"
+  },
+  {
+    "id": "T14b",
+    "title": "append, join \", \"",
+    "base": {
+      "Keywords": "A"
+    },
+    "modifiers": [
+      {
+        "field": "a2d2-6932-5906-9eaf",
+        "type": "append",
+        "value": "B",
+        "join": ", "
+      }
+    ],
+    "expect": "A, B",
+    "note": " | observed in NR"
+  },
+  {
+    "id": "T14c",
+    "title": "append, join \"\"",
+    "base": {
+      "Keywords": "A"
+    },
+    "modifiers": [
+      {
+        "field": "a2d2-6932-5906-9eaf",
+        "type": "append",
+        "value": "B",
+        "join": ""
+      }
+    ],
+    "expect": "AB",
+    "note": " | observed in NR"
+  },
+  {
+    "id": "T14d",
+    "title": "prepend, join \", \"",
+    "base": {
+      "Keywords": "A"
+    },
+    "modifiers": [
+      {
+        "field": "a2d2-6932-5906-9eaf",
+        "type": "prepend",
+        "value": "B",
+        "join": ", "
+      }
+    ],
+    "expect": "B, A",
+    "note": " | observed in NR"
+  },
+  {
+    "id": "T14e",
+    "title": "append, join newline",
+    "base": {
+      "Keywords": "A"
+    },
+    "modifiers": [
+      {
+        "field": "a2d2-6932-5906-9eaf",
+        "type": "append",
+        "value": "B",
+        "join": "\n"
+      }
+    ],
+    "expect": "A\nB",
+    "note": "observed in NR | observed in NR"
+  },
+  {
+    "id": "T15",
+    "title": "position -1 on append (inert?)",
+    "base": {
+      "Keywords": "A"
+    },
+    "modifiers": [
+      {
+        "field": "a2d2-6932-5906-9eaf",
+        "type": "append",
+        "value": "B",
+        "join": ", ",
+        "position": -1
+      }
+    ],
+    "expect": "A, B",
+    "note": "same as T14b if position is ignored | observed in NR"
+  },
+  {
+    "id": "T19a",
+    "title": "dice attacks: append +0, increment last, strip +0",
+    "base": {
+      "A": "D6"
+    },
+    "modifiers": [
+      {
+        "field": "4c71-02b5-b294-444d",
+        "type": "append",
+        "value": "+0",
+        "join": ""
+      },
+      {
+        "field": "4c71-02b5-b294-444d",
+        "type": "increment",
+        "value": 2,
+        "position": -1
+      },
+      {
+        "field": "4c71-02b5-b294-444d",
+        "type": "replace",
+        "arg": "+0"
+      }
+    ],
+    "expect": "D6+2",
+    "note": "the real Wulfen Stone pattern | observed in NR"
+  },
+  {
+    "id": "T19b",
+    "title": "dice attacks: increment -1 without the +0 trick",
+    "base": {
+      "A": "D6"
+    },
+    "modifiers": [
+      {
+        "field": "4c71-02b5-b294-444d",
+        "type": "increment",
+        "value": 2,
+        "position": -1
+      }
+    ],
+    "expect": "D8",
+    "note": "shows why the +0 is needed | observed in NR"
+  },
+  {
+    "id": "T19c",
+    "title": "dice attacks, +0 left in place (no strip)",
+    "base": {
+      "A": "D6"
+    },
+    "modifiers": [
+      {
+        "field": "4c71-02b5-b294-444d",
+        "type": "append",
+        "value": "+0",
+        "join": ""
+      },
+      {
+        "field": "4c71-02b5-b294-444d",
+        "type": "increment",
+        "value": 0,
+        "position": -1
+      }
+    ],
+    "expect": "D6+0",
+    "note": "a zero increment leaves the suffix | observed in NR"
+  },
+  {
+    "id": "T16a",
+    "title": "count min 3",
+    "base": {
+      "Keywords": ""
+    },
+    "modifiers": [
+      {
+        "field": "a2d2-6932-5906-9eaf",
+        "type": "set",
+        "value": "PASS"
+      }
+    ],
+    "expect": "PASS",
+    "note": "select 0..4 of C1-C4 and record when PASS shows | observed in NR"
+  },
+  {
+    "id": "T16b",
+    "title": "count min 3 max 3",
+    "base": {
+      "Keywords": ""
+    },
+    "modifiers": [
+      {
+        "field": "a2d2-6932-5906-9eaf",
+        "type": "set",
+        "value": "PASS"
+      }
+    ],
+    "expect": "",
+    "note": "select 0..4 of C1-C4 and record when PASS shows | observed in NR"
+  },
+  {
+    "id": "T16c",
+    "title": "count max 1",
+    "base": {
+      "Keywords": ""
+    },
+    "modifiers": [
+      {
+        "field": "a2d2-6932-5906-9eaf",
+        "type": "set",
+        "value": "PASS"
+      }
+    ],
+    "expect": "",
+    "note": "select 0..4 of C1-C4 and record when PASS shows | observed in NR"
+  },
+  {
+    "id": "F01a",
+    "title": "exponent 3 on 5",
+    "base": {
+      "Num": "5"
+    },
+    "modifiers": [
+      {
+        "field": "e4ba-e365-6ee4-10a4",
+        "type": "exponent",
+        "value": 3
+      }
+    ],
+    "expect": "15",
+    "note": "first run: exponent 2 on 5 gave 10 | observed in NR"
+  },
+  {
+    "id": "F01b",
+    "title": "exponent 2 on 4",
+    "base": {
+      "Num": "4"
+    },
+    "modifiers": [
+      {
+        "field": "e4ba-e365-6ee4-10a4",
+        "type": "exponent",
+        "value": 2
+      }
+    ],
+    "expect": "8",
+    "note": " | observed in NR"
+  },
+  {
+    "id": "F01c",
+    "title": "exponent 1 on 5",
+    "base": {
+      "Num": "5"
+    },
+    "modifiers": [
+      {
+        "field": "e4ba-e365-6ee4-10a4",
+        "type": "exponent",
+        "value": 1
+      }
+    ],
+    "expect": "5",
+    "note": " | observed in NR"
+  },
+  {
+    "id": "F01d",
+    "title": "exponent 0 on 5",
+    "base": {
+      "Num": "5"
+    },
+    "modifiers": [
+      {
+        "field": "e4ba-e365-6ee4-10a4",
+        "type": "exponent",
+        "value": 0
+      }
+    ],
+    "expect": "0",
+    "note": " | observed in NR"
+  },
+  {
+    "id": "F02a",
+    "title": "triangular 4 on 5",
+    "base": {
+      "Num": "5"
+    },
+    "modifiers": [
+      {
+        "field": "e4ba-e365-6ee4-10a4",
+        "type": "triangular",
+        "value": 4
+      }
+    ],
+    "expect": "9",
+    "note": "first run: triangular 3 on 5 gave 8 | observed in NR"
+  },
+  {
+    "id": "F02b",
+    "title": "triangular 3 on 10",
+    "base": {
+      "Num": "10"
+    },
+    "modifiers": [
+      {
+        "field": "e4ba-e365-6ee4-10a4",
+        "type": "triangular",
+        "value": 3
+      }
+    ],
+    "expect": "13",
+    "note": " | observed in NR"
+  },
+  {
+    "id": "F02c",
+    "title": "triangular 1 on 5",
+    "base": {
+      "Num": "5"
+    },
+    "modifiers": [
+      {
+        "field": "e4ba-e365-6ee4-10a4",
+        "type": "triangular",
+        "value": 1
+      }
+    ],
+    "expect": "6",
+    "note": " | observed in NR"
+  },
+  {
+    "id": "F02d",
+    "title": "triangular 0 on 5",
+    "base": {
+      "Num": "5"
+    },
+    "modifiers": [
+      {
+        "field": "e4ba-e365-6ee4-10a4",
+        "type": "triangular",
+        "value": 0
+      }
+    ],
+    "expect": "5",
+    "note": " | observed in NR"
+  },
+  {
+    "id": "F02e",
+    "title": "triangular 2 on 5",
+    "base": {
+      "Num": "5"
+    },
+    "modifiers": [
+      {
+        "field": "e4ba-e365-6ee4-10a4",
+        "type": "triangular",
+        "value": 2
+      }
+    ],
+    "expect": "7",
+    "note": " | observed in NR"
+  },
+  {
+    "id": "F03a",
+    "title": "power 3 on 5",
+    "base": {
+      "Num": "5"
+    },
+    "modifiers": [
+      {
+        "field": "e4ba-e365-6ee4-10a4",
+        "type": "power",
+        "value": 3
+      }
+    ],
+    "expect": "125",
+    "note": "first run: power 2 on 5 gave 25 | observed in NR"
+  },
+  {
+    "id": "F03b",
+    "title": "power 2 on 4",
+    "base": {
+      "Num": "4"
+    },
+    "modifiers": [
+      {
+        "field": "e4ba-e365-6ee4-10a4",
+        "type": "power",
+        "value": 2
+      }
+    ],
+    "expect": "16",
+    "note": " | observed in NR"
+  },
+  {
+    "id": "F03c",
+    "title": "power 0 on 5",
+    "base": {
+      "Num": "5"
+    },
+    "modifiers": [
+      {
+        "field": "e4ba-e365-6ee4-10a4",
+        "type": "power",
+        "value": 0
+      }
+    ],
+    "expect": "1",
+    "note": " | observed in NR"
+  },
+  {
+    "id": "F04a",
+    "title": "increment 10, position 1 on D6+1+2",
+    "base": {
+      "A": "D6+1+2"
+    },
+    "modifiers": [
+      {
+        "field": "4c71-02b5-b294-444d",
+        "type": "increment",
+        "value": 10,
+        "position": 1
+      }
+    ],
+    "expect": "D16+1+2",
+    "note": "numbers are 6, 1, 2 | observed in NR"
+  },
+  {
+    "id": "F04b",
+    "title": "increment 10, position 2 on D6+1+2",
+    "base": {
+      "A": "D6+1+2"
+    },
+    "modifiers": [
+      {
+        "field": "4c71-02b5-b294-444d",
+        "type": "increment",
+        "value": 10,
+        "position": 2
+      }
+    ],
+    "expect": "D6+11+2",
+    "note": "numbers are 6, 1, 2 | observed in NR"
+  },
+  {
+    "id": "F04c",
+    "title": "increment 10, position 3 on D6+1+2",
+    "base": {
+      "A": "D6+1+2"
+    },
+    "modifiers": [
+      {
+        "field": "4c71-02b5-b294-444d",
+        "type": "increment",
+        "value": 10,
+        "position": 3
+      }
+    ],
+    "expect": "D6+1+12",
+    "note": "numbers are 6, 1, 2 | observed in NR"
+  },
+  {
+    "id": "F04d",
+    "title": "increment 10, position -3 on D6+1+2",
+    "base": {
+      "A": "D6+1+2"
+    },
+    "modifiers": [
+      {
+        "field": "4c71-02b5-b294-444d",
+        "type": "increment",
+        "value": 10,
+        "position": -3
+      }
+    ],
+    "expect": "D16+1+2",
+    "note": "numbers are 6, 1, 2 | observed in NR"
+  },
+  {
+    "id": "F04e",
+    "title": "increment 10, position -4 on D6+1+2",
+    "base": {
+      "A": "D6+1+2"
+    },
+    "modifiers": [
+      {
+        "field": "4c71-02b5-b294-444d",
+        "type": "increment",
+        "value": 10,
+        "position": -4
+      }
+    ],
+    "expect": "D6+1+2",
+    "note": "numbers are 6, 1, 2 | observed in NR"
+  },
+  {
+    "id": "F04f",
+    "title": "increment 2, position 1 on D6+1",
+    "base": {
+      "A": "D6+1"
+    },
+    "modifiers": [
+      {
+        "field": "4c71-02b5-b294-444d",
+        "type": "increment",
+        "value": 2,
+        "position": 1
+      }
+    ],
+    "expect": "D8+1",
+    "note": " | observed in NR"
+  },
+  {
+    "id": "F05a",
+    "title": "ceil 4 on D6+1",
+    "base": {
+      "A": "D6+1"
+    },
+    "modifiers": [
+      {
+        "field": "4c71-02b5-b294-444d",
+        "type": "ceil",
+        "value": 4
+      }
+    ],
+    "expect": "D4+1",
+    "note": "does a clamp touch every number? | observed in NR"
+  },
+  {
+    "id": "F05b",
+    "title": "floor 3 on D6+1",
+    "base": {
+      "A": "D6+1"
+    },
+    "modifiers": [
+      {
+        "field": "4c71-02b5-b294-444d",
+        "type": "floor",
+        "value": 3
+      }
+    ],
+    "expect": "D6+3",
+    "note": " | observed in NR"
+  },
+  {
+    "id": "F05c",
+    "title": "ceil 4, position -1 on D6+1",
+    "base": {
+      "A": "D6+1"
+    },
+    "modifiers": [
+      {
+        "field": "4c71-02b5-b294-444d",
+        "type": "ceil",
+        "value": 4,
+        "position": -1
+      }
+    ],
+    "expect": "D6+1",
+    "note": "does position apply to clamps? | observed in NR"
+  },
+  {
+    "id": "F06a",
+    "title": "increment 1 on 3+",
+    "base": {
+      "WS": "3+"
+    },
+    "modifiers": [
+      {
+        "field": "b755-0ea0-6554-6646",
+        "type": "increment",
+        "value": 1
+      }
+    ],
+    "expect": "4+",
+    "note": " | observed in NR"
+  },
+  {
+    "id": "F06b",
+    "title": "decrement 1 on 3+",
+    "base": {
+      "WS": "3+"
+    },
+    "modifiers": [
+      {
+        "field": "b755-0ea0-6554-6646",
+        "type": "decrement",
+        "value": 1
+      }
+    ],
+    "expect": "2+",
+    "note": " | observed in NR"
+  },
+  {
+    "id": "F06c",
+    "title": "decrement 5 on 3+",
+    "base": {
+      "WS": "3+"
+    },
+    "modifiers": [
+      {
+        "field": "b755-0ea0-6554-6646",
+        "type": "decrement",
+        "value": 5
+      }
+    ],
+    "expect": "-2+",
+    "note": "goes below 1 | observed in NR"
+  },
+  {
+    "id": "F07a",
+    "title": "divide 2, position -1 on D6+4",
+    "base": {
+      "A": "D6+4"
+    },
+    "modifiers": [
+      {
+        "field": "4c71-02b5-b294-444d",
+        "type": "divide",
+        "value": 2,
+        "position": -1
+      }
+    ],
+    "expect": "D6+2",
+    "note": " | observed in NR"
+  },
+  {
+    "id": "F07b",
+    "title": "divide 2, no position on D6+4",
+    "base": {
+      "A": "D6+4"
+    },
+    "modifiers": [
+      {
+        "field": "4c71-02b5-b294-444d",
+        "type": "divide",
+        "value": 2
+      }
+    ],
+    "expect": "D3+2",
+    "note": " | observed in NR"
+  },
+  {
+    "id": "F07c",
+    "title": "multiply 2, position -1 on D6+4",
+    "base": {
+      "A": "D6+4"
+    },
+    "modifiers": [
+      {
+        "field": "4c71-02b5-b294-444d",
+        "type": "multiply",
+        "value": 2,
+        "position": -1
+      }
+    ],
+    "expect": "D6+8",
+    "note": " | observed in NR"
+  },
+  {
+    "id": "F08a",
+    "title": "increment 0.5 on 5",
+    "base": {
+      "Num": "5"
+    },
+    "modifiers": [
+      {
+        "field": "e4ba-e365-6ee4-10a4",
+        "type": "increment",
+        "value": 0.5
+      }
+    ],
+    "expect": "5.5",
+    "note": " | observed in NR"
+  },
+  {
+    "id": "F08b",
+    "title": "increment 2 on empty",
+    "base": {
+      "Num": ""
+    },
+    "modifiers": [
+      {
+        "field": "e4ba-e365-6ee4-10a4",
+        "type": "increment",
+        "value": 2
+      }
+    ],
+    "expect": "2",
+    "note": "empty numeric field | observed in NR"
+  },
+  {
+    "id": "F08c",
+    "title": "increment 2 on text",
+    "base": {
+      "Txt": "abc"
+    },
+    "modifiers": [
+      {
+        "field": "7e9c-6ea9-9082-981e",
+        "type": "increment",
+        "value": 2
+      }
+    ],
+    "expect": "abc",
+    "note": "no number in the string | observed in NR"
+  },
+  {
+    "id": "F09a",
+    "title": "increment 2, repeated",
+    "base": {
+      "Num": "5"
+    },
+    "modifiers": [
+      {
+        "field": "e4ba-e365-6ee4-10a4",
+        "type": "increment",
+        "value": 2,
+        "repeats": "once per selected model"
+      }
+    ],
+    "expect": null,
+    "note": "control: 5 + 2k",
+    "observed": {
+      "one model": "7",
+      "two models": "9",
+      "no models": "unchanged"
+    }
+  },
+  {
+    "id": "F09b",
+    "title": "multiply 2, repeated",
+    "base": {
+      "Num": "5"
+    },
+    "modifiers": [
+      {
+        "field": "e4ba-e365-6ee4-10a4",
+        "type": "multiply",
+        "value": 2,
+        "repeats": "once per selected model"
+      }
+    ],
+    "expect": null,
+    "note": "control: 5 * 2^k",
+    "observed": {
+      "one model": "10",
+      "two models": "20",
+      "no models": "unchanged"
+    }
+  },
+  {
+    "id": "F09c",
+    "title": "exponent 2, repeated",
+    "base": {
+      "Num": "5"
+    },
+    "modifiers": [
+      {
+        "field": "e4ba-e365-6ee4-10a4",
+        "type": "exponent",
+        "value": 2,
+        "repeats": "once per selected model"
+      }
+    ],
+    "expect": null,
+    "note": "plain: behaves like multiply",
+    "observed": {
+      "one model": "10",
+      "two models": "20",
+      "no models": "unchanged"
+    }
+  },
+  {
+    "id": "F09d",
+    "title": "triangular 1, repeated",
+    "base": {
+      "Num": "5"
+    },
+    "modifiers": [
+      {
+        "field": "e4ba-e365-6ee4-10a4",
+        "type": "triangular",
+        "value": 1,
+        "repeats": "once per selected model"
+      }
+    ],
+    "expect": null,
+    "note": "plain: behaves like increment",
+    "observed": {
+      "one model": "6",
+      "two models": "8",
+      "no models": "unchanged"
+    }
+  },
+  {
+    "id": "F09e",
+    "title": "triangular 2, repeated",
+    "base": {
+      "Num": "5"
+    },
+    "modifiers": [
+      {
+        "field": "e4ba-e365-6ee4-10a4",
+        "type": "triangular",
+        "value": 2,
+        "repeats": "once per selected model"
+      }
+    ],
+    "expect": null,
+    "note": "",
+    "observed": {
+      "one model": "7",
+      "two models": "11",
+      "no models": "unchanged"
+    }
+  },
+  {
+    "id": "F09f",
+    "title": "power 2, repeated",
+    "base": {
+      "Num": "5"
+    },
+    "modifiers": [
+      {
+        "field": "e4ba-e365-6ee4-10a4",
+        "type": "power",
+        "value": 2,
+        "repeats": "once per selected model"
+      }
+    ],
+    "expect": null,
+    "note": "plain: n^2",
+    "observed": {
+      "one model": "25",
+      "two models": "625",
+      "no models": "unchanged"
+    }
+  },
+  {
+    "id": "F09g",
+    "title": "cumulative-add 2, repeated",
+    "base": {
+      "Num": "5"
+    },
+    "modifiers": [
+      {
+        "field": "e4ba-e365-6ee4-10a4",
+        "type": "cumulative-add",
+        "value": 2,
+        "repeats": "once per selected model"
+      }
+    ],
+    "expect": null,
+    "note": "",
+    "observed": {
+      "one model": "7",
+      "two models": "8",
+      "no models": "unchanged"
+    }
+  },
+  {
+    "id": "F09h",
+    "title": "cumulative-multiply 2, repeated",
+    "base": {
+      "Num": "5"
+    },
+    "modifiers": [
+      {
+        "field": "e4ba-e365-6ee4-10a4",
+        "type": "cumulative-multiply",
+        "value": 2,
+        "repeats": "once per selected model"
+      }
+    ],
+    "expect": null,
+    "note": "",
+    "observed": {
+      "one model": "10",
+      "two models": "30",
+      "no models": "unchanged"
+    }
+  },
+  {
+    "id": "F09i",
+    "title": "cumulative-power 2, repeated",
+    "base": {
+      "Num": "5"
+    },
+    "modifiers": [
+      {
+        "field": "e4ba-e365-6ee4-10a4",
+        "type": "cumulative-power",
+        "value": 2,
+        "repeats": "once per selected model"
+      }
+    ],
+    "expect": null,
+    "note": "",
+    "observed": {
+      "one model": "5",
+      "two models": "7.5",
+      "no models": "unchanged"
+    }
+  },
+  {
+    "id": "F09j",
+    "title": "decrement 1, repeated",
+    "base": {
+      "Num": "5"
+    },
+    "modifiers": [
+      {
+        "field": "e4ba-e365-6ee4-10a4",
+        "type": "decrement",
+        "value": 1,
+        "repeats": "once per selected model"
+      }
+    ],
+    "expect": null,
+    "note": "control: 5 - k",
+    "observed": {
+      "one model": "4",
+      "two models": "3",
+      "no models": "unchanged"
+    }
+  },
+  {
+    "id": "F09k",
+    "title": "divide 2, repeated",
+    "base": {
+      "Num": "5"
+    },
+    "modifiers": [
+      {
+        "field": "e4ba-e365-6ee4-10a4",
+        "type": "divide",
+        "value": 2,
+        "repeats": "once per selected model"
+      }
+    ],
+    "expect": null,
+    "note": "",
+    "observed": {
+      "one model": "2.5",
+      "two models": "1.25",
+      "no models": "unchanged"
+    }
+  },
+  {
+    "id": "F10-add-v2-r1",
+    "title": "cumulative-add 2, repeats multiplier 1, base 5",
+    "base": {
+      "Num": "5"
+    },
+    "modifiers": [
+      {
+        "field": "e4ba-e365-6ee4-10a4",
+        "type": "cumulative-add",
+        "value": 2,
+        "repeats": "models x 1"
+      }
+    ],
+    "expect": null,
+    "note": "k = (selected models) x 1",
+    "observed": {
+      "one model": "7",
+      "two models": "8",
+      "no models": "unchanged"
+    }
+  },
+  {
+    "id": "F10-add-v2-r2",
+    "title": "cumulative-add 2, repeats multiplier 2, base 5",
+    "base": {
+      "Num": "5"
+    },
+    "modifiers": [
+      {
+        "field": "e4ba-e365-6ee4-10a4",
+        "type": "cumulative-add",
+        "value": 2,
+        "repeats": "models x 2"
+      }
+    ],
+    "expect": null,
+    "note": "k = (selected models) x 2",
+    "observed": {
+      "one model": "8",
+      "two models": "10",
+      "no models": "unchanged"
+    }
+  },
+  {
+    "id": "F10-add-v2-r3",
+    "title": "cumulative-add 2, repeats multiplier 3, base 5",
+    "base": {
+      "Num": "5"
+    },
+    "modifiers": [
+      {
+        "field": "e4ba-e365-6ee4-10a4",
+        "type": "cumulative-add",
+        "value": 2,
+        "repeats": "models x 3"
+      }
+    ],
+    "expect": null,
+    "note": "k = (selected models) x 3",
+    "observed": {
+      "one model": "9",
+      "two models": "12",
+      "no models": "unchanged"
+    }
+  },
+  {
+    "id": "F10-add-v3-r1",
+    "title": "cumulative-add 3, repeats multiplier 1, base 5",
+    "base": {
+      "Num": "5"
+    },
+    "modifiers": [
+      {
+        "field": "e4ba-e365-6ee4-10a4",
+        "type": "cumulative-add",
+        "value": 3,
+        "repeats": "models x 1"
+      }
+    ],
+    "expect": null,
+    "note": "k = (selected models) x 1",
+    "observed": {
+      "one model": "8",
+      "two models": "9.5",
+      "no models": "unchanged"
+    }
+  },
+  {
+    "id": "F10-add-v3-r2",
+    "title": "cumulative-add 3, repeats multiplier 2, base 5",
+    "base": {
+      "Num": "5"
+    },
+    "modifiers": [
+      {
+        "field": "e4ba-e365-6ee4-10a4",
+        "type": "cumulative-add",
+        "value": 3,
+        "repeats": "models x 2"
+      }
+    ],
+    "expect": null,
+    "note": "k = (selected models) x 2",
+    "observed": {
+      "one model": "9.5",
+      "two models": "12.5",
+      "no models": "unchanged"
+    }
+  },
+  {
+    "id": "F10-add-v3-r3",
+    "title": "cumulative-add 3, repeats multiplier 3, base 5",
+    "base": {
+      "Num": "5"
+    },
+    "modifiers": [
+      {
+        "field": "e4ba-e365-6ee4-10a4",
+        "type": "cumulative-add",
+        "value": 3,
+        "repeats": "models x 3"
+      }
+    ],
+    "expect": null,
+    "note": "k = (selected models) x 3",
+    "observed": {
+      "one model": "11",
+      "two models": "15.5",
+      "no models": "unchanged"
+    }
+  },
+  {
+    "id": "F10-add-v2-r1-n10",
+    "title": "cumulative-add 2, repeats multiplier 1, base 10",
+    "base": {
+      "Num": "10"
+    },
+    "modifiers": [
+      {
+        "field": "e4ba-e365-6ee4-10a4",
+        "type": "cumulative-add",
+        "value": 2,
+        "repeats": "models x 1"
+      }
+    ],
+    "expect": null,
+    "note": "k = (selected models) x 1",
+    "observed": {
+      "one model": "12",
+      "two models": "13",
+      "no models": "unchanged"
+    }
+  },
+  {
+    "id": "F10-mul-v2-r1",
+    "title": "cumulative-multiply 2, repeats multiplier 1, base 5",
+    "base": {
+      "Num": "5"
+    },
+    "modifiers": [
+      {
+        "field": "e4ba-e365-6ee4-10a4",
+        "type": "cumulative-multiply",
+        "value": 2,
+        "repeats": "models x 1"
+      }
+    ],
+    "expect": null,
+    "note": "k = (selected models) x 1",
+    "observed": {
+      "one model": "10",
+      "two models": "30",
+      "no models": "unchanged"
+    }
+  },
+  {
+    "id": "F10-mul-v2-r2",
+    "title": "cumulative-multiply 2, repeats multiplier 2, base 5",
+    "base": {
+      "Num": "5"
+    },
+    "modifiers": [
+      {
+        "field": "e4ba-e365-6ee4-10a4",
+        "type": "cumulative-multiply",
+        "value": 2,
+        "repeats": "models x 2"
+      }
+    ],
+    "expect": null,
+    "note": "k = (selected models) x 2",
+    "observed": {
+      "one model": "30",
+      "two models": "150",
+      "no models": "unchanged"
+    }
+  },
+  {
+    "id": "F10-mul-v2-r3",
+    "title": "cumulative-multiply 2, repeats multiplier 3, base 5",
+    "base": {
+      "Num": "5"
+    },
+    "modifiers": [
+      {
+        "field": "e4ba-e365-6ee4-10a4",
+        "type": "cumulative-multiply",
+        "value": 2,
+        "repeats": "models x 3"
+      }
+    ],
+    "expect": null,
+    "note": "k = (selected models) x 3",
+    "observed": {
+      "one model": "70",
+      "two models": "630",
+      "no models": "unchanged"
+    }
+  },
+  {
+    "id": "F10-mul-v3-r1",
+    "title": "cumulative-multiply 3, repeats multiplier 1, base 5",
+    "base": {
+      "Num": "5"
+    },
+    "modifiers": [
+      {
+        "field": "e4ba-e365-6ee4-10a4",
+        "type": "cumulative-multiply",
+        "value": 3,
+        "repeats": "models x 1"
+      }
+    ],
+    "expect": null,
+    "note": "k = (selected models) x 1",
+    "observed": {
+      "one model": "15",
+      "two models": "60",
+      "no models": "unchanged"
+    }
+  },
+  {
+    "id": "F10-mul-v3-r2",
+    "title": "cumulative-multiply 3, repeats multiplier 2, base 5",
+    "base": {
+      "Num": "5"
+    },
+    "modifiers": [
+      {
+        "field": "e4ba-e365-6ee4-10a4",
+        "type": "cumulative-multiply",
+        "value": 3,
+        "repeats": "models x 2"
+      }
+    ],
+    "expect": null,
+    "note": "k = (selected models) x 2",
+    "observed": {
+      "one model": "60",
+      "two models": "600",
+      "no models": "unchanged"
+    }
+  },
+  {
+    "id": "F10-mul-v3-r3",
+    "title": "cumulative-multiply 3, repeats multiplier 3, base 5",
+    "base": {
+      "Num": "5"
+    },
+    "modifiers": [
+      {
+        "field": "e4ba-e365-6ee4-10a4",
+        "type": "cumulative-multiply",
+        "value": 3,
+        "repeats": "models x 3"
+      }
+    ],
+    "expect": null,
+    "note": "k = (selected models) x 3",
+    "observed": {
+      "one model": "195",
+      "two models": "5460",
+      "no models": "unchanged"
+    }
+  },
+  {
+    "id": "F10-mul-v2-r1-n10",
+    "title": "cumulative-multiply 2, repeats multiplier 1, base 10",
+    "base": {
+      "Num": "10"
+    },
+    "modifiers": [
+      {
+        "field": "e4ba-e365-6ee4-10a4",
+        "type": "cumulative-multiply",
+        "value": 2,
+        "repeats": "models x 1"
+      }
+    ],
+    "expect": null,
+    "note": "k = (selected models) x 1",
+    "observed": {
+      "one model": "20",
+      "two models": "60",
+      "no models": "unchanged"
+    }
+  },
+  {
+    "id": "F10-pow-v2-r1",
+    "title": "cumulative-power 2, repeats multiplier 1, base 5",
+    "base": {
+      "Num": "5"
+    },
+    "modifiers": [
+      {
+        "field": "e4ba-e365-6ee4-10a4",
+        "type": "cumulative-power",
+        "value": 2,
+        "repeats": "models x 1"
+      }
+    ],
+    "expect": null,
+    "note": "k = (selected models) x 1",
+    "observed": {
+      "one model": "5",
+      "two models": "7.5",
+      "no models": "unchanged"
+    }
+  },
+  {
+    "id": "F10-pow-v2-r2",
+    "title": "cumulative-power 2, repeats multiplier 2, base 5",
+    "base": {
+      "Num": "5"
+    },
+    "modifiers": [
+      {
+        "field": "e4ba-e365-6ee4-10a4",
+        "type": "cumulative-power",
+        "value": 2,
+        "repeats": "models x 2"
+      }
+    ],
+    "expect": null,
+    "note": "k = (selected models) x 2",
+    "observed": {
+      "one model": "7.5",
+      "two models": "18.75",
+      "no models": "unchanged"
+    }
+  },
+  {
+    "id": "F10-pow-v2-r3",
+    "title": "cumulative-power 2, repeats multiplier 3, base 5",
+    "base": {
+      "Num": "5"
+    },
+    "modifiers": [
+      {
+        "field": "e4ba-e365-6ee4-10a4",
+        "type": "cumulative-power",
+        "value": 2,
+        "repeats": "models x 3"
+      }
+    ],
+    "expect": null,
+    "note": "k = (selected models) x 3",
+    "observed": {
+      "one model": "11.666666666666666",
+      "two models": "52.5",
+      "no models": "unchanged"
+    }
+  },
+  {
+    "id": "F10-pow-v3-r1",
+    "title": "cumulative-power 3, repeats multiplier 1, base 5",
+    "base": {
+      "Num": "5"
+    },
+    "modifiers": [
+      {
+        "field": "e4ba-e365-6ee4-10a4",
+        "type": "cumulative-power",
+        "value": 3,
+        "repeats": "models x 1"
+      }
+    ],
+    "expect": null,
+    "note": "k = (selected models) x 1",
+    "observed": {
+      "one model": "5",
+      "two models": "10",
+      "no models": "unchanged"
+    }
+  },
+  {
+    "id": "F10-pow-v3-r2",
+    "title": "cumulative-power 3, repeats multiplier 2, base 5",
+    "base": {
+      "Num": "5"
+    },
+    "modifiers": [
+      {
+        "field": "e4ba-e365-6ee4-10a4",
+        "type": "cumulative-power",
+        "value": 3,
+        "repeats": "models x 2"
+      }
+    ],
+    "expect": null,
+    "note": "k = (selected models) x 2",
+    "observed": {
+      "one model": "10",
+      "two models": "50",
+      "no models": "unchanged"
+    }
+  },
+  {
+    "id": "F10-pow-v3-r3",
+    "title": "cumulative-power 3, repeats multiplier 3, base 5",
+    "base": {
+      "Num": "5"
+    },
+    "modifiers": [
+      {
+        "field": "e4ba-e365-6ee4-10a4",
+        "type": "cumulative-power",
+        "value": 3,
+        "repeats": "models x 3"
+      }
+    ],
+    "expect": null,
+    "note": "k = (selected models) x 3",
+    "observed": {
+      "one model": "21.666666666666668",
+      "two models": "303.3333333333333",
+      "no models": "unchanged"
+    }
+  },
+  {
+    "id": "F10-pow-v2-r1-n10",
+    "title": "cumulative-power 2, repeats multiplier 1, base 10",
+    "base": {
+      "Num": "10"
+    },
+    "modifiers": [
+      {
+        "field": "e4ba-e365-6ee4-10a4",
+        "type": "cumulative-power",
+        "value": 2,
+        "repeats": "models x 1"
+      }
+    ],
+    "expect": null,
+    "note": "k = (selected models) x 1",
+    "observed": {
+      "one model": "10",
+      "two models": "15",
+      "no models": "unchanged"
+    }
+  },
+  {
+    "id": "F11a-multiply",
+    "title": "multiply 2 on D6+1",
+    "base": {
+      "A": "D6+1"
+    },
+    "modifiers": [
+      {
+        "field": "4c71-02b5-b294-444d",
+        "type": "multiply",
+        "value": 2
+      }
+    ],
+    "expect": "D12+2",
+    "note": " | observed in NR"
+  },
+  {
+    "id": "F11a-exponent",
+    "title": "exponent 2 on D6+1",
+    "base": {
+      "A": "D6+1"
+    },
+    "modifiers": [
+      {
+        "field": "4c71-02b5-b294-444d",
+        "type": "exponent",
+        "value": 2
+      }
+    ],
+    "expect": "D12+2",
+    "note": " | observed in NR"
+  },
+  {
+    "id": "F11a-power",
+    "title": "power 2 on D6+1",
+    "base": {
+      "A": "D6+1"
+    },
+    "modifiers": [
+      {
+        "field": "4c71-02b5-b294-444d",
+        "type": "power",
+        "value": 2
+      }
+    ],
+    "expect": "D36+1",
+    "note": " | observed in NR"
+  },
+  {
+    "id": "F11a-triangular",
+    "title": "triangular 2 on D6+1",
+    "base": {
+      "A": "D6+1"
+    },
+    "modifiers": [
+      {
+        "field": "4c71-02b5-b294-444d",
+        "type": "triangular",
+        "value": 2
+      }
+    ],
+    "expect": "D8+3",
+    "note": " | observed in NR"
+  },
+  {
+    "id": "F11b-multiply",
+    "title": "multiply 2 on 3+",
+    "base": {
+      "WS": "3+"
+    },
+    "modifiers": [
+      {
+        "field": "b755-0ea0-6554-6646",
+        "type": "multiply",
+        "value": 2
+      }
+    ],
+    "expect": "6+",
+    "note": " | observed in NR"
+  },
+  {
+    "id": "F11b-exponent",
+    "title": "exponent 2 on 3+",
+    "base": {
+      "WS": "3+"
+    },
+    "modifiers": [
+      {
+        "field": "b755-0ea0-6554-6646",
+        "type": "exponent",
+        "value": 2
+      }
+    ],
+    "expect": "6+",
+    "note": " | observed in NR"
+  },
+  {
+    "id": "F11b-power",
+    "title": "power 2 on 3+",
+    "base": {
+      "WS": "3+"
+    },
+    "modifiers": [
+      {
+        "field": "b755-0ea0-6554-6646",
+        "type": "power",
+        "value": 2
+      }
+    ],
+    "expect": "9+",
+    "note": " | observed in NR"
+  },
+  {
+    "id": "F11b-triangular",
+    "title": "triangular 2 on 3+",
+    "base": {
+      "WS": "3+"
+    },
+    "modifiers": [
+      {
+        "field": "b755-0ea0-6554-6646",
+        "type": "triangular",
+        "value": 2
+      }
+    ],
+    "expect": "5+",
+    "note": " | observed in NR"
+  },
+  {
+    "id": "F11a-modulo",
+    "title": "modulo 2 on D6+5",
+    "base": {
+      "A": "D6+5"
+    },
+    "modifiers": [
+      {
+        "field": "4c71-02b5-b294-444d",
+        "type": "modulo",
+        "value": 2
+      }
+    ],
+    "expect": "D0+1",
+    "note": " | observed in NR"
+  },
+  {
+    "id": "F12-add-r5",
+    "title": "cumulative-add 2, base 5, r=5",
+    "base": {
+      "Num": "5"
+    },
+    "modifiers": [
+      {
+        "field": "e4ba-e365-6ee4-10a4",
+        "type": "cumulative-add",
+        "value": 2,
+        "repeats": {
+          "childId": "model",
+          "field": "selections",
+          "includeChildSelections": true,
+          "repeats": 5,
+          "roundUp": false,
+          "scope": "self",
+          "shared": true,
+          "value": 1
+        }
+      }
+    ],
+    "expect": null,
+    "note": "k = models x 5",
+    "observed": {
+      "one model": "11",
+      "two models": "16"
+    }
+  },
+  {
+    "id": "F12-mul-r5",
+    "title": "cumulative-multiply 2, base 5, r=5",
+    "base": {
+      "Num": "5"
+    },
+    "modifiers": [
+      {
+        "field": "e4ba-e365-6ee4-10a4",
+        "type": "cumulative-multiply",
+        "value": 2,
+        "repeats": {
+          "childId": "model",
+          "field": "selections",
+          "includeChildSelections": true,
+          "repeats": 5,
+          "roundUp": false,
+          "scope": "self",
+          "shared": true,
+          "value": 1
+        }
+      }
+    ],
+    "expect": null,
+    "note": "k = models x 5",
+    "observed": {
+      "one model": "310",
+      "two models": "10230"
+    }
+  },
+  {
+    "id": "F12-pow-r5",
+    "title": "cumulative-power 2, base 5, r=5",
+    "base": {
+      "Num": "5"
+    },
+    "modifiers": [
+      {
+        "field": "e4ba-e365-6ee4-10a4",
+        "type": "cumulative-power",
+        "value": 2,
+        "repeats": {
+          "childId": "model",
+          "field": "selections",
+          "includeChildSelections": true,
+          "repeats": 5,
+          "roundUp": false,
+          "scope": "self",
+          "shared": true,
+          "value": 1
+        }
+      }
+    ],
+    "expect": null,
+    "note": "k = models x 5",
+    "observed": {
+      "one model": "31",
+      "two models": "511.5"
+    }
+  },
+  {
+    "id": "F12-add-neg",
+    "title": "cumulative-add 2, base -3, r=2",
+    "base": {
+      "Num": "-3"
+    },
+    "modifiers": [
+      {
+        "field": "e4ba-e365-6ee4-10a4",
+        "type": "cumulative-add",
+        "value": 2,
+        "repeats": {
+          "childId": "model",
+          "field": "selections",
+          "includeChildSelections": true,
+          "repeats": 2,
+          "roundUp": false,
+          "scope": "self",
+          "shared": true,
+          "value": 1
+        }
+      }
+    ],
+    "expect": null,
+    "note": "k = models x 2",
+    "observed": {
+      "one model": "0",
+      "two models": "2"
+    }
+  },
+  {
+    "id": "F12-mul-neg",
+    "title": "cumulative-multiply 2, base -3, r=2",
+    "base": {
+      "Num": "-3"
+    },
+    "modifiers": [
+      {
+        "field": "e4ba-e365-6ee4-10a4",
+        "type": "cumulative-multiply",
+        "value": 2,
+        "repeats": {
+          "childId": "model",
+          "field": "selections",
+          "includeChildSelections": true,
+          "repeats": 2,
+          "roundUp": false,
+          "scope": "self",
+          "shared": true,
+          "value": 1
+        }
+      }
+    ],
+    "expect": null,
+    "note": "k = models x 2",
+    "observed": {
+      "one model": "-18",
+      "two models": "-90"
+    }
+  },
+  {
+    "id": "F12-pow-neg",
+    "title": "cumulative-power 2, base -3, r=2",
+    "base": {
+      "Num": "-3"
+    },
+    "modifiers": [
+      {
+        "field": "e4ba-e365-6ee4-10a4",
+        "type": "cumulative-power",
+        "value": 2,
+        "repeats": {
+          "childId": "model",
+          "field": "selections",
+          "includeChildSelections": true,
+          "repeats": 2,
+          "roundUp": false,
+          "scope": "self",
+          "shared": true,
+          "value": 1
+        }
+      }
+    ],
+    "expect": null,
+    "note": "k = models x 2",
+    "observed": {
+      "one model": "-4.5",
+      "two models": "-11.25"
+    }
+  },
+  {
+    "id": "F12-add-frac",
+    "title": "cumulative-add 3, base 2.5, r=2",
+    "base": {
+      "Num": "2.5"
+    },
+    "modifiers": [
+      {
+        "field": "e4ba-e365-6ee4-10a4",
+        "type": "cumulative-add",
+        "value": 3,
+        "repeats": {
+          "childId": "model",
+          "field": "selections",
+          "includeChildSelections": true,
+          "repeats": 2,
+          "roundUp": false,
+          "scope": "self",
+          "shared": true,
+          "value": 1
+        }
+      }
+    ],
+    "expect": null,
+    "note": "k = models x 2",
+    "observed": {
+      "one model": "7",
+      "two models": "10"
+    }
+  },
+  {
+    "id": "F12-mul-frac",
+    "title": "cumulative-multiply 3, base 2.5, r=2",
+    "base": {
+      "Num": "2.5"
+    },
+    "modifiers": [
+      {
+        "field": "e4ba-e365-6ee4-10a4",
+        "type": "cumulative-multiply",
+        "value": 3,
+        "repeats": {
+          "childId": "model",
+          "field": "selections",
+          "includeChildSelections": true,
+          "repeats": 2,
+          "roundUp": false,
+          "scope": "self",
+          "shared": true,
+          "value": 1
+        }
+      }
+    ],
+    "expect": null,
+    "note": "k = models x 2",
+    "observed": {
+      "one model": "30",
+      "two models": "300"
+    }
+  },
+  {
+    "id": "F12-pow-frac",
+    "title": "cumulative-power 3, base 2.5, r=2",
+    "base": {
+      "Num": "2.5"
+    },
+    "modifiers": [
+      {
+        "field": "e4ba-e365-6ee4-10a4",
+        "type": "cumulative-power",
+        "value": 3,
+        "repeats": {
+          "childId": "model",
+          "field": "selections",
+          "includeChildSelections": true,
+          "repeats": 2,
+          "roundUp": false,
+          "scope": "self",
+          "shared": true,
+          "value": 1
+        }
+      }
+    ],
+    "expect": null,
+    "note": "k = models x 2",
+    "observed": {
+      "one model": "5",
+      "two models": "25"
+    }
+  },
+  {
+    "id": "F12-add-vhalf",
+    "title": "cumulative-add 0.5, base 5, r=2",
+    "base": {
+      "Num": "5"
+    },
+    "modifiers": [
+      {
+        "field": "e4ba-e365-6ee4-10a4",
+        "type": "cumulative-add",
+        "value": 0.5,
+        "repeats": {
+          "childId": "model",
+          "field": "selections",
+          "includeChildSelections": true,
+          "repeats": 2,
+          "roundUp": false,
+          "scope": "self",
+          "shared": true,
+          "value": 1
+        }
+      }
+    ],
+    "expect": null,
+    "note": "k = models x 2",
+    "observed": {
+      "one model": "5.75",
+      "two models": "6.25"
+    }
+  },
+  {
+    "id": "F12-mul-vhalf",
+    "title": "cumulative-multiply 0.5, base 5, r=2",
+    "base": {
+      "Num": "5"
+    },
+    "modifiers": [
+      {
+        "field": "e4ba-e365-6ee4-10a4",
+        "type": "cumulative-multiply",
+        "value": 0.5,
+        "repeats": {
+          "childId": "model",
+          "field": "selections",
+          "includeChildSelections": true,
+          "repeats": 2,
+          "roundUp": false,
+          "scope": "self",
+          "shared": true,
+          "value": 1
+        }
+      }
+    ],
+    "expect": null,
+    "note": "k = models x 2",
+    "observed": {
+      "one model": "3.75",
+      "two models": "4.6875"
+    }
+  },
+  {
+    "id": "F12-pow-vhalf",
+    "title": "cumulative-power 0.5, base 5, r=2",
+    "base": {
+      "Num": "5"
+    },
+    "modifiers": [
+      {
+        "field": "e4ba-e365-6ee4-10a4",
+        "type": "cumulative-power",
+        "value": 0.5,
+        "repeats": {
+          "childId": "model",
+          "field": "selections",
+          "includeChildSelections": true,
+          "repeats": 2,
+          "roundUp": false,
+          "scope": "self",
+          "shared": true,
+          "value": 1
+        }
+      }
+    ],
+    "expect": null,
+    "note": "k = models x 2",
+    "observed": {
+      "one model": "3.75",
+      "two models": "2.34375"
+    }
+  },
+  {
+    "id": "F12-add-vneg",
+    "title": "cumulative-add -2, base 5, r=2",
+    "base": {
+      "Num": "5"
+    },
+    "modifiers": [
+      {
+        "field": "e4ba-e365-6ee4-10a4",
+        "type": "cumulative-add",
+        "value": -2,
+        "repeats": {
+          "childId": "model",
+          "field": "selections",
+          "includeChildSelections": true,
+          "repeats": 2,
+          "roundUp": false,
+          "scope": "self",
+          "shared": true,
+          "value": 1
+        }
+      }
+    ],
+    "expect": null,
+    "note": "k = models x 2",
+    "observed": {
+      "one model": "2",
+      "two models": "0"
+    }
+  },
+  {
+    "id": "F12-mul-vneg",
+    "title": "cumulative-multiply -2, base 5, r=2",
+    "base": {
+      "Num": "5"
+    },
+    "modifiers": [
+      {
+        "field": "e4ba-e365-6ee4-10a4",
+        "type": "cumulative-multiply",
+        "value": -2,
+        "repeats": {
+          "childId": "model",
+          "field": "selections",
+          "includeChildSelections": true,
+          "repeats": 2,
+          "roundUp": false,
+          "scope": "self",
+          "shared": true,
+          "value": 1
+        }
+      }
+    ],
+    "expect": null,
+    "note": "k = models x 2",
+    "observed": {
+      "one model": "10",
+      "two models": "50"
+    }
+  },
+  {
+    "id": "F12-pow-vneg",
+    "title": "cumulative-power -2, base 5, r=2",
+    "base": {
+      "Num": "5"
+    },
+    "modifiers": [
+      {
+        "field": "e4ba-e365-6ee4-10a4",
+        "type": "cumulative-power",
+        "value": -2,
+        "repeats": {
+          "childId": "model",
+          "field": "selections",
+          "includeChildSelections": true,
+          "repeats": 2,
+          "roundUp": false,
+          "scope": "self",
+          "shared": true,
+          "value": 1
+        }
+      }
+    ],
+    "expect": null,
+    "note": "k = models x 2",
+    "observed": {
+      "one model": "-2.5",
+      "two models": "-6.25"
+    }
+  },
+  {
+    "id": "F12-add-v1",
+    "title": "cumulative-add 1, base 5, r=3",
+    "base": {
+      "Num": "5"
+    },
+    "modifiers": [
+      {
+        "field": "e4ba-e365-6ee4-10a4",
+        "type": "cumulative-add",
+        "value": 1,
+        "repeats": {
+          "childId": "model",
+          "field": "selections",
+          "includeChildSelections": true,
+          "repeats": 3,
+          "roundUp": false,
+          "scope": "self",
+          "shared": true,
+          "value": 1
+        }
+      }
+    ],
+    "expect": null,
+    "note": "k = models x 3",
+    "observed": {
+      "one model": "7",
+      "two models": "8.5"
+    }
+  },
+  {
+    "id": "F12-mul-v1",
+    "title": "cumulative-multiply 1, base 5, r=3",
+    "base": {
+      "Num": "5"
+    },
+    "modifiers": [
+      {
+        "field": "e4ba-e365-6ee4-10a4",
+        "type": "cumulative-multiply",
+        "value": 1,
+        "repeats": {
+          "childId": "model",
+          "field": "selections",
+          "includeChildSelections": true,
+          "repeats": 3,
+          "roundUp": false,
+          "scope": "self",
+          "shared": true,
+          "value": 1
+        }
+      }
+    ],
+    "expect": null,
+    "note": "k = models x 3",
+    "observed": {
+      "one model": "15",
+      "two models": "30"
+    }
+  },
+  {
+    "id": "F12-pow-v1",
+    "title": "cumulative-power 1, base 5, r=3",
+    "base": {
+      "Num": "5"
+    },
+    "modifiers": [
+      {
+        "field": "e4ba-e365-6ee4-10a4",
+        "type": "cumulative-power",
+        "value": 1,
+        "repeats": {
+          "childId": "model",
+          "field": "selections",
+          "includeChildSelections": true,
+          "repeats": 3,
+          "roundUp": false,
+          "scope": "self",
+          "shared": true,
+          "value": 1
+        }
+      }
+    ],
+    "expect": null,
+    "note": "k = models x 3",
+    "observed": {
+      "one model": "5",
+      "two models": "5"
+    }
+  },
+  {
+    "id": "F12-add-v0",
+    "title": "cumulative-add 0, base 5, r=2",
+    "base": {
+      "Num": "5"
+    },
+    "modifiers": [
+      {
+        "field": "e4ba-e365-6ee4-10a4",
+        "type": "cumulative-add",
+        "value": 0,
+        "repeats": {
+          "childId": "model",
+          "field": "selections",
+          "includeChildSelections": true,
+          "repeats": 2,
+          "roundUp": false,
+          "scope": "self",
+          "shared": true,
+          "value": 1
+        }
+      }
+    ],
+    "expect": null,
+    "note": "k = models x 2",
+    "observed": {
+      "one model": "5",
+      "two models": "5"
+    }
+  },
+  {
+    "id": "F12-mul-v0",
+    "title": "cumulative-multiply 0, base 5, r=2",
+    "base": {
+      "Num": "5"
+    },
+    "modifiers": [
+      {
+        "field": "e4ba-e365-6ee4-10a4",
+        "type": "cumulative-multiply",
+        "value": 0,
+        "repeats": {
+          "childId": "model",
+          "field": "selections",
+          "includeChildSelections": true,
+          "repeats": 2,
+          "roundUp": false,
+          "scope": "self",
+          "shared": true,
+          "value": 1
+        }
+      }
+    ],
+    "expect": null,
+    "note": "k = models x 2",
+    "observed": {
+      "one model": "0",
+      "two models": "0"
+    }
+  },
+  {
+    "id": "F12-pow-v0",
+    "title": "cumulative-power 0, base 5, r=2",
+    "base": {
+      "Num": "5"
+    },
+    "modifiers": [
+      {
+        "field": "e4ba-e365-6ee4-10a4",
+        "type": "cumulative-power",
+        "value": 0,
+        "repeats": {
+          "childId": "model",
+          "field": "selections",
+          "includeChildSelections": true,
+          "repeats": 2,
+          "roundUp": false,
+          "scope": "self",
+          "shared": true,
+          "value": 1
+        }
+      }
+    ],
+    "expect": null,
+    "note": "k = models x 2",
+    "observed": {
+      "one model": "2.5",
+      "two models": "1.25"
+    }
+  },
+  {
+    "id": "F12-ru-floor",
+    "title": "increment 2, repeat value 2 (floor)",
+    "base": {
+      "Num": "5"
+    },
+    "modifiers": [
+      {
+        "field": "e4ba-e365-6ee4-10a4",
+        "type": "increment",
+        "value": 2,
+        "repeats": {
+          "childId": "model",
+          "field": "selections",
+          "includeChildSelections": true,
+          "repeats": 1,
+          "roundUp": false,
+          "scope": "self",
+          "shared": true,
+          "value": 2
+        }
+      }
+    ],
+    "expect": null,
+    "note": "one model: 0 repetitions, two: 1",
+    "observed": {
+      "one model": "5",
+      "two models": "7"
+    }
+  },
+  {
+    "id": "F12-ru-ceil",
+    "title": "increment 2, repeat value 2, roundUp",
+    "base": {
+      "Num": "5"
+    },
+    "modifiers": [
+      {
+        "field": "e4ba-e365-6ee4-10a4",
+        "type": "increment",
+        "value": 2,
+        "repeats": {
+          "childId": "model",
+          "field": "selections",
+          "includeChildSelections": true,
+          "repeats": 1,
+          "roundUp": true,
+          "scope": "self",
+          "shared": true,
+          "value": 2
+        }
+      }
+    ],
+    "expect": null,
+    "note": "one model: 1 repetition, two: 1",
+    "observed": {
+      "one model": "7",
+      "two models": "7"
+    }
+  },
+  {
+    "id": "F12-ru-v2r3",
+    "title": "increment 2, repeat value 2 repeats 3",
+    "base": {
+      "Num": "5"
+    },
+    "modifiers": [
+      {
+        "field": "e4ba-e365-6ee4-10a4",
+        "type": "increment",
+        "value": 2,
+        "repeats": {
+          "childId": "model",
+          "field": "selections",
+          "includeChildSelections": true,
+          "repeats": 3,
+          "roundUp": false,
+          "scope": "self",
+          "shared": true,
+          "value": 2
+        }
+      }
+    ],
+    "expect": null,
+    "note": "floor(count/2)*3",
+    "observed": {
+      "one model": "5",
+      "two models": "11"
+    }
+  }
+]
