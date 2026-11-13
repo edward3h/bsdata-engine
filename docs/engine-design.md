@@ -474,10 +474,20 @@ Findings:
 - **The real data agrees.** With the game system and the transitive closure of
   `catalogueLinks`, every `targetId` in both repositories resolves; with direct
   links only, 167 in 11e and 182 in HH3 do not.
+- **Only link targets need scope.** Other id fields are matched at run time or
+  ignored, and the data uses them across catalogues that are not linked: cost types
+  defined in another faction's catalogue (872 values in 11e), publications
+  defined elsewhere, and a condition `childId` that is another catalogue's root id
+  (6,112 in HH3). So `Linker` applies the scoped lookup to `targetId` only, and for
+  every other field any definition anywhere counts as resolved.
 - **Cost on a 5 MB file:** Node loads and parses all 46 `wh40k-11e` files in
   about 1.4 s and links them in about 0.2 s; HH3 takes 0.7 s and 0.1 s. Peak
   memory for the whole-repository runs has not been measured yet.
 
+Scoped resolution is implemented (`Repository`, `Linker`), with unit tests that mirror
+tests D1a to D1g. On both full repositories it reports 0 out-of-scope `targetId`s,
+and the JVM and compiled-JavaScript reports are byte-identical.
+
 Not yet done: browser (as opposed to Node) timing and heap; whole-repository
-memory; scoped link resolution in the `Linker` (it still uses one global index);
-the other half of the loader (normalisation and the typed model).
+memory; own copy against game-system copy (untested in NR); the other half of
+the loader (normalisation and the typed model).
