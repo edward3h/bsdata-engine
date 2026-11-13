@@ -311,7 +311,7 @@ Each ends with something that runs and is checked.
 | # | Milestone | Done when |
 |---|---|---|
 | M0 | Toolchain spike, loader, ID index, link resolution | Gradle skeleton builds with Java 25 and TeaVM 0.16; one test runs identically on the JVM and in Node; loads `wh40k-11e` and HH3 with zero unresolved references and reports the counts in section 2; records, sealed types and the JSON library confirmed under TeaVM; browser parse time and memory measured |
-| M1 | Roster tree, instantiation, costs without modifiers | A unit's base cost sums correctly; a hand-made roster totals match NR |
+| M1 | Typed game data, roster tree with explicit selections, costs without modifiers | A unit's base cost sums correctly; hand-made and exported rosters total as NR does (done, section 13). Automatic instantiation is left to M5 |
 | M2 | Query engine, scopes, conditions, groups | Condition truth tables match the NR notes; T16 passes |
 | M3 | Modifier pipeline for plain numbers and text | T04, T05, T08, T12, T14, T09 pass |
 | M4 | Number tokens, `position`, clamps, repeats, `cumulative-*` | All of F01 to F12 in `expected.json` pass except the fractional F08a (informational); Wulfen replica gives `D6+2` |
@@ -525,3 +525,53 @@ Findings that affect the engine:
 Not yet done: the engine side of reading (resolving each selection's `entryId`
 against a `Repository`, which needs the typed model of M1), writing rosters from
 scratch, and checking that NR opens a written file.
+
+## 13. M1: typed model, roster tree, base costs
+
+Done on branch `typed-model`. Decisions: explicit selections only (what NR adds
+automatically when a unit is added waits for M5, because `min` constraints can be
+modified); the typed model is incremental (structure, links, categories, profiles,
+costs and forces are typed; constraints, modifiers, modifier groups and
+associations are kept as raw nodes in `Raw` until M2 and M3 type them); tests use
+synthetic copies of the Extension Tests data, with the real repositories loaded
+from a local path by the command-line checker.
+
+**Code.** `model` (immutable records: `Catalogue`, `Entry`, `Link`, `Body`, `Parts`,
+`GameData` with scoped lookup and `::` path resolution) and `roster` (`RosterModel`,
+`ForceNode`, `Selection`, and `RosterBinder`, which attaches an exported roster file
+to the data).
+
+**Cost rules observed in NR** (M1 Costs test data, `nr-extension-tests/RESULTS.md`):
+
+- An entry link's own cost **replaces** its target's cost of the same cost type
+  (Hero: target 30 pts, link 5 pts, shown 5). Cost types the link does not mention
+  come from the target (Shared unit: link 3 pts, target 20 pts and 2 Enh, shown 3 pts
+  and 2 Enh). This corrects the earlier assumption that "a link and its target both
+  contribute".
+- A selection's cost is its effective cost times its **total number**; a child's
+  amount is per parent, so totals multiply down the tree (Gun 2 under Trooper 3 is 6
+  guns, 12 pts).
+- The roster total is the plain sum of the selections' own costs.
+
+**Results.**
+
+| Check | Result |
+|---|---|
+| Exported M1 Costs roster binds | no problems; every selection's own cost equals the exported cost |
+| Roster total | 50 pts and 2 Enh, as NR |
+| Hand-built roster (explicit adds) | 42 pts at the point NR showed 42 |
+| `entryId` paths in the two larger exports | all resolve (no problems) |
+| Real repositories loaded into the typed model | `wh40k-11e`: 12,035 entries, 4,278 groups, 17,869 links, **0 unresolved**; HH3: 2,912 entries, 1,429 groups, 8,568 links, **0 unresolved** |
+| JVM and compiled-JavaScript reports | byte-identical on both repositories |
+
+**Memory (a concern).** The whole `wh40k-11e` repository peaks at about 930 MB RSS in
+Node and 590 MB on the JVM; HH3 about 430 MB and 330 MB. That is with the parsed
+JSON trees still held (for `Raw` and for the id sets in `Repository`). A browser tab
+will not take 930 MB, so the loader needs a memory pass before any UI: drop the
+tree after typing, intern repeated strings (type ids, names), keep `Raw` as compact
+nodes, and build `Repository` id sets from the typed model instead of a second tree
+walk.
+
+**Not done:** automatic instantiation (M5); categories as explicit roster nodes
+(needed for `primary-category`, M2); writing a `RosterModel` back to a roster file;
+profile and rule evaluation.

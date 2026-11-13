@@ -12,6 +12,7 @@ import org.ethelred.bsdata.DataNode;
 import org.ethelred.bsdata.Linker;
 import org.ethelred.bsdata.MinimalJsonSource;
 import org.ethelred.bsdata.RosterReport;
+import org.ethelred.bsdata.model.ModelReport;
 
 /**
  * Command-line checker: {@code Main <directory>} reports id references across all JSON files in it; {@code Main
@@ -40,5 +41,6 @@ public final class Main {
             }
         }
         System.out.print(Linker.check(files).format(15));
+        System.out.print(ModelReport.of(files));
     }
 }

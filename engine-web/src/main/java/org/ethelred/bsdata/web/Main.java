@@ -7,6 +7,7 @@ import org.ethelred.bsdata.DataNode;
 import org.ethelred.bsdata.Linker;
 import org.ethelred.bsdata.MinimalJsonSource;
 import org.ethelred.bsdata.RosterReport;
+import org.ethelred.bsdata.model.ModelReport;
 import org.teavm.jso.JSBody;
 
 public final class Main {
@@ -31,6 +32,7 @@ public final class Main {
         String report = Linker.check(files).format(15);
         double t2 = now();
         log(report);
+        log(ModelReport.of(files));
         logError("loadMs=" + (t1 - t0) + " linkMs=" + (t2 - t1));
     }
 

@@ -54,8 +54,10 @@ category: { "id", "entryId", "name", "primary" }
   (three segments in the Horus Heresy export). A force's `entryId` is the force
   entry's id with no path. The first segment is the catalogue-level link, so the
   same unit linked from two catalogues has two different ids.
-- **`number`** is the quantity. A copy of a unit added twice is two selections
-  with `number` 1, not one with 2 (the G1 test shows four separate selections).
+- **`number`** is the **total** quantity, not per parent: a Gun entered as 2 under a
+  Trooper entered as 3 exports with `number` 6. A unit added twice is two
+  selections with `number` 1, not one with 2 (the G1 test shows four separate
+  selections).
 - **`type`** is `unit`, `model` or `upgrade`, copied from the entry.
 - **`from`** is `entry` for a selection taken directly from an entry's children
   and `group` for one chosen from a selection entry group. For `group`, there is
@@ -63,9 +65,11 @@ category: { "id", "entryId", "name", "primary" }
   joined by `::` (for example `Options::May exchange bolter for`).
 - **Computed values are exported.** `costs` hold the values after modifiers (four
   copies of G1 export as 100, 100, 110, 110), and profile characteristics hold the
-  modified text (T01a exports `D8+3`). The roster's `costs` equal the sum over all
-  selections of each cost times its `number` (checked on the fixture).
-  `rules` entries carry `id`, `name`, `description`, `hidden` and `page`.
+  modified text (T01a exports `D8+3`). A selection's exported cost is already its
+  total (the cost of one times its total `number`: Trooper 5 pts, `number` 3,
+  cost 15), so the roster's `costs` are the plain sum over all selections
+  (5 + 3 + 10 + 3 + 15 + 12 + 2 = 50 in the M1 fixture). `rules` entries carry
+  `id`, `name`, `description`, `hidden` and `page`.
 - **Zero or empty values are omitted.** A unit whose only cost is 0 (UNIT A in the
   fixture has `pts` 0) has no `costs` key, and empty lists are left out entirely.
 - **Catalogue names are copied from the data as is**, including leading
