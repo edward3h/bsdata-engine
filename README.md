@@ -4,7 +4,9 @@ An open-source engine for BSData game system files: load a game system,
 build a roster, and evaluate it (costs, profiles, rules, validation), with
 behaviour that matches what the data actually uses today.
 
-**Status: design only. There is no code yet.**
+**Status: design only. There is no code yet.** The engine will be written in
+Java 25 and compiled to JavaScript with [TeaVM](https://teavm.org) for the
+browser, following the author's `kv2` project.
 
 ## Why
 
@@ -36,6 +38,6 @@ a user.
 
 ## Open decisions
 
-Language and platform, version 1 scope, whether to match New Recruit's
-behaviour or the original BattleScribe's, and the licence. No licence has been
+Version 1 scope, repository layout, and the licence. Decided: match New
+Recruit's behaviour (not the original BattleScribe's), in compat mode. No licence has been
 chosen yet, so until one is added all rights are reserved.
