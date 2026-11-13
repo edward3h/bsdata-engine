@@ -9,3 +9,4 @@ rootProject.name = "bsdata-engine"
 
 include("engine-core")
 include("engine-web")
+include("engine-jvm")

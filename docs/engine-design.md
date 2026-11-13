@@ -412,26 +412,54 @@ Still needed:
 
 ## 11. M0 spike results
 
-First pass, on the `m0-spike` branch (Gradle skeleton following kv2; `engine-core`
-and `engine-web`; a `Census` that counts objects, ids and `targetId` references).
+On the `m0-spike` branch: Gradle skeleton following kv2 (Kotlin DSL), with
+`engine-core` (JSON library behind `JsonSource`, `DataNode`, `Linker`),
+`engine-jvm` (command-line checker) and `engine-web` (TeaVM, run in Node). The
+`Linker` loads every `*.json` file in a repository, indexes all `id`s, and
+checks every string field ending in `Id` (except `id`).
 
 | Question | Result |
 |---|---|
 | Java 25 records, sealed interface, pattern-matching `switch` under TeaVM 0.16 | Compile and run correctly |
 | `minimal-json` 0.9.5 under TeaVM | Works unchanged |
-| Spotless, EISOP nullness checker and JUnit on `engine-core` | Pass (`./gradlew build`) |
-| JVM and Node results agree | The Node counts match an independent Python count exactly, for three files |
+| Spotless, EISOP nullness checker and JUnit | Pass (`./gradlew build`) |
+| JVM and compiled-JavaScript results agree | The reports are byte-identical on both full repositories |
 | TeaVM `long` and JSO | `long` is a BigInt in TeaVM, so JSO bindings must use `double` or `int` |
 
-Measurements, Node 24 (compiled JavaScript), single file each:
+Reference resolution (all files of the repository, 46 files for `wh40k-11e`, 42 for HH3):
 
-| File | Size | Objects | Parse | Peak RSS |
-|---|---|---|---|---|
-| `wh40k-11e/Imperium - Space Marines.json` | 5.1 MB | 28,549 | 209 ms | 231 MB |
-| `horus-heresy-3rd-edition/Alpha Legion.json` | small | 1,296 | 30 ms | 68 MB |
+| Field | wh40k-11e unresolved | HH3 unresolved |
+|---|---|---|
+| `targetId` (entry, info, category and catalogue links) | **0** of 43,786 | **0** of 19,980 |
+| `childId` (conditions, constraints, repeats, associations) | **0** of 35,894 | **0** of 18,676 |
+| `gameSystemId` | 0 | 0 |
+| `typeId` | 37 of 99,340 | 844 of 26,382 |
+| `publicationId` | 80 of 490 | 78 of 773 |
+| `defaultSelectionEntryId` | 23 of 1,328 | 2 of 675 |
 
-Not yet done: loading a whole repository and resolving links across files
-(unresolved references within one file are expected, since links cross files);
-browser (as opposed to Node) timing and heap; a JVM-side comparison of the same
-files; the exit criterion that wh40k-11e and HH3 load with zero unresolved
-references.
+Findings:
+
+- **Links resolve.** Every `targetId` and `childId` in both repositories resolves
+  when all files are searched together, so the M0 criterion holds for the
+  references that matter to the engine.
+- **Keywords stand in for ids.** `childId` takes `any`, `model`, `unit`,
+  `model-or-unit` and `upgrade`; `defaultSelectionEntryId` takes `none`. They
+  account for 1,933 and 180 `childId` values in the two repositories.
+- **Remaining misses are dangling definitions in the data.** Examples: HH3 has 841
+  cost values (all 0) for a cost type "Asset Point(s)" that no game system
+  defines; 11e has 37 for a missing "Commendation Points" type (Crusade
+  content, ignored); some `publicationId`s name publications that do not exist.
+  The engine must treat these as ignorable, and report them as warnings, not
+  errors.
+- **Duplicate ids across files exist in 11e** (144 ids appear in more than one
+  file, 795 repeated occurrences overall) and not in HH3. A global id index is
+  ambiguous there. The engine needs resolution that prefers the object's own
+  catalogue, then imported catalogues, then the game system. Whether NR does
+  the same is not yet known (open question).
+- **Cost on a 5 MB file:** Node loads and parses all 46 `wh40k-11e` files in
+  about 1.4 s and links them in about 0.2 s; HH3 takes 0.7 s and 0.1 s. Peak
+  memory for the whole-repository runs has not been measured yet.
+
+Not yet done: browser (as opposed to Node) timing and heap; whole-repository
+memory; resolving duplicate ids by catalogue scope; the other half of the
+loader (normalisation and the typed model).
