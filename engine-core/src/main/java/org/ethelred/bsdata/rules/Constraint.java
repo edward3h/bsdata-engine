@@ -4,6 +4,7 @@ package org.ethelred.bsdata.rules;
 import java.util.ArrayList;
 import java.util.List;
 import org.ethelred.bsdata.DataNode;
+import org.ethelred.bsdata.model.Body;
 import org.jspecify.annotations.Nullable;
 
 /**
@@ -36,6 +37,11 @@ public record Constraint(
         boolean traverseAssociationGroup,
         @Nullable String message,
         @Nullable String name) {
+
+    /** The constraints in a body (an entry, group or link), or none. */
+    public static List<Constraint> of(Body body) {
+        return body.raw().isEmpty() ? List.of() : of(body.raw().constraints());
+    }
 
     public static List<Constraint> of(List<DataNode> constraints) {
         List<Constraint> out = new ArrayList<>();

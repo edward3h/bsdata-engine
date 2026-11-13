@@ -13,7 +13,7 @@ import org.jspecify.annotations.Nullable;
 public final class TestData {
     private static final MinimalJsonSource JSON = new MinimalJsonSource();
     private static final String[] FILES = {
-        "Extension Tests", "Extension Tests Catalogue", "M1 Costs", "M2 Scopes", "M5 Constraints"
+        "Extension Tests", "Extension Tests Catalogue", "M1 Costs", "M2 Scopes", "M5 Constraints", "M6 Instantiate"
     };
 
     private TestData() {}

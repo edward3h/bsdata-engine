@@ -323,7 +323,7 @@ Each ends with something that runs and is checked.
 | M3 | Modifier pipeline for characteristics and costs, plain numbers and text | T04, T05, T08, T12, T14, T09 pass; costs and profile values match NR exports (done, section 18) |
 | M4 | Number tokens inside dice and compound values, `position` | The 27 observations M3 reported as needing tokens pass, and 248 odd-value profiles match NR; the worked-example replica gives `D6+2` (done, section 19) |
 | M5 | Constraints and validation | Validator messages match NR for the synthetic `M5 Constraints` catalogue (min, max, exactly, percent, hidden, scopes, modified limits, cost fields, groups, roster cost limits). The G1 to G3 cost rules were done in M2/M3; leader/bodyguard messages moved to M7 with associations (done, section 20) |
-| M6 | Force and catalogue linking, hidden entries, categories, automatic instantiation, force and category constraints | The synthetic scale dataset and the exported conformance rosters instantiate without errors |
+| M6 | Automatic instantiation (child forces, force and category constraints, and more modifier fields stay open) | The instantiator matches what NR adds for the synthetic `M5 Constraints` and `M6 Instantiate` catalogues; every unit of the generated scale dataset can be added, instantiated and validated without errors (done, section 21) |
 | M7 | Associations, `affects` with `group`, `traverseAssociationGroup` | E, F, G4 results match |
 | M8 | Differential testing against NR | A corpus of rosters exported from NR for the synthetic systems shows the same totals, values and validation as NR. Real data can be checked locally by anyone who holds it, outside the repository and CI |
 | M9 | Roster file format: read and write | A roster exported from NR loads, evaluates to the same totals, and writes back so that NR opens it; the format is documented in the spec |
@@ -915,3 +915,27 @@ other selections. Constraints on forces and categories, and `shared: false`, are
 
 **Memory.** The validator parses constraints on demand and caches them per body for one run;
 the memory check is unchanged (JVM 64 MB, Node 128 MB).
+
+## 21. M6: automatic instantiation
+
+Done on branch `forces-m6`. Scope agreed with the user: automatic instantiation only. Child
+forces, force and category constraints and further modifier fields (`name`, categories) are
+left open and are not scheduled yet.
+
+`Instantiator` (in `rules`) adds what NR adds by itself: units in a new force, and children
+under a new selection, recursively. `InstantiatorTest` compares it with NR for the `M6
+Instantiate` catalogue (12 units: root minimums at several scopes, nesting, groups, child
+scopes, links) and for the M5 catalogue's units. `ScaleInstantiationTest` adds every unit of
+the generated 5% dataset to a roster, instantiates it and validates the roster.
+
+The rules are in spec 6.2 (**Instantiation**). The surprises: the root rule ignores `childId`
+and scope (a unit with `min 3` of one of its children is added three times), while the child
+rule only reads constraints owned by the child itself, only `min`, and only the scopes
+`parent`, `self` and `root-entry` (`force` adds nothing). Hidden children are added too, and
+then reported as errors by the validator.
+
+**Open.** Scopes `roster`, `primary-category`, `ancestor` and the type words for child
+minimums are untested; so is a group's own scope other than `self`. The exported rosters of
+M9 do not need instantiation, since they list their selections.
+
+**Memory.** Unchanged (memory check passes).
