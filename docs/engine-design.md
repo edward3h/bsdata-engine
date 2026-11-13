@@ -154,12 +154,18 @@ Diagnostics, totals, profile tables
   values (`value` may be `"0"`, `0` or absent).
 - Builds an **ID index** across all files: every object with an `id`, plus its
   owning file and path. Needed because modifiers, conditions, `affects` paths
-  and scopes all refer to IDs, and because links need resolving.
+  and scopes all refer to IDs, and because links need resolving. Lookup is
+  **scoped**, not global (see section 11): a catalogue sees itself, then the
+  game system, then the catalogues it links, followed transitively, with the first
+  link winning. Modifiers address constraints through their own entry.
 - Resolves **links**: `catalogueLinks`, `entryLinks`, `infoLinks`,
   `categoryLinks`, with the link's own modifiers and constraints kept
   separately from the target's (a link and its target both contribute).
-- Reports unresolved references as diagnostics instead of failing. The editor
-  itself fails on a missing catalogue link; a library should say which one.
+- Reports unresolved references as diagnostics instead of failing. NR fails the
+  whole catalogue when a link target is not reachable ("This Army Book could not
+  be loaded"); a library should say which one. Dangling `typeId`,
+  `publicationId` and `defaultSelectionEntryId` values are warnings, since the
+  real data contains them.
 
 Output type, roughly:
 
@@ -451,15 +457,27 @@ Findings:
   content, ignored); some `publicationId`s name publications that do not exist.
   The engine must treat these as ignorable, and report them as warnings, not
   errors.
-- **Duplicate ids across files exist in 11e** (144 ids appear in more than one
-  file, 795 repeated occurrences overall) and not in HH3. A global id index is
-  ambiguous there. The engine needs resolution that prefers the object's own
-  catalogue, then imported catalogues, then the game system. Whether NR does
-  the same is not yet known (open question).
+- **Duplicate ids exist in 11e**: 144 ids appear in more than one file, and 651
+  more repeat inside one file; HH3 has none. They are mostly copied constraints
+  and entry links. The only referenced one is a category "Tyrant Guard" copied
+  between two Tyranid catalogues, and the modifier `field` use of a constraint id
+  affects 21 of them. So a global index is ambiguous but rarely matters.
+- **Resolution is by scope, not global (observed in NR, tests D1 and D2 in
+  `nr-extension-tests`).** For an id defined in several places: the first
+  catalogue link wins (links X then Y gave X, Y then X gave Y); a catalogue's own
+  copy beats linked ones; the game system's copy beat a linked catalogue's copy;
+  catalogue links are followed transitively; and a link to an id that no linked
+  catalogue defines makes the whole catalogue fail to load. A modifier whose
+  `field` is a constraint id changed only the constraint on its own entry, though
+  another entry had a constraint with the same id. Untested: own copy against
+  the game system copy.
+- **The real data agrees.** With the game system and the transitive closure of
+  `catalogueLinks`, every `targetId` in both repositories resolves; with direct
+  links only, 167 in 11e and 182 in HH3 do not.
 - **Cost on a 5 MB file:** Node loads and parses all 46 `wh40k-11e` files in
   about 1.4 s and links them in about 0.2 s; HH3 takes 0.7 s and 0.1 s. Peak
   memory for the whole-repository runs has not been measured yet.
 
 Not yet done: browser (as opposed to Node) timing and heap; whole-repository
-memory; resolving duplicate ids by catalogue scope; the other half of the
-loader (normalisation and the typed model).
+memory; scoped link resolution in the `Linker` (it still uses one global index);
+the other half of the loader (normalisation and the typed model).
