@@ -415,12 +415,12 @@ Resolved:
   `docs/` (as built).
 - **Whether to start**: yes; M0 is done (section 11).
 
-Still needed:
+- **Roster formats**: NR's JSON roster format first (the JSON parser is there),
+  then BattleScribe `.ros`/`.rosz` (XML in a zip), which needs the deferred XML
+  parser and a zip reader that work under TeaVM. The JSON format is documented in
+  `docs/roster-format.md`; M9 is under way (see section 12).
 
-1. **Which roster formats**: NR's JSON roster format first (the JSON parser is
-   there), then BattleScribe `.ros`/`.rosz` (XML in a zip), which needs the
-   deferred XML parser and a zip reader that work under TeaVM. The roster format
-   is not yet documented in the spec; M9 starts by observing exported rosters.
+Still needed: nothing blocking.
 
 ## 11. M0 spike results
 
@@ -497,3 +497,28 @@ and the JVM and compiled-JavaScript reports are byte-identical.
 Not yet done: browser (as opposed to Node) timing and heap; whole-repository
 memory; own copy against game-system copy (untested in NR); the other half of
 the loader (normalisation and the typed model).
+
+## 12. M9 progress: roster JSON
+
+Exported rosters were observed and documented in `docs/roster-format.md`. `Roster`
+(in `engine-core`) reads NR's JSON roster export into records and writes it back; a
+round trip reproduces the file exactly, on the JVM and compiled to JavaScript, for
+both synthetic fixtures (and for a local Horus Heresy export containing groups and
+rules, which is not committed because it contains rules text). Unknown fields are
+kept in an `extra` map so files survive a read and write.
+
+Findings that affect the engine:
+
+- **Exports carry NR's computed values** (costs and profile text after modifiers),
+  and the roster total equals the sum of the selection costs. That makes exports a
+  ready-made corpus for M8: instantiate the same selections, evaluate, and compare.
+  Fixtures: `edward3h/nr-extension-tests/rosters/`.
+- **A selection's `entryId` is a path** of ids from the catalogue's entry link to
+  the entry, so reading a roster needs the scoped link resolution of section 11.
+- **Attachment state is not in the export** (or was not set in the fixtures). It must
+  be settled before M7 (associations) and before writing rosters that NR opens
+  with the same attachments.
+
+Not yet done: the engine side of reading (resolving each selection's `entryId`
+against a `Repository`, which needs the typed model of M1), writing rosters from
+scratch, and checking that NR opens a written file.

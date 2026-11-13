@@ -27,6 +27,7 @@ a user.
 | File | What it is |
 |---|---|
 | [`docs/bsdata-extensions-spec.md`](docs/bsdata-extensions-spec.md) | Draft specification of the BSData format extensions and how they evaluate, with a confidence level for each claim |
+| [`docs/roster-format.md`](docs/roster-format.md) | New Recruit's JSON roster export format as observed, with open questions |
 | [`docs/engine-design.md`](docs/engine-design.md) | Sketch of a minimal engine: layers, milestones, risks, and the decisions still open |
 
 ## Related repositories

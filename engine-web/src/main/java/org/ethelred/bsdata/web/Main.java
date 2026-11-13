@@ -6,6 +6,7 @@ import java.util.TreeMap;
 import org.ethelred.bsdata.DataNode;
 import org.ethelred.bsdata.Linker;
 import org.ethelred.bsdata.MinimalJsonSource;
+import org.ethelred.bsdata.RosterReport;
 import org.teavm.jso.JSBody;
 
 public final class Main {
@@ -14,6 +15,10 @@ public final class Main {
     /** Node entry point: reports id references across all JSON files in a directory (the last argument). */
     public static void main(String[] args) {
         String dir = lastArgument();
+        if (dir.endsWith(".roster.json")) {
+            log(RosterReport.of(readFile(dir)));
+            return;
+        }
         var json = new MinimalJsonSource();
         Map<String, DataNode> files = new TreeMap<>();
         double t0 = now();
