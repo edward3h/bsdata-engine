@@ -321,7 +321,7 @@ Each ends with something that runs and is checked.
 | M1b | **Memory pass** on the loader and typed model | The generated 11e-sized dataset loads in a browser tab within the agreed budget (300 MB peak, agreed 2026-11-13; the real 11e data measured about 930 MB in Node), measured in a real browser and in Node; a half-sized set well inside it; reports unchanged; a regression check records the peak so later milestones cannot quietly undo it (done, section 16) |
 | M2 | Query engine, scopes, conditions, groups | Condition truth tables match the NR notes; T16 passes; counts match NR on the scope battery (done, section 17) |
 | M3 | Modifier pipeline for characteristics and costs, plain numbers and text | T04, T05, T08, T12, T14, T09 pass; costs and profile values match NR exports (done, section 18) |
-| M4 | Number tokens inside dice and compound values, `position` | The 27 observations M3 reports as needing tokens pass (F04 to F08, F11, T01 to T03, T19); the worked-example replica gives `D6+2`. Repeat counts and the arithmetic and `cumulative-*` formulas already work on plain numbers (M3) |
+| M4 | Number tokens inside dice and compound values, `position` | The 27 observations M3 reported as needing tokens pass, and 248 odd-value profiles match NR; the worked-example replica gives `D6+2` (done, section 19) |
 | M5 | Constraints and validation | The G1 to G3 cost rules and the leader/bodyguard messages reproduce |
 | M6 | Force and catalogue linking, hidden entries, categories | The synthetic scale dataset and the exported conformance rosters instantiate without errors |
 | M7 | Associations, `affects` with `group`, `traverseAssociationGroup` | E, F, G4 results match |
@@ -860,3 +860,27 @@ scope resolves to nothing.
 **Memory.** Unchanged: the memory check passes at JVM 64 MB and Node 128 MB, because
 modifiers are parsed on demand and not retained. A typed, cached form would cost more;
 decide that with measurements when it is needed.
+
+## 19. M4: number tokens and `position`
+
+Done on branch `number-tokens-m4`. `NumberTokens` finds the numbers inside a text value and
+`ModifierEngine` applies arithmetic and clamps to them, optionally only the one a
+modifier's `position` picks. The rules are in spec 5.6 and 5.7.
+
+| Check | Result |
+|---|---|
+| The 27 observations M3 reported as needing tokens (T01 to T03, T19, F04, F05, F07, F08, F11) | all match NR; with the earlier 49, all 76 roster-free observations in `expected.json` now pass |
+| Profile values on the test unit | 139 match NR; the one left out is the profile changed by a modifier with `affects` (M7) |
+| 124 odd-value profiles (two hosts, so 248 comparisons): decimals, a minus sign inside a value, empty and digit-free text, leading zeros, `position` | all match NR |
+| The dice trick from the spec's worked example (append `+0`, raise the last number, strip `+0`) in any listing order | `D6` gives `D6+2` |
+
+**What the odd values corrected.** I had assumed a minus sign was part of a number only at
+the start of a value; NR treats it as part of the number wherever it is directly before
+digits (`D6-3` is 6 and -3). I had also let `floor` and `ceil` treat an empty value as 0;
+NR leaves it empty (arithmetic still treats it as 0). And a number the operation leaves
+unchanged keeps its original text.
+
+**Open.** The full worked example needs `affects` and categories (M7); `position` on
+`append` and `prepend` is inert, as observed, and not modelled further.
+
+**Memory.** Unchanged (the memory check passes at JVM 64 MB, Node 128 MB).

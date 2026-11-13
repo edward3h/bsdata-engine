@@ -11,9 +11,9 @@ import org.jspecify.annotations.Nullable;
  * were listed in (spec 5.12): set, add, remove and the primary-category types; then append and prepend; then arithmetic;
  * then floor and ceil; then the cumulative types and replace. Within a stage, listing order is kept.
  *
- * <p>Numbers are plain numbers, or a number with a trailing {@code +} such as a save of {@code 3+}. A value with
- * several numbers in it (a dice expression such as {@code D6+1}) is not handled yet (milestone M4): the modifier is
- * skipped and a diagnostic says so.
+ * <p>Arithmetic and clamps act on the numbers inside a text value ({@link NumberTokens}): a plain number, an {@code N+}
+ * such as {@code 3+}, or a dice expression such as {@code D6+1}, optionally only the one a modifier's {@code position}
+ * picks.
  */
 public final class ModifierEngine {
     /** A modifier with the number of times it applies. Zero disables it. */
@@ -56,17 +56,21 @@ public final class ModifierEngine {
                 case "add", "remove", "set-primary", "unset-primary" ->
                     diagnostics.add("modifier type " + m.type() + " on a characteristic: not supported");
                 default -> {
-                    PlainNumber n = PlainNumber.parse(current);
                     Double v = m.valueNumber();
-                    if (n == null || v == null) {
-                        diagnostics.add("modifier " + m.type() + " on \"" + current
-                                + "\": only plain numbers and N+ values are handled until M4");
+                    if (v == null) {
+                        diagnostics.add("modifier " + m.type() + " needs a numeric value");
                         continue;
                     }
-                    Double result = arithmetic(m.type(), n.number(), v, a.times(), diagnostics);
-                    if (result != null) {
-                        current = NumberText.format(result) + n.suffix();
-                    }
+                    final double times = a.times();
+                    final String type = m.type();
+                    boolean[] known = {true};
+                    String result = NumberTokens.map(
+                            current, m.position(), !type.equals("floor") && !type.equals("ceil"), n -> {
+                                Double r = arithmetic(type, n, v, times, diagnostics);
+                                known[0] &= r != null;
+                                return r == null ? n : r;
+                            });
+                    current = known[0] ? result : current;
                 }
             }
         }
@@ -178,33 +182,6 @@ public final class ModifierEngine {
             default:
                 diagnostics.add("modifier type " + type + ": not supported");
                 return null;
-        }
-    }
-
-    /** A plain number, or a number with a trailing plus. */
-    record PlainNumber(double number, String suffix) {
-        static @Nullable PlainNumber parse(String s) {
-            String digits = s;
-            String suffix = "";
-            if (s.endsWith("+")) {
-                digits = s.substring(0, s.length() - 1);
-                suffix = "+";
-            }
-            if (digits.isEmpty() || !digits.equals(digits.trim())) {
-                return null;
-            }
-            for (int i = 0; i < digits.length(); i++) {
-                char c = digits.charAt(i);
-                boolean ok = c >= '0' && c <= '9' || c == '.' || (c == '-' && i == 0);
-                if (!ok) {
-                    return null;
-                }
-            }
-            try {
-                return new PlainNumber(Double.parseDouble(digits), suffix);
-            } catch (NumberFormatException e) {
-                return null;
-            }
         }
     }
 }
