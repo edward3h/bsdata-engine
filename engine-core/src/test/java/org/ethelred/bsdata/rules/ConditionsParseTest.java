@@ -44,8 +44,7 @@ class ConditionsParseTest {
 
     @Test
     void aCountGroupHasItsConditionsAndBounds() {
-        List<ModifierDef> mods =
-                ModifierDef.of(profile(entry("UNIT A"), "T16a").raw().modifiers());
+        List<Modifier> mods = Modifier.of(profile(entry("UNIT A"), "T16a").raw().modifiers());
         assertEquals(1, mods.size());
         Conditions c = mods.get(0).conditions();
         assertEquals(1, c.groups().size());
@@ -64,7 +63,7 @@ class ConditionsParseTest {
 
     @Test
     void aMinAndMaxAreBothKept() {
-        ConditionGroup g = ModifierDef.of(profile(entry("UNIT A"), "T16b").raw().modifiers())
+        ConditionGroup g = Modifier.of(profile(entry("UNIT A"), "T16b").raw().modifiers())
                 .get(0)
                 .conditions()
                 .groups()
@@ -85,7 +84,7 @@ class ConditionsParseTest {
     private List<Repeat> profileRepeats() {
         Entry unit = entry("UNIT A");
         for (Profile p : unit.body().profiles()) {
-            for (ModifierDef m : ModifierDef.of(p.raw().modifiers())) {
+            for (Modifier m : Modifier.of(p.raw().modifiers())) {
                 if (!m.repeats().isEmpty()) {
                     return m.repeats();
                 }
@@ -97,7 +96,7 @@ class ConditionsParseTest {
     @Test
     void aLocalGroupInsideAConditionGroupKeepsItsInnerConditions() {
         Entry g1 = entry("G1 ");
-        List<ModifierDef> mods = ModifierDef.of(g1.body().raw().modifiers());
+        List<Modifier> mods = Modifier.of(g1.body().raw().modifiers());
         LocalGroup local = mods.stream()
                 .flatMap(m -> m.conditions().groups().stream())
                 .flatMap(g -> g.localGroups().stream())
@@ -119,7 +118,7 @@ class ConditionsParseTest {
         for (var model : unit.body().children()) {
             if (model instanceof Entry e && e.name().startsWith("Model")) {
                 for (Profile p : e.body().profiles()) {
-                    for (ModifierDef m : ModifierDef.of(p.raw().modifiers())) {
+                    for (Modifier m : Modifier.of(p.raw().modifiers())) {
                         found |= m.conditions().conditions().stream()
                                 .anyMatch(c -> c.type().equals("before"));
                     }

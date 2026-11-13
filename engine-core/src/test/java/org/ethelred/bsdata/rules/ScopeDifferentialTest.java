@@ -40,7 +40,7 @@ class ScopeDifferentialTest {
             Map<String, Double> nums = nr.getOrDefault(s.id(), Map.of());
             for (Profile p : s.entry().body().profiles()) {
                 Double num = nums.get(p.name());
-                var mods = ModifierDef.of(p.raw().modifiers());
+                var mods = Modifier.of(p.raw().modifiers());
                 if (num == null || mods.isEmpty() || mods.get(0).repeats().isEmpty()) {
                     continue;
                 }

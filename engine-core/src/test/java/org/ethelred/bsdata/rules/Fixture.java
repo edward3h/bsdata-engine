@@ -102,7 +102,7 @@ final class Fixture {
                 .id();
     }
 
-    static List<ModifierDef> modifiers(Entry e) {
-        return ModifierDef.of(e.body().raw().modifiers());
+    static List<Modifier> modifiers(Entry e) {
+        return Modifier.of(e.body().raw().modifiers());
     }
 }

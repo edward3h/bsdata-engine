@@ -16,7 +16,7 @@ class EvaluatorTest {
                 .filter(p -> p.name().equals(profileName))
                 .findFirst()
                 .orElseThrow();
-        return ModifierDef.of(profile.raw().modifiers()).get(0).conditions();
+        return Modifier.of(profile.raw().modifiers()).get(0).conditions();
     }
 
     private static Result t(boolean b) {
@@ -76,7 +76,7 @@ class EvaluatorTest {
         Evaluator ev = new Evaluator(f.model);
         for (Selection model : List.of(m1, m2)) {
             Entry e = model.entry();
-            var mods = ModifierDef.of(e.body().profiles().get(0).raw().modifiers());
+            var mods = Modifier.of(e.body().profiles().get(0).raw().modifiers());
             // all four combinations fired when both models were present
             assertEquals(Result.TRUE, ev.eval(model, mods.get(0).conditions()), model.name());
             assertEquals(Result.TRUE, ev.eval(model, mods.get(1).conditions()), model.name());
@@ -89,7 +89,7 @@ class EvaluatorTest {
         Selection unit = f.unit("UNIT A");
         Selection m1 = f.add(unit, "Model One", 1);
         Evaluator ev = new Evaluator(f.model);
-        var mods = ModifierDef.of(m1.entry().body().profiles().get(0).raw().modifiers());
+        var mods = Modifier.of(m1.entry().body().profiles().get(0).raw().modifiers());
         // M1's modifiers are [before Model Two, before Model One]; only Model One is present
         assertEquals(Result.FALSE, ev.eval(m1, mods.get(0).conditions()));
         assertEquals(Result.TRUE, ev.eval(m1, mods.get(1).conditions()));
@@ -98,7 +98,7 @@ class EvaluatorTest {
     // ---- F14: local condition groups (G1 to G3)
 
     private Result unitCondition(Fixture f, Evaluator ev, Selection copy) {
-        List<ModifierDef> mods = Fixture.modifiers(copy.entry());
+        List<Modifier> mods = Fixture.modifiers(copy.entry());
         return ev.eval(copy, mods.get(0).conditions());
     }
 
